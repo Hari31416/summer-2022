@@ -3,12 +3,13 @@
 import sys
 
 def largest_number(a):
-    #write your code here
-    res = ""
-    for x in a:
-        res += x
-    return res
-
+    single_nums = []
+    for n in a:
+        for m in list(str(n)):
+            single_nums.append(int(m))
+    single_nums.sort(reverse=True)
+    nums = [str(i) for i in single_nums]
+    return int("".join(nums))
 if __name__ == '__main__':
     input = sys.stdin.read()
     data = input.split()
