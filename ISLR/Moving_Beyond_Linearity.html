@@ -3,7 +3,7 @@
 <head><meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Terminology</title><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
+<title>Moving Beyond Linearity</title><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
 
 <style type="text/css">
   pre { line-height: 125%; }
@@ -13096,19 +13096,21 @@ div#notebook {
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p><h2 id="Contents">Contents<a href="#Contents"></a></h2>
+<p><h1 id="Contents">Contents<a href="#Contents"></a>&lt;/h2&gt;
         <ol>
-        <ol><li><a class="" href="#Bagging">Bagging</a></li></p>
-<ol><li><a class="" href="#How-It-Works?">How It Works?</a></li>
-<li><a class="" href="#Benefits-And-Challanges">Benefits And Challanges</a></li>
-</ol><li><a class="" href="#Boosting">Boosting</a></li>
-<ol><li><a class="" href="#AdaBoost-(Adaptive-Boosting)">AdaBoost (Adaptive Boosting)</a></li>
-<li><a class="" href="#Gradient-Boosting">Gradient Boosting</a></li>
-</ol><li><a class="" href="#Ensemble-Learning">Ensemble Learning</a></li>
-<li><a class="" href="#Bias-and-Variance">Bias and Variance</a></li>
-<ol><li><a class="" href="#Bias">Bias</a></li>
-<li><a class="" href="#Variance">Variance</a></li>
-<li><a class="" href="#Bias-Variance-Trade-Off">Bias-Variance Trade-Off</a></li>
+        <li><a class="" href="#Moving-Beyond-Linearity">Moving Beyond Linearity</a></li></p>
+<ol><li><a class="" href="#Polynomial-Regression">Polynomial Regression</a></li>
+<li><a class="" href="#Step-Functions">Step Functions</a></li>
+<li><a class="" href="#Basis-Functions">Basis Functions</a></li>
+<li><a class="" href="#Regression-Splines">Regression Splines</a></li>
+<ol><li><a class="" href="#Piecewise-Polynomials">Piecewise Polynomials</a></li>
+<li><a class="" href="#Constraints-and-Splines">Constraints and Splines</a></li>
+<li><a class="" href="#Choosing-the-Number-and-Locations-of-the-Knots">Choosing the Number and Locations of the Knots</a></li>
+</ol><li><a class="" href="#Smoothing-Splines">Smoothing Splines</a></li>
+<li><a class="" href="#Local-Regression">Local Regression</a></li>
+<li><a class="" href="#Generalized-Additive-Models">Generalized Additive Models</a></li>
+<ol><li><a class="" href="#GAMs-for-Regression-Problems">GAMs for Regression Problems</a></li>
+<li><a class="" href="#GAMs-for-Classification-Problems">GAMs for Classification Problems</a></li>
 </ol>
 </div>
 </div>
@@ -13116,160 +13118,109 @@ div#notebook {
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="Bagging">Bagging<a class="anchor-link" href="#Bagging">&#182;</a></h3>
+<h1 id="Moving-Beyond-Linearity">Moving Beyond Linearity<a class="anchor-link" href="#Moving-Beyond-Linearity">&#182;</a></h1>
 </div>
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Bagging, short for bootstrap aggregation, is the ensemble learning method that is commonly used to reduce variance within a noisy dataset. In bagging, a random sample of data in a training set is selected with replacement—meaning that the individual data points can be chosen more than once. After several data samples are generated, these weak models are then trained independently, and depending on the type of task—regression or classification, for example—the average or majority of those predictions yield a more accurate estimate.</p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h4 id="How-It-Works?">How It Works?<a class="anchor-link" href="#How-It-Works?">&#182;</a></h4>
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<ol>
-<li>Bootstrapping:  Bagging leverages a bootstrapping sampling technique to create diverse samples. This resampling method generates different subsets of the training dataset by selecting data points at random and with replacement. This means that each time you select a data point from the training dataset, you are able to select the same instance multiple times. As a result, a value/instance repeated twice (or more) in a sample.</li>
-<li>Parallel training: These bootstrap samples are then trained independently and in parallel with each other using weak or base learners.</li>
-<li>Aggregation: Finally, depending on the task (i.e. regression or classification), an average or a majority of the predictions are taken to compute a more accurate estimate. In the case of regression, an average is taken of all the outputs predicted by the individual classifiers; this is known as soft voting. For classification problems, the class with the highest majority of votes is accepted; this is known as hard voting or majority voting.</li>
-</ol>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h4 id="Benefits-And-Challanges">Benefits And Challanges<a class="anchor-link" href="#Benefits-And-Challanges">&#182;</a></h4><p>Benefits are:</p>
-<ol>
-<li>Ease of Implemantation</li>
-<li>Reduction of variance</li>
-</ol>
-<p>Challanges are:</p>
-<ol>
-<li>Loss of interpretability: It’s difficult to draw very precise business insights through bagging because due to the averaging involved across predictions.</li>
-<li>Computationally expensive: Bagging slows down and grows more intensive as the number of iterations increase.</li>
-</ol>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p><a href="https://www.ibm.com/cloud/learn/bagging">Reference</a></p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="Boosting">Boosting<a class="anchor-link" href="#Boosting">&#182;</a></h3>
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<blockquote><p>A machine learning technique that iteratively combines a set of simple and not very accurate classifiers (referred to as "weak" classifiers) into a classifier with high accuracy (a "strong" classifier) by upweighting the examples that the model is currently misclassifying.</p>
-</blockquote>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h4 id="AdaBoost-(Adaptive-Boosting)">AdaBoost (Adaptive Boosting)<a class="anchor-link" href="#AdaBoost-(Adaptive-Boosting)">&#182;</a></h4>
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>Here, the weakness is identified by the weak estimator’s error rate. In each iteration, AdaBoost identifies miss-classified data points, increasing their weights (and decrease the weights of correct points, in a sense) so that the next classifier will pay extra attention to get them right.</p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p><img src="images/1.png" alt=""></p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h4 id="Gradient-Boosting">Gradient Boosting<a class="anchor-link" href="#Gradient-Boosting">&#182;</a></h4>
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>Instead of adjusting weights of data points, Gradient boosting focuses on the difference between the prediction and the ground truth.</p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p><a href="https://towardsdatascience.com/boosting-algorithms-explained-d38f56ef3f30">Reference</a></p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="Ensemble-Learning">Ensemble Learning<a class="anchor-link" href="#Ensemble-Learning">&#182;</a></h3>
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<blockquote><p>A collection of models trained independently whose predictions are averaged or aggregated. In many cases, an ensemble produces better predictions than a single model. For example, a random forest is an ensemble built from multiple decision trees. Note that not all decision forests are ensembles.</p>
-</blockquote>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="Bias-and-Variance">Bias and Variance<a class="anchor-link" href="#Bias-and-Variance">&#182;</a></h3>
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>The prediction error for any machine learning algorithm can be broken down into three parts:</p>
+<p>Linear models
+are relatively simple to describe and implement, and have advantages over
+other approaches in terms of interpretation and inference. However, standard linear regression can have significant limitations in terms of predictive power. This is because the linearity assumption is almost always an
+approximation, and sometimes a poor one.</p>
+<p>Here, we relax the linearity assumption
+while still attempting to maintain as much interpretability as possible. We
+do this by examining very simple extensions of linear models like polynomial regression and step functions, as well as more sophisticated approaches
+such as splines, local regression, and generalized additive models.</p>
 <ul>
-<li>Bias Error</li>
-<li>Variance Error</li>
-<li>Irreducible Error
+<li><strong>Polynomial regression</strong> extends the linear model by adding extra predictors, obtained by raising each of the original predictors to a power.
+For example, a cubic regression uses three variables, X, X2, and X3,
+as predictors. This approach provides a simple way to provide a nonlinear fit to data.</li>
+<li><strong>Step functions</strong> cut the range of a variable into K distinct regions in
+order to produce a qualitative variable. This has the effect of fitting
+a piecewise constant function.</li>
+<li><strong>Regression splines</strong> are more flexible than polynomials and step
+functions, and in fact are an extension of the two. They involve dividing the range of X into K distinct regions. Within each region,
+a polynomial function is fit to the data. However, these polynomials
+are constrained so that they join smoothly at the region boundaries,
+or knots. Provided that the interval is divided into enough regions,
+this can produce an extremely flexible fit.</li>
+<li><strong>Smoothing splines</strong> are similar to regression splines, but arise in a
+slightly different situation. Smoothing splines result from minimizing
+a residual sum of squares criterion subject to a smoothness penalty.</li>
+<li><strong>Local regression</strong> is similar to splines, but differs in an important way.
+The regions are allowed to overlap, and indeed they do so in a very
+smooth way.</li>
+<li><strong>Generalized additive models</strong> allow us to extend the methods above to
+deal with multiple predictors.</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Polynomial-Regression">Polynomial Regression<a class="anchor-link" href="#Polynomial-Regression">&#182;</a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>A polynomial model is
 $$
-Err(x) = \mathrm{Bias}^2 + \mathrm{Variance} + \mathrm{Irreducible\ Error}
+y_i = \sum_{j=0}^d a_j x_i^j + \epsilon_i
+$$</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Here $\epsilon_i$ is the error term and d is the degree of the polynomial. The coefficients $\{a_j\}$ can easily be estimated by minimizing the sum of squares of the residuals.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Step-Functions">Step Functions<a class="anchor-link" href="#Step-Functions">&#182;</a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Using polynomial functions of the features as predictors in a linear model
+imposes a global structure on the non-linear function of X. We can instead
+use step functions in order to avoid imposing such a global structure. Here
+we break the range of X into bins, and fit a different constant in each bin.
+This amounts to converting a continuous variable into an ordered categorical
+variable.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>We create cutpoints $c_1, c_2, \ldots, c_K$ in the range of X and then construct K+1 new variables"
 $$
-The irreducible error cannot be reduced regardless of what algorithm is used. It is the error introduced from the chosen framing of the problem and may be caused by factors like unknown variables that influence the mapping of the input variables to the output variable.</li>
-</ul>
+\begin{align*}
+   C_0(X) &amp;= I(X&lt;C_1) \\
+   C_1(X) &amp;= I(c_1\le X&lt;c_2) \\
+    \vdots \\
+    C_K(X) &amp;= I(c_K\le X) \\
+\end{align*}
+$$
+Where I is an indicator function that returns 1 if the condition is true and 0 otherwise. We than use $C_i$ as predictors in a linear model.
+$$
+y_i = \beta_0 + \beta_1 C_1(X_i) + \beta_2 C_2(X_i) + \ldots + \beta_K C_K(X_i) + \epsilon_i
+$$</p>
 
 </div>
 </div>
@@ -13277,20 +13228,19 @@ The irreducible error cannot be reduced regardless of what algorithm is used. It
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h4 id="Bias">Bias<a class="anchor-link" href="#Bias">&#182;</a></h4>
+<h2 id="Basis-Functions">Basis Functions<a class="anchor-link" href="#Basis-Functions">&#182;</a></h2>
 </div>
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Bias are the simplifying assumptions made by a model to make the target function easier to learn. High bias can cause an algorithm to miss the relevant relations between features and target outputs (underfitting).</p>
-<ul>
-<li><strong>Low Bias:</strong> Suggests less assumptions about the form of the target function.</li>
-<li><strong>High-Bias:</strong> Suggests more assumptions about the form of the target function.</li>
-</ul>
-<p>Examples of low-bias machine learning algorithms include: Decision Trees, k-Nearest Neighbors and Support Vector Machines.</p>
-<p>Examples of high-bias machine learning algorithms include: Linear Regression, Linear Discriminant Analysis and Logistic Regression.</p>
+<p>The idea of basis functions is to use a set of predefined functions to fit a model. Let these functions be $b_1, b_2, \ldots, b_K$. We then fit the model:
+$$
+y_i = \beta_0 + \beta_1 b_1(X_i) + \beta_2 b_2(X_i) + \ldots + \beta_K b_K(X_i) + \epsilon_i
+$$
+We can se least squares to estimate the unknown regression coefficients of the model defined above.</p>
+<p>Note that the polynomial model as well as the step functions are a special case of a basis function model.</p>
 
 </div>
 </div>
@@ -13298,20 +13248,26 @@ The irreducible error cannot be reduced regardless of what algorithm is used. It
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h4 id="Variance">Variance<a class="anchor-link" href="#Variance">&#182;</a></h4>
+<h2 id="Regression-Splines">Regression Splines<a class="anchor-link" href="#Regression-Splines">&#182;</a></h2>
 </div>
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Variance is the amount that the estimate of the target function will change if different training data was used. The variance is an error from sensitivity to small fluctuations in the training set. High variance may result from an algorithm modeling the random noise in the training data (overfitting).</p>
-<ul>
-<li><strong>Low Variance:</strong> Suggests small changes to the estimate of the target function with changes to the training dataset.</li>
-<li><strong>High Variance:</strong> Suggests large changes to the estimate of the target function with changes to the training dataset.</li>
-</ul>
-<p>Examples of low-variance machine learning algorithms include: Linear Regression, Linear Discriminant Analysis and Logistic Regression.</p>
-<p>Examples of high-variance machine learning algorithms include: Decision Trees, k-Nearest Neighbors and Support Vector Machines.</p>
+<h3 id="Piecewise-Polynomials">Piecewise Polynomials<a class="anchor-link" href="#Piecewise-Polynomials">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Instead of fitting a high-degree polynomial over the entire range of X, piecewise polynomial regression involves fitting separate low-degree polynomials regression
+over different regions of X. For example, a piecewise cubic polynomial works
+by fitting a cubic regression model of the form:
+$$
+y_i = \beta_0+\beta_1 x_i+\beta_2 x_i^2+\beta_3 x_i^3+\epsilon_i
+$$</p>
 
 </div>
 </div>
@@ -13319,7 +13275,8 @@ The irreducible error cannot be reduced regardless of what algorithm is used. It
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p><img src="images/6.png" alt=""></p>
+<p>The coefficients $\{\beta_j\}$ differ in different regions of X called knots. Using more knots leads to a more flexible piecewise polynomial. In general, if we place K different knots throughout the range of X, then we
+will end up fitting K + 1 different cubic polynomials.</p>
 
 </div>
 </div>
@@ -13327,14 +13284,14 @@ The irreducible error cannot be reduced regardless of what algorithm is used. It
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h4 id="Bias-Variance-Trade-Off">Bias-Variance Trade-Off<a class="anchor-link" href="#Bias-Variance-Trade-Off">&#182;</a></h4>
+<h3 id="Constraints-and-Splines">Constraints and Splines<a class="anchor-link" href="#Constraints-and-Splines">&#182;</a></h3>
 </div>
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Given the true model and infinite data to calibrate it, we should be able to reduce both the bias and variance terms to 0. However, in a world with imperfect models and finite data, there is a tradeoff between minimizing the bias and minimizing the variance.</p>
+<p><img src="images/07_01.png" alt=""></p>
 
 </div>
 </div>
@@ -13342,10 +13299,10 @@ The irreducible error cannot be reduced regardless of what algorithm is used. It
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<blockquote><p>There is no escaping the relationship between bias and variance in machine learning.
-Increasing the bias will decrease the variance.
-Increasing the variance will decrease the bias.</p>
-</blockquote>
+<p>From the image, we can see that just fitting a cubic polynomial is not enough. It created discontinuities. (Top-left image)</p>
+<p>We can fix the discontinuities by adding some constraints. The top-right image fits a cubic polynomial with constraint that it is continuous at the knots. The bottom-left image uses further constraints that the first and second derivatives are also continuous at the knots. The curve in the bottom-left is called a cubic spline. In general, a cubic spline with K knots uses
+cubic spline
+a total of 4 + K degrees of freedom.</p>
 
 </div>
 </div>
@@ -13353,8 +13310,25 @@ Increasing the variance will decrease the bias.</p>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>To understand it better, let's look at an example. Suppose given information about the wealth and religion of a group of people, we want to predict whome they will vote. This can be done by using KNN.
-<img src="images/7.png" alt=""></p>
+<h3 id="Choosing-the-Number-and-Locations-of-the-Knots">Choosing the Number and Locations of the Knots<a class="anchor-link" href="#Choosing-the-Number-and-Locations-of-the-Knots">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>The regression
+spline is most flexible in regions that contain a lot of knots, because in
+those regions the polynomial coefficients can change rapidly. Hence, one
+option is to place more knots in places where we feel the function might
+vary most rapidly, and to place fewer knots where it seems more stable.
+While this option can work well, in practice it is common to place knots in
+a uniform fashion. One way to do this is to specify the desired degrees of
+freedom, and then have the software automatically place the corresponding
+number of knots at uniform quantiles of the data.</p>
+<p>How many knots should we use, or equivalently how many degrees of
+freedom should our spline contain? One option is to try out different numbers of knots and see which produces the best looking curve. A somewhat
+more objective approach is to use cross-validation</p>
 
 </div>
 </div>
@@ -13362,9 +13336,19 @@ Increasing the variance will decrease the bias.</p>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Increasing k results in the averaging of more voters in each prediction. This results in smoother prediction curves. With a k of 1, the separation between the two parties is very jagged. Furthermore, there are "islands" of Democrats in generally Republican territory and vice versa. As k is increased to, say, 20, the transition becomes smoother and the islands disappear and the split between the two parties does a good job of following the boundary line. As k becomes very large, say, 80, the distinction between the two categories becomes more blurred and the boundary prediction line is not matched very well at all.</p>
-<p>At small k's the jaggedness and islands are signs of variance. The locations of the islands and the exact curves of the boundaries will change radically as new data is gathered. On the other hand, at large k's the transition is very smooth so there isn't much variance, but the lack of a match to the boundary line is a sign of high bias.</p>
-<p>What we are observing here is that increasing k will decrease variance and increase bias. While decreasing k will increase variance and decrease bias. Take a look at how variable the predictions are for different data sets at low k. As k increases this variability is reduced. But if we increase k too much, then we no longer follow the true boundary line and we observe high bias. This is the nature of the Bias-Variance Tradeoff.</p>
+<h2 id="Smoothing-Splines">Smoothing Splines<a class="anchor-link" href="#Smoothing-Splines">&#182;</a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>In fitting a smooth curve to a set of data, what we really want to do is
+find some function, say $g(x)$, that fits the observed data well. However, if we don't put any constraint on the function, it will overfit the data. What we really want is a function g that makes RSS small,
+but that is also smooth. This can be done by finding g such that it minimizes the following cost function:
+$$
+\sum_{i=1}^n(y_i-g(x_i))^2+\lambda \int g^{''}(t)^2 dt
+$$</p>
 
 </div>
 </div>
@@ -13372,9 +13356,14 @@ Increasing the variance will decrease the bias.</p>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p><img src="images/8_1.png" alt="">
-<img src="images/8_2.png" alt="">
-<img src="images/8_3.png" alt=""></p>
+<p>here $\lambda$ is a non-negative tuning parameter.</p>
+<p>The function g(x) that minimizes the cost function can be shown to have some special properties: it is a piecewise cubic polynomial with knots at the unique
+values of $x_1, \cdots , x_n$, and continuous first and second derivatives at each
+knot. Furthermore, it is linear in the region outside of the extreme knots.
+In other words, the function g(x) that minimizes the cost function is a natural cubic
+spline with knots at $x_1, \cdots , x_n$! However, it is not the same natural cubic
+spline that one would get if one applied the basis function approach with knots at $x_1, \cdots , x_n$—rather, it is a shrunken
+version of such a natural cubic spline, where the value of the tuning parameter $\lambda$ in the cost function controls the level of shrinkage.</p>
 
 </div>
 </div>
@@ -13382,8 +13371,16 @@ Increasing the variance will decrease the bias.</p>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p><a href="http://scott.fortmann-roe.com/docs/BiasVariance.html">Reference 1</a></p>
-<p><a href="https://machinelearningmastery.com/gentle-introduction-to-the-bias-variance-trade-off-in-machine-learning/">Reference 2</a></p>
+<h2 id="Local-Regression">Local Regression<a class="anchor-link" href="#Local-Regression">&#182;</a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Local regression is a different approach for fitting flexible non-linear funclocal
+tions, which involves computing the fit at a target point $x_0$ using only the regression
+nearby training observations. The algorithm is:</p>
 
 </div>
 </div>
@@ -13391,6 +13388,109 @@ Increasing the variance will decrease the bias.</p>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
+<ol>
+<li>Gather the fraction $s = k/n$ of training points whose $x_i$ are closest
+to $x_0$.</li>
+<li>Assign a weight $K_{i0} = K(x_i, x_0)$ to each point in this neighborhood,
+so that the point furthest from $x_0$ has weight zero, and the closest
+has the highest weight. All but these k nearest neighbors get weight
+zero.</li>
+<li>Fit a weighted least squares regression of the $y_i$ on the $x_i$ using the
+aforementioned weights, by finding $\hat{\beta_0}$ and $\hat{\beta_1}$ that minimize
+$$
+\sum_{i=1}^nK_{i0}(y_i-\hat{y_i})^2\\
+\hat{y_i} = \hat{\beta_0}+\hat{\beta_1}x_i
+$$</li>
+<li>The fitted value as $x_0$ is given by $\hat f{x_0} = \hat{\beta_0}+\hat{\beta_1}x_0$.</li>
+</ol>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>In order to perform local regression, there are a number of choices to be
+made, such as how to define the weighting function K, and whether to fit
+a linear, constant, or quadratic regression in Step 3 above. While all of these choices make some
+difference, the most important choice is the span s, defined in Step 1 above.
+The span plays a role like that of the tuning parameter $\lambda$ in smoothing
+splines: it controls the flexibility of the non-linear fit. The smaller the value
+of s, the more local and wiggly will be our fit; alternatively, a very large
+value of s will lead to a global fit to the data using all of the training
+observations.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Generalized-Additive-Models">Generalized Additive Models<a class="anchor-link" href="#Generalized-Additive-Models">&#182;</a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Upto now, we have discussed a number of approaches for flexibly predicting a response Y on the basis of a single predictor X. These approaches can
+be seen as extensions of simple linear regression. Here we explore the problem of flexibly predicting Y on the basis of several predictors, $X_1, \ldots , X_p$.
+This amounts to an extension of multiple linear regression.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="GAMs-for-Regression-Problems">GAMs for Regression Problems<a class="anchor-link" href="#GAMs-for-Regression-Problems">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>We can extend the multiple linear regression model:
+$$
+\hat{y_i} = \hat{\beta_0}+\hat{\beta_1}x_{i1}+\hat{\beta_2}x_{i2}+\cdots+\hat{\beta_p}x_{ip} + \epsilon_i
+$$
+in order to allow for non-linear relationships between each feature and the
+response is to replace each linear component $\beta_jx_{ij}$ with a (smooth) nonlinear function $f_j(x_{ij})$. We would then write the model as:
+$$
+\hat{y_i} = \hat{\beta_0} + f_1(x_{i1})+f_2(x_{i2})+\cdots+f_p(x_{ip}) + \epsilon_i
+$$</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>This is an example of a GAM. It is called an additive model because we
+calculate a separate $f_j$ for each $X_j$, and then add together all of their
+contributions.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="GAMs-for-Classification-Problems">GAMs for Classification Problems<a class="anchor-link" href="#GAMs-for-Classification-Problems">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>The GAM model can be used for classification problems too. We extend the existing logistic regression model:
+$$
+\log \left(\frac{p(X)}{1-p(X)}\right) = \hat{\beta_0}+\hat{\beta_1}X_{1}+\hat{\beta_2}X_{2}+\cdots+\hat{\beta_p}X_{p}
+$$
+to a GAM model:
+$$
+\log\left(\frac{p(X)}{1-p(X)}\right) = \hat{\beta_0}+f_1(X_{1})+f_2(X_{2})+\cdots+f_p(X_{p})
+$$</p>
 
 </div>
 </div>

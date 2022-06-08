@@ -3,7 +3,7 @@
 <head><meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Terminology</title><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
+<title>Tree Based Methods</title><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
 
 <style type="text/css">
   pre { line-height: 125%; }
@@ -13096,19 +13096,18 @@ div#notebook {
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p><h2 id="Contents">Contents<a href="#Contents"></a></h2>
+<p><h1 id="Contents">Contents<a href="#Contents"></a>&lt;/h2&gt;
         <ol>
-        <ol><li><a class="" href="#Bagging">Bagging</a></li></p>
-<ol><li><a class="" href="#How-It-Works?">How It Works?</a></li>
-<li><a class="" href="#Benefits-And-Challanges">Benefits And Challanges</a></li>
-</ol><li><a class="" href="#Boosting">Boosting</a></li>
-<ol><li><a class="" href="#AdaBoost-(Adaptive-Boosting)">AdaBoost (Adaptive Boosting)</a></li>
-<li><a class="" href="#Gradient-Boosting">Gradient Boosting</a></li>
-</ol><li><a class="" href="#Ensemble-Learning">Ensemble Learning</a></li>
-<li><a class="" href="#Bias-and-Variance">Bias and Variance</a></li>
-<ol><li><a class="" href="#Bias">Bias</a></li>
-<li><a class="" href="#Variance">Variance</a></li>
-<li><a class="" href="#Bias-Variance-Trade-Off">Bias-Variance Trade-Off</a></li>
+        <li><a class="" href="#Tree-Based-Methods">Tree-Based Methods</a></li></p>
+<ol><li><a class="" href="#The-Basics-of-Decision-Trees">The Basics of Decision Trees</a></li>
+<ol><li><a class="" href="#Regression-Trees">Regression Trees</a></li>
+<ol><li><a class="" href="#Tree-Pruning">Tree Pruning</a></li>
+</ol><li><a class="" href="#Classification-Trees">Classification Trees</a></li>
+<li><a class="" href="#Trees-Versus-Linear-Models">Trees Versus Linear Models</a></li>
+</ol><li><a class="" href="#Bagging">Bagging</a></li>
+<ol><li><a class="" href="#Out-of-Bag-Error-Estimation">Out-of-Bag Error Estimation</a></li>
+</ol><li><a class="" href="#Random-Forests">Random Forests</a></li>
+<li><a class="" href="#Boosting">Boosting</a></li>
 </ol>
 </div>
 </div>
@@ -13116,14 +13115,19 @@ div#notebook {
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="Bagging">Bagging<a class="anchor-link" href="#Bagging">&#182;</a></h3>
+<h1 id="Tree-Based-Methods">Tree-Based Methods<a class="anchor-link" href="#Tree-Based-Methods">&#182;</a></h1>
 </div>
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Bagging, short for bootstrap aggregation, is the ensemble learning method that is commonly used to reduce variance within a noisy dataset. In bagging, a random sample of data in a training set is selected with replacement—meaning that the individual data points can be chosen more than once. After several data samples are generated, these weak models are then trained independently, and depending on the type of task—regression or classification, for example—the average or majority of those predictions yield a more accurate estimate.</p>
+<p>Tree-based methods involve stratifying or segmenting the predictor space
+into a number of simple regions. In order to make a prediction for a given
+observation, we typically use the mean or the mode of the training observations in the region to which it belongs. Since the set of splitting rules used
+to segment the predictor space can be summarized in a tree, these types of
+approaches are known as decision tree methods.
+decision tree.</p>
 
 </div>
 </div>
@@ -13131,17 +13135,29 @@ div#notebook {
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h4 id="How-It-Works?">How It Works?<a class="anchor-link" href="#How-It-Works?">&#182;</a></h4>
+<h2 id="The-Basics-of-Decision-Trees">The Basics of Decision Trees<a class="anchor-link" href="#The-Basics-of-Decision-Trees">&#182;</a></h2>
 </div>
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Regression-Trees">Regression Trees<a class="anchor-link" href="#Regression-Trees">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Roughly speaking,
+there are two steps to form a decision tree:</p>
 <ol>
-<li>Bootstrapping:  Bagging leverages a bootstrapping sampling technique to create diverse samples. This resampling method generates different subsets of the training dataset by selecting data points at random and with replacement. This means that each time you select a data point from the training dataset, you are able to select the same instance multiple times. As a result, a value/instance repeated twice (or more) in a sample.</li>
-<li>Parallel training: These bootstrap samples are then trained independently and in parallel with each other using weak or base learners.</li>
-<li>Aggregation: Finally, depending on the task (i.e. regression or classification), an average or a majority of the predictions are taken to compute a more accurate estimate. In the case of regression, an average is taken of all the outputs predicted by the individual classifiers; this is known as soft voting. For classification problems, the class with the highest majority of votes is accepted; this is known as hard voting or majority voting.</li>
+<li>We divide the predictor space—that is, the set of possible values for
+$X_1, X_2, \ldots , X_p$—into J distinct and non-overlapping regions,
+$R_1, R_2, \ldots , R_J$.</li>
+<li>For every observation that falls into the region $R_j$, we make the same
+prediction, which is simply the mean of the response values for the
+training observations in $R_j$.</li>
 </ol>
 
 </div>
@@ -13150,126 +13166,51 @@ div#notebook {
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h4 id="Benefits-And-Challanges">Benefits And Challanges<a class="anchor-link" href="#Benefits-And-Challanges">&#182;</a></h4><p>Benefits are:</p>
-<ol>
-<li>Ease of Implemantation</li>
-<li>Reduction of variance</li>
-</ol>
-<p>Challanges are:</p>
-<ol>
-<li>Loss of interpretability: It’s difficult to draw very precise business insights through bagging because due to the averaging involved across predictions.</li>
-<li>Computationally expensive: Bagging slows down and grows more intensive as the number of iterations increase.</li>
-</ol>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p><a href="https://www.ibm.com/cloud/learn/bagging">Reference</a></p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="Boosting">Boosting<a class="anchor-link" href="#Boosting">&#182;</a></h3>
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<blockquote><p>A machine learning technique that iteratively combines a set of simple and not very accurate classifiers (referred to as "weak" classifiers) into a classifier with high accuracy (a "strong" classifier) by upweighting the examples that the model is currently misclassifying.</p>
-</blockquote>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h4 id="AdaBoost-(Adaptive-Boosting)">AdaBoost (Adaptive Boosting)<a class="anchor-link" href="#AdaBoost-(Adaptive-Boosting)">&#182;</a></h4>
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>Here, the weakness is identified by the weak estimator’s error rate. In each iteration, AdaBoost identifies miss-classified data points, increasing their weights (and decrease the weights of correct points, in a sense) so that the next classifier will pay extra attention to get them right.</p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p><img src="images/1.png" alt=""></p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h4 id="Gradient-Boosting">Gradient Boosting<a class="anchor-link" href="#Gradient-Boosting">&#182;</a></h4>
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>Instead of adjusting weights of data points, Gradient boosting focuses on the difference between the prediction and the ground truth.</p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p><a href="https://towardsdatascience.com/boosting-algorithms-explained-d38f56ef3f30">Reference</a></p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="Ensemble-Learning">Ensemble Learning<a class="anchor-link" href="#Ensemble-Learning">&#182;</a></h3>
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<blockquote><p>A collection of models trained independently whose predictions are averaged or aggregated. In many cases, an ensemble produces better predictions than a single model. For example, a random forest is an ensemble built from multiple decision trees. Note that not all decision forests are ensembles.</p>
-</blockquote>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="Bias-and-Variance">Bias and Variance<a class="anchor-link" href="#Bias-and-Variance">&#182;</a></h3>
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>The prediction error for any machine learning algorithm can be broken down into three parts:</p>
-<ul>
-<li>Bias Error</li>
-<li>Variance Error</li>
-<li>Irreducible Error
+<p>How do we construct the regions $R_1, R_2, \ldots , R_J$? The goal is to find these regions such that they minimize the RSS error:
 $$
-Err(x) = \mathrm{Bias}^2 + \mathrm{Variance} + \mathrm{Irreducible\ Error}
+\text{RSS}(R_j) = \sum_{i=1}^N \left( y_i - \hat{y_{R_j}} \right)^2
+$$</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Unfortunately, it is computationally infeasible to consider every
+possible partition of the feature space into J boxes. For this reason, we take
+a top-down, greedy approach that is known as recursive binary splitting. The
+recursive
+binary
+splitting
+approach is top-down because it begins at the top of the tree (at which point
+all observations belong to a single region) and then successively splits the
+predictor space; each split is indicated via two new branches further down
+on the tree. It is greedy because at each step of the tree-building process,
+the best split is made at that particular step, rather than looking ahead
+and picking a split that will lead to a better tree in some future step.</p>
+<p>In order to perform recursive binary splitting, we first select the predictor $X_j$ and the cutpoint s such that splitting the predictor space into
+the regions $\{X|X_j &lt; s \}$ and $\{X|X_j\le s\}$ leads to the greatest possible
+reduction in RSS.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>That is, we consider all
+predictors $X_1, X_2, \ldots , X_p$, and all possible values of the cutpoint s for each of
+the predictors, and then choose the predictor and cutpoint such that the
+resulting tree has the lowest RSS. In greater detail, for any j and s, we
+define the pair of half-planes:
 $$
-The irreducible error cannot be reduced regardless of what algorithm is used. It is the error introduced from the chosen framing of the problem and may be caused by factors like unknown variables that influence the mapping of the input variables to the output variable.</li>
-</ul>
+R_1(j,s) = \{X|X_j &lt; s\}\quad \text{and}\quad R_2(j,s)= \{X|X_j\le s\}
+$$
+and we seek j, s such that it minimizes:
+$$
+\sum_{i:x_i\epsilon R_1(j,s)}\left( y_i - \hat{y}_{R_1} \right)^2 +\sum_{i:x_i\epsilon R_2(j,s)}\left( y_i - \hat{y}_{R_2} \right)^2
+$$</p>
 
 </div>
 </div>
@@ -13277,20 +13218,16 @@ The irreducible error cannot be reduced regardless of what algorithm is used. It
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h4 id="Bias">Bias<a class="anchor-link" href="#Bias">&#182;</a></h4>
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>Bias are the simplifying assumptions made by a model to make the target function easier to learn. High bias can cause an algorithm to miss the relevant relations between features and target outputs (underfitting).</p>
-<ul>
-<li><strong>Low Bias:</strong> Suggests less assumptions about the form of the target function.</li>
-<li><strong>High-Bias:</strong> Suggests more assumptions about the form of the target function.</li>
-</ul>
-<p>Examples of low-bias machine learning algorithms include: Decision Trees, k-Nearest Neighbors and Support Vector Machines.</p>
-<p>Examples of high-bias machine learning algorithms include: Linear Regression, Linear Discriminant Analysis and Logistic Regression.</p>
+<p>Once we find the j and s, we repeat the process, looking for the best predictor and best
+cutpoint in order to split the data further so as to minimize the RSS within
+each of the resulting regions. However, this time, instead of splitting the
+entire predictor space, we split one of the two previously identified regions.
+We now have three regions. Again, we look to split one of these three regions
+further, so as to minimize the RSS. The process continues until a stopping
+criterion is reached; for instance, we may continue until no region contains
+more than five observations. Once the regions $R_1, R_2, \ldots , R_J$ have been created, we predict the response
+for a given test observation using the mean of the training observations in
+the region to which that test observation belongs.</p>
 
 </div>
 </div>
@@ -13298,20 +13235,21 @@ The irreducible error cannot be reduced regardless of what algorithm is used. It
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h4 id="Variance">Variance<a class="anchor-link" href="#Variance">&#182;</a></h4>
+<h4 id="Tree-Pruning">Tree Pruning<a class="anchor-link" href="#Tree-Pruning">&#182;</a></h4>
 </div>
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Variance is the amount that the estimate of the target function will change if different training data was used. The variance is an error from sensitivity to small fluctuations in the training set. High variance may result from an algorithm modeling the random noise in the training data (overfitting).</p>
-<ul>
-<li><strong>Low Variance:</strong> Suggests small changes to the estimate of the target function with changes to the training dataset.</li>
-<li><strong>High Variance:</strong> Suggests large changes to the estimate of the target function with changes to the training dataset.</li>
-</ul>
-<p>Examples of low-variance machine learning algorithms include: Linear Regression, Linear Discriminant Analysis and Logistic Regression.</p>
-<p>Examples of high-variance machine learning algorithms include: Decision Trees, k-Nearest Neighbors and Support Vector Machines.</p>
+<p>The process described above may produce good predictions on the training
+set, but is likely to overfit the data, leading to poor test set performance. One possible
+alternative to the process described above is to build the tree only so long
+as the decrease in the RSS due to each split exceeds some (high) threshold.
+This strategy will result in smaller trees, but is too short-sighted since a
+seemingly worthless split early on in the tree might be followed by a very
+good split—that is, a split that leads to a large reduction in RSS later on. Therefore, a better strategy is to grow a very large tree $T_0$, and then
+prune it back in order to obtain a subtree.</p>
 
 </div>
 </div>
@@ -13319,7 +13257,12 @@ The irreducible error cannot be reduced regardless of what algorithm is used. It
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p><img src="images/6.png" alt=""></p>
+<p><em>Cost complexity pruning</em>—also known as weakest link pruning—gives us
+a way to do just this. Rather than considering every possible subtree, we
+consider a sequence of trees indexed by a nonnegative tuning parameter $\alpha$. For each value of $\alpha$, we consider the subtree $T\subset T_0$ such that:
+$$
+\sum_{m=1}^{|T|}\sum_{x_i\epsilon R_m}\left( y_i - \hat{y}_{R_m} \right)^2+\alpha|T|
+$$</p>
 
 </div>
 </div>
@@ -13327,14 +13270,9 @@ The irreducible error cannot be reduced regardless of what algorithm is used. It
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h4 id="Bias-Variance-Trade-Off">Bias-Variance Trade-Off<a class="anchor-link" href="#Bias-Variance-Trade-Off">&#182;</a></h4>
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>Given the true model and infinite data to calibrate it, we should be able to reduce both the bias and variance terms to 0. However, in a world with imperfect models and finite data, there is a tradeoff between minimizing the bias and minimizing the variance.</p>
+<p>is as small as possible. We can select a value of
+$\alpha$ using a validation set or using cross-validation. We then return to the
+full data set and obtain the subtree corresponding to $\alpha$.</p>
 
 </div>
 </div>
@@ -13342,9 +13280,23 @@ The irreducible error cannot be reduced regardless of what algorithm is used. It
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<blockquote><p>There is no escaping the relationship between bias and variance in machine learning.
-Increasing the bias will decrease the variance.
-Increasing the variance will decrease the bias.</p>
+<blockquote><p>The Algorithm</p>
+<ol>
+<li>Use recursive binary splitting to grow a large tree on the training
+data, stopping only when each terminal node has fewer than some
+minimum number of observations.</li>
+<li>Apply cost complexity pruning to the large tree in order to obtain a
+sequence of best subtrees, as a function of $\alpha$.</li>
+<li>Use K-fold cross-validation to choose $\alpha$. That is, divide the training
+observations into K folds. For each $k = 1, \ldots , K$:
+(a) Repeat Steps 1 and 2 on all but the kth fold of the training data.
+(b) Evaluate the mean squared prediction error on the data in the
+left-out kth fold, as a function of $\alpha$.
+Average the results for each value of $\alpha$, and pick $\alpha$ to minimize the
+average error.</li>
+<li>Return the subtree from Step 2 that corresponds to the chosen value
+of $\alpha$</li>
+</ol>
 </blockquote>
 
 </div>
@@ -13353,8 +13305,21 @@ Increasing the variance will decrease the bias.</p>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>To understand it better, let's look at an example. Suppose given information about the wealth and religion of a group of people, we want to predict whome they will vote. This can be done by using KNN.
-<img src="images/7.png" alt=""></p>
+<h3 id="Classification-Trees">Classification Trees<a class="anchor-link" href="#Classification-Trees">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>A classification tree is very similar to a regression tree, except that it is
+classification
+used to predict a qualitative response rather than a quantitative one. Re- tree
+call that for a regression tree, the predicted response for an observation is
+given by the mean response of the training observations that belong to the
+same terminal node. In contrast, for a classification tree, we predict that
+each observation belongs to the most commonly occurring class of training
+observations in the region to which it belongs.</p>
 
 </div>
 </div>
@@ -13362,9 +13327,21 @@ Increasing the variance will decrease the bias.</p>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Increasing k results in the averaging of more voters in each prediction. This results in smoother prediction curves. With a k of 1, the separation between the two parties is very jagged. Furthermore, there are "islands" of Democrats in generally Republican territory and vice versa. As k is increased to, say, 20, the transition becomes smoother and the islands disappear and the split between the two parties does a good job of following the boundary line. As k becomes very large, say, 80, the distinction between the two categories becomes more blurred and the boundary prediction line is not matched very well at all.</p>
-<p>At small k's the jaggedness and islands are signs of variance. The locations of the islands and the exact curves of the boundaries will change radically as new data is gathered. On the other hand, at large k's the transition is very smooth so there isn't much variance, but the lack of a match to the boundary line is a sign of high bias.</p>
-<p>What we are observing here is that increasing k will decrease variance and increase bias. While decreasing k will increase variance and decrease bias. Take a look at how variable the predictions are for different data sets at low k. As k increases this variability is reduced. But if we increase k too much, then we no longer follow the true boundary line and we observe high bias. This is the nature of the Bias-Variance Tradeoff.</p>
+<p>To grow a classification tree, we use the same procedure as in the regression using <em>classification error rate</em> as the cost function.  The classification error rate is
+simply the fraction of the training observations in that region that do not
+belong to the most common class:
+$$
+E = 1-\max_k(\hat{p}_{mk})
+$$
+Here $\hat{p}_{mk}$ represents the proportion of training observations in the mth
+region that are from the kth class.</p>
+<p>However, it turns out that classification
+error is not sufficiently sensitive for tree-growing, and in practice two other
+measures are preferable.
+The Gini index is defined by
+$$
+G = \sum_{k=1}^K\hat{p}_{mk}(1-\hat{p}_{mk})
+$$</p>
 
 </div>
 </div>
@@ -13372,9 +13349,15 @@ Increasing the variance will decrease the bias.</p>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p><img src="images/8_1.png" alt="">
-<img src="images/8_2.png" alt="">
-<img src="images/8_3.png" alt=""></p>
+<p>a measure of total variance across the K classes. It is not hard to see
+that the Gini index takes on a small value if all of the $\hat{p}_{mk}$’s are close to
+zero or one. For this reason the Gini index is referred to as a measure of
+node purity—a small value indicates that a node contains predominantly
+observations from a single class.</p>
+<p>An alternative to the Gini index is cross-entropy, given by
+$$
+D = -\sum_{k=1}^K\hat{p}_{mk}\log\hat{p}_{mk}
+$$</p>
 
 </div>
 </div>
@@ -13382,8 +13365,10 @@ Increasing the variance will decrease the bias.</p>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p><a href="http://scott.fortmann-roe.com/docs/BiasVariance.html">Reference 1</a></p>
-<p><a href="https://machinelearningmastery.com/gentle-introduction-to-the-bias-variance-trade-off-in-machine-learning/">Reference 2</a></p>
+<p>One can show that
+the cross-entropy will take on a value near zero if the $\hat{p}_{mk}$’s are all near
+zero or near one. Therefore, like the Gini index, the cross-entropy will take
+on a small value if the mth node is pure.</p>
 
 </div>
 </div>
@@ -13391,6 +13376,221 @@ Increasing the variance will decrease the bias.</p>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
+<p>When building a classification tree, either the Gini index or the crossentropy are typically used to evaluate the quality of a particular split,
+since these two approaches are more sensitive to node purity than is the
+classification error rate. Any of these three approaches might be used when
+pruning the tree, but the classification error rate is preferable if prediction
+accuracy of the final pruned tree is the goal.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<blockquote><p>Decision trees can be constructed
+even in the presence of qualitative predictor variables.</p>
+</blockquote>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Trees-Versus-Linear-Models">Trees Versus Linear Models<a class="anchor-link" href="#Trees-Versus-Linear-Models">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Linear regression assumes a model of the form:
+$$
+f(X) = \beta_0 + \sum_{i=1}^n\beta_iX_i
+$$
+whereas regression trees assume a model of the form:
+$$
+f(X) = \sum_{m=1}^M c_m.1 (X\epsilon R_m)
+$$</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Which model is better depends on the problem at hand. If the
+relationship between the features and the response is well approximated
+by a linear model then an approach such as linear regression
+will likely work well, and will outperform a method such as a regression
+tree that does not exploit this linear structure. If instead there is a highly
+non-linear and complex relationship between the features and the response
+as indicated by the tree model then decision trees may outperform classical
+approaches.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Bagging">Bagging<a class="anchor-link" href="#Bagging">&#182;</a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Trees generally do not have the same level of predictive
+accuracy as some of the other regression and classification approaches however, by aggregating many decision trees, using methods like bagging,
+random forests, and boosting, the predictive performance of trees can be
+substantially improved.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>The decision tree suffer from high variance.
+This means that if we split the training data into two parts at random,
+and fit a decision tree to both halves, the results that we get could be
+quite different. We know that averaging a set of observations reduces variance. Hence a natural way to reduce the variance and hence increase the prediction accuracy of a statistical learning method is to take many training sets
+from the population, build a separate prediction model using each training
+set, and average the resulting predictions. In other words, we could calculate $\hat{f}^1(x), \hat{f}^2(x), \ldots, \hat{f}^B(x)$ using B separate training sets, and average
+them in order to obtain a single low-variance statistical learning model,
+given by 
+$$
+\hat{f}^{\text{avg}}(x) = \frac{1}{B}\sum_{i=1}^B\hat{f}^i(x)
+$$</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Of course, this is not practical because we generally do not have access
+to multiple training sets. Instead, we can bootstrap, by taking repeated samples from the single training set, and fit a decision tree to each sample. This is called bagging.</p>
+<p>To apply bagging to regression
+trees, we simply construct B regression trees using B bootstrapped training
+sets, and average the resulting predictions. These trees are grown deep,
+and are not pruned. Hence each individual tree has high variance, but
+low bias. Averaging these B trees reduces the variance.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h4 id="Out-of-Bag-Error-Estimation">Out-of-Bag Error Estimation<a class="anchor-link" href="#Out-of-Bag-Error-Estimation">&#182;</a></h4>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>One can show
+that on average, each bagged tree makes use of around two-thirds of the
+observations. The remaining one-third of the observations not used to fit a
+given bagged tree are referred to as the out-of-bag (OOB) observations. We
+out-of-bag
+can predict the response for the ith observation using each of the trees in which that observation was OOB. This will yield around B/3 predictions
+for the ith observation. We can take average (or mode) which will give a valid test error for the model.  It can
+be shown that with B sufficiently large, OOB error is virtually equivalent
+to leave-one-out cross-validation error. The OOB approach for estimating
+the test error is particularly convenient when performing bagging on large
+data sets for which cross-validation would be computationally onerous.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Random-Forests">Random Forests<a class="anchor-link" href="#Random-Forests">&#182;</a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Random forests provide an improvement over bagged trees by way of a
+random
+small tweak that decorrelates the trees. As in bagging, we build a number forest
+of decision trees on bootstrapped training samples. But when building these
+decision trees, each time a split in a tree is considered, a random sample of
+m predictors is chosen as split candidates from the full set of p predictors.
+The split is allowed to use only one of those m predictors. A fresh sample of
+m predictors is taken at each split, and typically we choose $m \approx \sqrt{p}$—that
+is, the number of predictors considered at each split is approximately equal
+to the square root of the total number of predictors.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Leaving all these features may sound weird, but it has a clever rationale. Suppose
+that there is one very strong predictor in the data set, along with a number of other moderately strong predictors. Then in the collection of bagged
+trees, most or all of the trees will use this strong predictor in the top split.
+Consequently, all of the bagged trees will look quite similar to each other.
+Hence the predictions from the bagged trees will be highly correlated.</p>
+<p>Random forests overcome this problem by forcing each split to consider
+only a subset of the predictors. Therefore, on average $(p − m)/p$ of the
+splits will not even consider the strong predictor, and so other predictors
+will have more of a chance. We can think of this process as decorrelating
+the trees, thereby making the average of the resulting trees less variable
+and hence more reliable</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Boosting">Boosting<a class="anchor-link" href="#Boosting">&#182;</a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Boosting works in a similar way as bagging, except that the trees are
+grown sequentially: each tree is grown using information from previously
+grown trees. Boosting does not involve bootstrap sampling; instead each
+tree is fit on a modified version of the original data set. The algorithm is:</p>
+<ol>
+<li>Set $\hat{f}(x) = 0$ and $r_i = y_i$ for all i in the training set.</li>
+<li>For $b = 1, \dots, B$,<ul>
+<li>Fit a tree $\hat{f}^b$ with d splits to the training data (X, r)</li>
+<li>Update $\hat{f}$ by adding in a shrunken version of the new tree: $$\hat{f}(x)\leftarrow \hat{f}(x) + \lambda \hat{f}^b(x)$$</li>
+<li>Update the residuals $$r_i \leftarrow r_i - \lambda \hat{f}^b(x_i)$$</li>
+</ul>
+</li>
+<li>Output the final model: $$f(x) = \sum_{b=1}^B\lambda \hat{f}^b(x)$$ </li>
+</ol>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Unlike fitting a single large decision tree to the data, which amounts to fitting the data hard and potentially
+overfitting, the boosting approach instead learns slowly. Given the current
+model, we fit a decision tree to the residuals from the model. That is, we
+fit a tree using the current residuals, rather than the outcome Y , as the response. We then add this new decision tree into the fitted function in order
+to update the residuals. Each of these trees can be rather small, with just
+a few terminal nodes, determined by the parameter d in the algorithm. By
+fitting small trees to the residuals, we slowly improve $\hat{f}$ in areas where it
+does not perform well. The shrinkage parameter $\lambda$ slows the process down
+even further, allowing more and different shaped trees to attack the residuals. In general, statistical learning approaches that learn slowly tend to
+perform well. Note that in boosting, unlike in bagging, the construction of
+each tree depends strongly on the trees that have already been grown.</p>
 
 </div>
 </div>

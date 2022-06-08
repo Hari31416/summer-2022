@@ -3,7 +3,7 @@
 <head><meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Terminology</title><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
+<title>Linear Model Selection And Regularization</title><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
 
 <style type="text/css">
   pre { line-height: 125%; }
@@ -13098,17 +13098,19 @@ div#notebook {
 <div class="text_cell_render border-box-sizing rendered_html">
 <p><h2 id="Contents">Contents<a href="#Contents"></a></h2>
         <ol>
-        <ol><li><a class="" href="#Bagging">Bagging</a></li></p>
-<ol><li><a class="" href="#How-It-Works?">How It Works?</a></li>
-<li><a class="" href="#Benefits-And-Challanges">Benefits And Challanges</a></li>
-</ol><li><a class="" href="#Boosting">Boosting</a></li>
-<ol><li><a class="" href="#AdaBoost-(Adaptive-Boosting)">AdaBoost (Adaptive Boosting)</a></li>
-<li><a class="" href="#Gradient-Boosting">Gradient Boosting</a></li>
-</ol><li><a class="" href="#Ensemble-Learning">Ensemble Learning</a></li>
-<li><a class="" href="#Bias-and-Variance">Bias and Variance</a></li>
-<ol><li><a class="" href="#Bias">Bias</a></li>
-<li><a class="" href="#Variance">Variance</a></li>
-<li><a class="" href="#Bias-Variance-Trade-Off">Bias-Variance Trade-Off</a></li>
+        <li><a class="" href="#Linear-Model-Selection-and-Regularization">Linear Model Selection and Regularization</a></li></p>
+<ol><li><a class="" href="#Subset-Selection">Subset Selection</a></li>
+<ol><li><a class="" href="#Best-Subset-Selection">Best Subset Selection</a></li>
+<li><a class="" href="#Stepwise-Selection">Stepwise Selection</a></li>
+<ol><li><a class="" href="#Forward-Stepwise-Selection">Forward Stepwise Selection</a></li>
+<li><a class="" href="#Backward-Stepwise-Selection">Backward Stepwise Selection</a></li>
+</ol><li><a class="" href="#Choosing-the-Optimal-Model">Choosing the Optimal Model</a></li>
+</ol><li><a class="" href="#Shrinkage-Methods">Shrinkage Methods</a></li>
+<ol><li><a class="" href="#Ridge-Regression">Ridge Regression</a></li>
+<li><a class="" href="#The-Lasso">The Lasso</a></li>
+</ol><li><a class="" href="#Dimension-Reduction-Methods">Dimension Reduction Methods</a></li>
+<ol><li><a class="" href="#Principal-Components-Regression">Principal Components Regression</a></li>
+<li><a class="" href="#Partial-Least-Squares">Partial Least Squares</a></li>
 </ol>
 </div>
 </div>
@@ -13116,160 +13118,18 @@ div#notebook {
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="Bagging">Bagging<a class="anchor-link" href="#Bagging">&#182;</a></h3>
+<h1 id="Linear-Model-Selection-and-Regularization">Linear Model Selection and Regularization<a class="anchor-link" href="#Linear-Model-Selection-and-Regularization">&#182;</a></h1>
 </div>
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Bagging, short for bootstrap aggregation, is the ensemble learning method that is commonly used to reduce variance within a noisy dataset. In bagging, a random sample of data in a training set is selected with replacement—meaning that the individual data points can be chosen more than once. After several data samples are generated, these weak models are then trained independently, and depending on the type of task—regression or classification, for example—the average or majority of those predictions yield a more accurate estimate.</p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h4 id="How-It-Works?">How It Works?<a class="anchor-link" href="#How-It-Works?">&#182;</a></h4>
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<ol>
-<li>Bootstrapping:  Bagging leverages a bootstrapping sampling technique to create diverse samples. This resampling method generates different subsets of the training dataset by selecting data points at random and with replacement. This means that each time you select a data point from the training dataset, you are able to select the same instance multiple times. As a result, a value/instance repeated twice (or more) in a sample.</li>
-<li>Parallel training: These bootstrap samples are then trained independently and in parallel with each other using weak or base learners.</li>
-<li>Aggregation: Finally, depending on the task (i.e. regression or classification), an average or a majority of the predictions are taken to compute a more accurate estimate. In the case of regression, an average is taken of all the outputs predicted by the individual classifiers; this is known as soft voting. For classification problems, the class with the highest majority of votes is accepted; this is known as hard voting or majority voting.</li>
-</ol>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h4 id="Benefits-And-Challanges">Benefits And Challanges<a class="anchor-link" href="#Benefits-And-Challanges">&#182;</a></h4><p>Benefits are:</p>
-<ol>
-<li>Ease of Implemantation</li>
-<li>Reduction of variance</li>
-</ol>
-<p>Challanges are:</p>
-<ol>
-<li>Loss of interpretability: It’s difficult to draw very precise business insights through bagging because due to the averaging involved across predictions.</li>
-<li>Computationally expensive: Bagging slows down and grows more intensive as the number of iterations increase.</li>
-</ol>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p><a href="https://www.ibm.com/cloud/learn/bagging">Reference</a></p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="Boosting">Boosting<a class="anchor-link" href="#Boosting">&#182;</a></h3>
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<blockquote><p>A machine learning technique that iteratively combines a set of simple and not very accurate classifiers (referred to as "weak" classifiers) into a classifier with high accuracy (a "strong" classifier) by upweighting the examples that the model is currently misclassifying.</p>
-</blockquote>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h4 id="AdaBoost-(Adaptive-Boosting)">AdaBoost (Adaptive Boosting)<a class="anchor-link" href="#AdaBoost-(Adaptive-Boosting)">&#182;</a></h4>
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>Here, the weakness is identified by the weak estimator’s error rate. In each iteration, AdaBoost identifies miss-classified data points, increasing their weights (and decrease the weights of correct points, in a sense) so that the next classifier will pay extra attention to get them right.</p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p><img src="images/1.png" alt=""></p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h4 id="Gradient-Boosting">Gradient Boosting<a class="anchor-link" href="#Gradient-Boosting">&#182;</a></h4>
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>Instead of adjusting weights of data points, Gradient boosting focuses on the difference between the prediction and the ground truth.</p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p><a href="https://towardsdatascience.com/boosting-algorithms-explained-d38f56ef3f30">Reference</a></p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="Ensemble-Learning">Ensemble Learning<a class="anchor-link" href="#Ensemble-Learning">&#182;</a></h3>
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<blockquote><p>A collection of models trained independently whose predictions are averaged or aggregated. In many cases, an ensemble produces better predictions than a single model. For example, a random forest is an ensemble built from multiple decision trees. Note that not all decision forests are ensembles.</p>
-</blockquote>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="Bias-and-Variance">Bias and Variance<a class="anchor-link" href="#Bias-and-Variance">&#182;</a></h3>
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>The prediction error for any machine learning algorithm can be broken down into three parts:</p>
-<ul>
-<li>Bias Error</li>
-<li>Variance Error</li>
-<li>Irreducible Error
+<p>The linear model
 $$
-Err(x) = \mathrm{Bias}^2 + \mathrm{Variance} + \mathrm{Irreducible\ Error}
+Y = \beta_0 + \beta_1 X_1+ \beta_2 X_2+\cdots + \epsilon
 $$
-The irreducible error cannot be reduced regardless of what algorithm is used. It is the error introduced from the chosen framing of the problem and may be caused by factors like unknown variables that influence the mapping of the input variables to the output variable.</li>
-</ul>
+is fitted using the least squares method. In a lot of cases, this method gives good result, however, it is not always the case. Using some other method to fit the model may result in better <em>prediction accuracy</em> and <em>model interpretability</em>.</p>
 
 </div>
 </div>
@@ -13277,20 +13137,13 @@ The irreducible error cannot be reduced regardless of what algorithm is used. It
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h4 id="Bias">Bias<a class="anchor-link" href="#Bias">&#182;</a></h4>
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>Bias are the simplifying assumptions made by a model to make the target function easier to learn. High bias can cause an algorithm to miss the relevant relations between features and target outputs (underfitting).</p>
 <ul>
-<li><strong>Low Bias:</strong> Suggests less assumptions about the form of the target function.</li>
-<li><strong>High-Bias:</strong> Suggests more assumptions about the form of the target function.</li>
+<li><strong>Prediction accuracy:</strong> Provided that the true relationship between the
+response and the predictors is approximately linear, the least squares
+estimates will have low bias if $n&gt;&gt;p$ hence it will generalize well on test data. If n is not much larger than p, the bias will be greater and if $n&lt;p$ there
+is no longer a unique least squares coefficient estimate: the variance
+is infinite so the method cannot be used at all.</li>
 </ul>
-<p>Examples of low-bias machine learning algorithms include: Decision Trees, k-Nearest Neighbors and Support Vector Machines.</p>
-<p>Examples of high-bias machine learning algorithms include: Linear Regression, Linear Discriminant Analysis and Logistic Regression.</p>
 
 </div>
 </div>
@@ -13298,20 +13151,13 @@ The irreducible error cannot be reduced regardless of what algorithm is used. It
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h4 id="Variance">Variance<a class="anchor-link" href="#Variance">&#182;</a></h4>
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>Variance is the amount that the estimate of the target function will change if different training data was used. The variance is an error from sensitivity to small fluctuations in the training set. High variance may result from an algorithm modeling the random noise in the training data (overfitting).</p>
 <ul>
-<li><strong>Low Variance:</strong> Suggests small changes to the estimate of the target function with changes to the training dataset.</li>
-<li><strong>High Variance:</strong> Suggests large changes to the estimate of the target function with changes to the training dataset.</li>
+<li><strong>Model interpretability:</strong>  It is often the case that some or many of the
+variables used in a multiple regression model are in fact not associated with the response. Including such irrelevant variables leads to
+unnecessary complexity in the resulting model. By removing these
+variables—that is, by setting the corresponding coefficient estimates
+to zero—we can obtain a model that is more easily interpreted. </li>
 </ul>
-<p>Examples of low-variance machine learning algorithms include: Linear Regression, Linear Discriminant Analysis and Logistic Regression.</p>
-<p>Examples of high-variance machine learning algorithms include: Decision Trees, k-Nearest Neighbors and Support Vector Machines.</p>
 
 </div>
 </div>
@@ -13319,7 +13165,19 @@ The irreducible error cannot be reduced regardless of what algorithm is used. It
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p><img src="images/6.png" alt=""></p>
+<p>There are many alternatives, both classical and modern, to using least
+squares to fit. Some are:</p>
+<ul>
+<li><strong>Subset Selection:</strong> This approach involves identifying a subset of the p
+predictors that we believe to be related to the response. We then fit
+a model using least squares on the reduced set of variables.</li>
+<li><strong>Shrinkage:</strong> This approach involves fitting a model involving all p predictors. However, the estimated coefficients are shrunken towards zero
+relative to the least squares estimates.</li>
+<li><strong>Dimension Reduction:</strong> This approach involves projecting the p predictors into a M-dimensional subspace, where $M &lt; p$. This is achieved
+by computing M different linear combinations, or projections, of the
+variables. Then these M projections are used as predictors to fit a
+linear regression model by least squares.</li>
+</ul>
 
 </div>
 </div>
@@ -13327,14 +13185,7 @@ The irreducible error cannot be reduced regardless of what algorithm is used. It
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h4 id="Bias-Variance-Trade-Off">Bias-Variance Trade-Off<a class="anchor-link" href="#Bias-Variance-Trade-Off">&#182;</a></h4>
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>Given the true model and infinite data to calibrate it, we should be able to reduce both the bias and variance terms to 0. However, in a world with imperfect models and finite data, there is a tradeoff between minimizing the bias and minimizing the variance.</p>
+<p>Let's learn them one by one.</p>
 
 </div>
 </div>
@@ -13342,9 +13193,253 @@ The irreducible error cannot be reduced regardless of what algorithm is used. It
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<blockquote><p>There is no escaping the relationship between bias and variance in machine learning.
-Increasing the bias will decrease the variance.
-Increasing the variance will decrease the bias.</p>
+<h2 id="Subset-Selection">Subset Selection<a class="anchor-link" href="#Subset-Selection">&#182;</a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Best-Subset-Selection">Best Subset Selection<a class="anchor-link" href="#Best-Subset-Selection">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>To perform best subset selection, we fit a separate least squares regression
+for each possible combination of the p predictors. That is, we fit all p models selection
+that contain exactly one predictor, all $^pP_2 = p(p-1)/2$ models that contain
+exactly two predictors, and so forth. We then look at all of the resulting
+models, with the goal of identifying the one that is best.
+The problem of selecting the best model from among the $2^p$ possibilities
+considered by best subset selection is not trivial. This is usually broken up
+into two stages, as described in Algorithm:</p>
+<ol>
+<li>Let $M_0$ denote the null model, which contains no predictors. This
+model simply predicts the sample mean for each observation.</li>
+<li><p>For $k = 1, 2, \cdots p$:</p>
+<ul>
+<li><p>Fit all $^pP_k$ models that contain exactly k predictors.</p>
+</li>
+<li><p>Pick the best among these $^pP_k$ models, and call it $M_k$.</p>
+</li>
+</ul>
+</li>
+<li><p>Select a single best model from among $M_0, M_1, \cdots, M_p$ using cross-validated prediction error.</p>
+</li>
+</ol>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>As there are $2^p$ possible models, this type of selection becomes computationally expensive for large $p$.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Stepwise-Selection">Stepwise Selection<a class="anchor-link" href="#Stepwise-Selection">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>For computational reasons, best subset selection cannot be applied with
+very large p. Best subset selection may also suffer from statistical problems
+when p is large. The larger the search space, the higher the chance of finding
+models that look good on the training data, even though they might not
+have any predictive power on future data. Thus an enormous search space
+can lead to overfitting and high variance of the coefficient estimates.
+For both of these reasons, stepwise methods, which explore a far more
+restricted set of models, are attractive alternatives to best subset selection.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h4 id="Forward-Stepwise-Selection">Forward Stepwise Selection<a class="anchor-link" href="#Forward-Stepwise-Selection">&#182;</a></h4>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Forward stepwise selection
+begins with a model containing no predictors, and then adds predictors
+to the model, one-at-a-time, until all of the predictors are in the model.
+In particular, at each step the variable that gives the greatest additional
+improvement to the fit is added to the model. More formally, the forward
+stepwise selection procedure is given in Algorithm</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<ol>
+<li>Let $M_0$ denote the null model, which contains no predictors.</li>
+<li>For $k = 0, \cdots , p − 1$:<ul>
+<li>Consider all $p − k$ models that augment the predictors in $M_k$ with one additional predictor.</li>
+<li>Choose the best among these $p − k$ models, and call it $M_{k+1}$. Here best is defined as having smallest RSS or highest $R^2$.</li>
+</ul>
+</li>
+<li>Select a single best model from among $M_0, \cdots , M_p$ using crossvalidated prediction error.</li>
+</ol>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>This algorithm amounts in total $1+p(p+1)/2$ models, in place of $2^p$ models that are required by best subset selection. This is a substantial difference: when
+p = 20, best subset selection requires fitting 1,048,576 models, whereas
+forward stepwise selection requires fitting only 211 models.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Though forward stepwise tends to do well in practice,
+it is not guaranteed to find the best possible model out of all $2^p$ models containing subsets of the p predictors. For instance, suppose that in a
+given data set with $p = 3$ predictors, the best possible one-variable model
+contains $X_1$, and the best possible two-variable model instead contains $X_2$
+and $X_3$. Then forward stepwise selection will fail to select the best possible
+two-variable model, because $M_1$ will contain $X_1$, so $M_2$ must also contain
+$X_1$ together with one additional variable.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h4 id="Backward-Stepwise-Selection">Backward Stepwise Selection<a class="anchor-link" href="#Backward-Stepwise-Selection">&#182;</a></h4>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>The Algorithm is:</p>
+<ol>
+<li>Let M
+p denote the full model, which contains all p predictors.</li>
+<li>For $k = p, p − 1, \cdots , 1$:<ul>
+<li>Consider all k models that contain all but one of the predictors in $M_k$, for a total of k − 1 predictors.</li>
+<li>Choose the best among these k models, and call it $M_k−1$. Here best is defined as having smallest RSS or highest $R_2$.</li>
+</ul>
+</li>
+<li>Select a single best model from among $M_0, M_1, \cdots , M_p$ using crossvalidated prediction error.</li>
+</ol>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Like forward stepwise selection, the backward selection approach searches
+through only $1+p(p+1)/2$ models, and so can be applied in settings where
+p is too large to apply best subset selection.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Choosing-the-Optimal-Model">Choosing the Optimal Model<a class="anchor-link" href="#Choosing-the-Optimal-Model">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Train error can not be a good predictor of the model's performance. Instead, we should use the model's performance on the test data. There are two common approaches:</p>
+<ol>
+<li>We can indirectly estimate test error by making an adjustment to the
+training error to account for the bias due to overfitting.</li>
+<li>We can directly estimate the test error, using either a validation set
+approach or a cross-validation approach.</li>
+</ol>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Shrinkage-Methods">Shrinkage Methods<a class="anchor-link" href="#Shrinkage-Methods">&#182;</a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>As an
+alternative to the subset selection, we can fit a model containing all p predictors using a technique
+that constrains or regularizes the coefficient estimates, or equivalently, that
+shrinks the coefficient estimates towards zero.</p>
+<p>The two best-known techniques for shrinking the regression coefficients
+towards zero are ridge regression and the lasso.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Ridge-Regression">Ridge Regression<a class="anchor-link" href="#Ridge-Regression">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Ridge regression is very similar to least squares, except that the coefficients
+ridge
+are estimated by minimizing a slightly different quantity. Here, we minimize the quantity:
+$$
+RSS + \lambda \sum_{i=1}^p \beta_i^2
+$$</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>where $RSS$ is the sum of squares of the residuals, and $\lambda \ge 0$ is a tuning parameter to be determined separately.</p>
+<p>As with least squares, ridge regression seeks coefficient estimates that fit the data well, by making the RSS
+small. However, the second term, called a shrinkage penalty, is shrinkage
+small when $\beta _1, \beta _2, \cdots \beta _p$ are close to zero, and so it has the effect of shrinking penalty
+the estimates of $\beta_j$ towards zero. The tuning parameter $\lambda$ serves to control
+the relative impact of these two terms on the regression coefficient estimates. When $\lambda =0$, the penalty term has no effect, and ridge regression
+will produce the least squares estimates. However, as $\lambda \to \infty $, the impact of
+the shrinkage penalty grows, and the ridge regression coefficient estimates
+will approach zero.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<blockquote><p>Note that the penlaty is not applied to the intercept term as we want to shrink the estimated association of
+each variable with the response.</p>
 </blockquote>
 
 </div>
@@ -13353,8 +13448,22 @@ Increasing the variance will decrease the bias.</p>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>To understand it better, let's look at an example. Suppose given information about the wealth and religion of a group of people, we want to predict whome they will vote. This can be done by using KNN.
-<img src="images/7.png" alt=""></p>
+<h3 id="The-Lasso">The Lasso<a class="anchor-link" href="#The-Lasso">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Ridge regression does have one obvious disadvantage. Unlike best subset,
+forward stepwise, and backward stepwise selection, which will generally
+select models that involve just a subset of the variables, ridge regression
+will include all p predictors in the final model. The penalty defined above
+will shrink all of the coefficients towards zero, but it will not set any of them
+exactly to zero. A solution to this problem is to use the lasso. In this, the penalty is defined as:
+$$
+RSS + \lambda \sum_{i=1}^p \|\beta_i\|
+$$</p>
 
 </div>
 </div>
@@ -13362,9 +13471,7 @@ Increasing the variance will decrease the bias.</p>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Increasing k results in the averaging of more voters in each prediction. This results in smoother prediction curves. With a k of 1, the separation between the two parties is very jagged. Furthermore, there are "islands" of Democrats in generally Republican territory and vice versa. As k is increased to, say, 20, the transition becomes smoother and the islands disappear and the split between the two parties does a good job of following the boundary line. As k becomes very large, say, 80, the distinction between the two categories becomes more blurred and the boundary prediction line is not matched very well at all.</p>
-<p>At small k's the jaggedness and islands are signs of variance. The locations of the islands and the exact curves of the boundaries will change radically as new data is gathered. On the other hand, at large k's the transition is very smooth so there isn't much variance, but the lack of a match to the boundary line is a sign of high bias.</p>
-<p>What we are observing here is that increasing k will decrease variance and increase bias. While decreasing k will increase variance and decrease bias. Take a look at how variable the predictions are for different data sets at low k. As k increases this variability is reduced. But if we increase k too much, then we no longer follow the true boundary line and we observe high bias. This is the nature of the Bias-Variance Tradeoff.</p>
+<p>We see that the lasso uses $l_1$ penalty while ridge regression uses $l_2$ penalty.</p>
 
 </div>
 </div>
@@ -13372,9 +13479,10 @@ Increasing the variance will decrease the bias.</p>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p><img src="images/8_1.png" alt="">
-<img src="images/8_2.png" alt="">
-<img src="images/8_3.png" alt=""></p>
+<p>Much like best subset selection, the lasso performs variable selection. As a result, models generated
+from the lasso are generally much easier to interpret than those produced
+by ridge regression. We say that the lasso yields sparse models—that is,
+models that involve only a subset of the variables. As in ridge regression, selecting good value of $\lambda$ is critical.</p>
 
 </div>
 </div>
@@ -13382,8 +13490,16 @@ Increasing the variance will decrease the bias.</p>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p><a href="http://scott.fortmann-roe.com/docs/BiasVariance.html">Reference 1</a></p>
-<p><a href="https://machinelearningmastery.com/gentle-introduction-to-the-bias-variance-trade-off-in-machine-learning/">Reference 2</a></p>
+<h2 id="Dimension-Reduction-Methods">Dimension Reduction Methods<a class="anchor-link" href="#Dimension-Reduction-Methods">&#182;</a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Let's now explore
+a class of approaches that transform the predictors and then fit a least
+squares model using the transformed variables. We will refer to these techniques as dimension reduction methods.</p>
 
 </div>
 </div>
@@ -13391,6 +13507,134 @@ Increasing the variance will decrease the bias.</p>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
+<p>Let $Z_1, Z_2, \cdots , Z_M$ represent $M \le p$ linear combinations of our original reduction
+linear
+combination
+p predictors. That is:
+$$
+Z_m = \sum_{j=1}^p \phi_{jm} Z_j
+$$
+We then fit the linear regression model
+$$
+y_i = \theta _0+ \sum_{m=1}^M\theta _m z_{im} \epsilon_i
+$$
+Using the least squares method. If the constants $\phi_{1m}, \phi_{2m}, \cdots , \phi_{pm}$ are chosen wisely, then
+such dimension reduction approaches can often outperform least squares
+regression.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>The fact that the number of coeeficients to estimate is decreased from p+1 to M+1 is what gives it the name of dimension reduction. Note that the original coeeficients $\beta _j$ can be calculated as:
+$$
+\beta _j = \sum_{m=1}^M\theta _m \phi_{jm}
+$$</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>So, dimension reduction techniques can be thought of as a way to constraint the values $\beta_j$ can take.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Principal-Components-Regression">Principal Components Regression<a class="anchor-link" href="#Principal-Components-Regression">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Principal components analysis (PCA) is a popular approach for deriving
+principal
+components
+analysis
+a low-dimensional set of features from a large set of variables. PCA is a technique for reducing the dimension of a n × p data matrix X.
+The first principal component direction of the data is that along which the
+observations vary the most.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><img src="images/06_01.png" alt=""></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>In the figure, the green line shows the maximum variance of the data. In general, one can construct up to p distinct principal components. The second
+principal component $Z_2$ is a linear combination of the variables that is uncorrelated with $Z_1$, and has largest variance subject to this constraint.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>The principal components regression (PCR) approach involves constructing
+principal
+components
+regression
+the first M principal components, $Z_1, Z_2, \cdots , Z_M$, and then using these components as the predictors in a linear regression model that is fit
+using least squares. The key idea is that often a small number of principal components suffice to explain most of the variability in the data, as
+well as the relationship with the response. In other words, we assume that
+the directions in which $X_1,\cdots , X_p$ show the most variation are the directions that are associated with Y. If the assumption underlying PCR holds, then fitting a least squares
+model to $Z_1, Z_2, \cdots , Z_M$ will lead to better results than fitting a least squares
+model to $X_1,\cdots , X_p$, since most or all of the information in the data that
+relates to the response is contained in $Z_1, Z_2, \cdots , Z_M$, and by estimating only
+M &lt;&lt; p coefficients we can mitigate overfitting.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>The PCR approach that we just described involves identifying linear combinations, or directions, that best represent the predictors $X_1,\cdots , X_p$. These
+directions are identified in an unsupervised way, since the response Y is not
+used to help determine the principal component directions. That is, the
+response does not supervise the identification of the principal components.
+Consequently, PCR suffers from a drawback: there is no guarantee that the
+directions that best explain the predictors will also be the best directions
+to use for predicting the response.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Partial-Least-Squares">Partial Least Squares<a class="anchor-link" href="#Partial-Least-Squares">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Partial least squares (PLS), is a supervised alternative to
+partial least
+PCR. Like PCR, PLS is a dimension reduction method, which first identifies squares
+a new set of features $Z_1, Z_2, \cdots , Z_M$ that are linear combinations of the original
+features, and then fits a linear model via least squares using these M new
+features. But unlike PCR, PLS identifies these new features in a supervised
+way—that is, it makes use of the response Y in order to identify new
+features that not only approximate the old features well, but also that are
+related to the response. Roughly speaking, the PLS approach attempts to
+find directions that help explain both the response and the predictors.</p>
 
 </div>
 </div>

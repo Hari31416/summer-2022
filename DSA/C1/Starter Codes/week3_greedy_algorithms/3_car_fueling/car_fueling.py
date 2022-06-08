@@ -3,36 +3,43 @@ import sys
 
 
 def compute_min_refills(distance, tank, stops):
-    # write your code here
-    num_stops = 0
-    remaining_distance = distance
-    current_dist = 0
-    for i, dist in enumerate(stops[:-1]):
-        # Changing Distances
-        current_dist += dist
-        remaining_distance -= dist
-        # Checking whether car has reached its destination
-        reached = remaining_distance <= 0
+    tank_refills = 0
+    tank_remaining = tank
+    distance_remaining = distance
+    stops = [0] + stops + [distance]
 
-        # If yes, return num_stops
-        if reached:
-            # print("Reached!")
-            return num_stops
-        # print("Distance Remaiming", remaining_distance)
+    for i in range(len(stops)):
+        # print(f"\nAt stop {i+1}")
+        if i == 0:
+            distance_moved = 0
+        else:
+            distance_moved = stops[i] - stops[i - 1]
 
-        # Check whether the car can reach the next stop
-        next_stop_dist = current_dist + stops[i + 1]
-        # print("Next stop at", next_stop_dist)
-        # print("While tank is", tank)
-        if next_stop_dist <= tank:
-            # If yes, continue
-            # print("Distnace on meter,", current_dist, "Can continue")
+        if i == len(stops) - 1:
+            next_stop_at = 0
+        else:
+            next_stop_at = stops[i + 1] - stops[i]
+
+        distance_remaining -= distance_moved
+        tank_remaining -= distance_moved
+        # assert tank_remaining >= 0
+        # print(f"Distnace remaining: {distance_remaining}")
+        if distance_remaining <= 0:
+            # print("Reached destination!")
+            return tank_refills
+
+        # print(f"Next stop at: {next_stop_at}")
+        # print(f"Tank remaining: {tank_remaining}")
+        if tank_remaining < 0:
+            return -1
+        if next_stop_at <= tank_remaining:
+            # print("Can reach next stop!")
             continue
         else:
-            # Else fill the tank
-            # print("Fill the tank")
-            num_stops += 1
-            current_dist = 0
+            # print("Cannot reach next stop! Fill tank!")
+            tank_refills += 1
+            tank_remaining = tank
+    # print("Can not reach destination!".upper())
     return -1
 
 
