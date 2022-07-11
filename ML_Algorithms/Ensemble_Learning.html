@@ -3,7 +3,7 @@
 <head><meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Support Vector Machine</title><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
+<title>Ensemble Learning</title><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
 
 <style type="text/css">
   pre { line-height: 125%; }
@@ -13096,189 +13096,104 @@ div#notebook {
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="Support-Vector-Machine">Support Vector Machine<a class="anchor-link" href="#Support-Vector-Machine">&#182;</a></h1>
+<p><h1 id="Contents">Contents<a href="#Contents"></a></h1>
+        <ol>
+        <li><a class="" href="#Ensemble-Learning">Ensemble Learning</a></li></p>
+<p><li><a class="" href="#Average-Ensemble-Methods">Average Ensemble Methods</a></li></p>
+<ol><li><a class="" href="#Bagging-meta-estimator">Bagging meta-estimator</a></li>
+<li><a class="" href="#Forests-of-randomized-trees">Forests of randomized trees</a></li>
+<ol><li><a class="" href="#Random-Forest">Random Forest</a></li>
+<li><a class="" href="#Extremely-Randomized-Trees">Extremely Randomized Trees</a></li>
+<li><a class="" href="#Parameters">Parameters</a></li>
+<li><a class="" href="#Time-Complexity">Time Complexity</a></li>
+<li><a class="" href="#Parallelization">Parallelization</a></li>
+<li><a class="" href="#Feature-Importance">Feature Importance</a></li>
+</ol><li><a class="" href="#Voting-Classifier">Voting Classifier</a></li>
+<ol><li><a class="" href="#Majority-Class-Labels-(Hard-Voting)">Majority Class Labels (Hard Voting)</a></li>
+<li><a class="" href="#Weighted-Average-Probabilities-(Soft-Voting)">Weighted Average Probabilities (Soft Voting)</a></li>
+<li><a class="" href="#Using-the-VotingClassifier-with-GridSearchCV">Using the VotingClassifier with GridSearchCV</a></li>
+</ol><li><a class="" href="#Voting-Regressor">Voting Regressor</a></li>
+<li><a class="" href="#Stacked-generalization">Stacked generalization</a></li>
+</ol><li><a class="" href="#Boosting-Methods">Boosting Methods</a></li>
+<ol><li><a class="" href="#AdaBoost">AdaBoost</a></li>
+<li><a class="" href="#Gradient-Tree-Boosting">Gradient Tree Boosting</a></li>
+<ol><li><a class="" href="#Controlling-the-Tree-Size">Controlling the Tree Size</a></li>
+<li><a class="" href="#Loss-Functions">Loss Functions</a></li>
+</ol><li><a class="" href="#Histogram-Based-Gradient-Boosting">Histogram-Based Gradient Boosting</a></li>
+<ol><li><a class="" href="#Missing-values-support">Missing values support</a></li>
+<li><a class="" href="#Sample-weight-support">Sample weight support</a></li>
+<li><a class="" href="#Monotonic-Constraints">Monotonic Constraints</a></li>
+</ol><li><a class="" href="#Algorithms">Algorithms</a></li>
+<ol><li><a class="" href="#BaggingClassifier">BaggingClassifier</a></li>
+<ol><li><a class="" href="#Parameters-of-the-BaggingClassifier">Parameters of the BaggingClassifier</a></li>
+<li><a class="" href="#Attributes-of-the-BaggingClassifier">Attributes of the BaggingClassifier</a></li>
+</ol><li><a class="" href="#BaggingRegressor">BaggingRegressor</a></li>
+<ol><li><a class="" href="#Parameters-of-the-BaggingRegressor">Parameters of the BaggingRegressor</a></li>
+<li><a class="" href="#Attributes-of-the-BaggingRegressor">Attributes of the BaggingRegressor</a></li>
+</ol><li><a class="" href="#RandomForestClassifier">RandomForestClassifier</a></li>
+<ol><li><a class="" href="#Parameters-of-the-RandomForestClassifier">Parameters of the RandomForestClassifier</a></li>
+<li><a class="" href="#Attributes-of-the-RandomForestClassifier">Attributes of the RandomForestClassifier</a></li>
+</ol><li><a class="" href="#RandomForestRegressor">RandomForestRegressor</a></li>
+<ol><li><a class="" href="#Parameters-of-the-RandomForestRegressor">Parameters of the RandomForestRegressor</a></li>
+<li><a class="" href="#Attributes-of-the-RandomForestRegressor">Attributes of the RandomForestRegressor</a></li>
+</ol><li><a class="" href="#ExtraTreesClassifier">ExtraTreesClassifier</a></li>
+<ol><li><a class="" href="#Parameters-of-the-ExtraTreesClassifier">Parameters of the ExtraTreesClassifier</a></li>
+<li><a class="" href="#Attributes-of-the-ExtraTreesClassifier">Attributes of the ExtraTreesClassifier</a></li>
+</ol><li><a class="" href="#ExtraTreesRegressor">ExtraTreesRegressor</a></li>
+<ol><li><a class="" href="#Parameters-of-the-ExtraTreesRegressor">Parameters of the ExtraTreesRegressor</a></li>
+<li><a class="" href="#Attributes-of-the-ExtraTreesRegressor">Attributes of the ExtraTreesRegressor</a></li>
+</ol><li><a class="" href="#VotingClassifier">VotingClassifier</a></li>
+<ol><li><a class="" href="#Parameters-of-the-VotingClassifier">Parameters of the VotingClassifier</a></li>
+<li><a class="" href="#Attributes-of-the-VotingClassifier">Attributes of the VotingClassifier</a></li>
+</ol><li><a class="" href="#VotingRegressor">VotingRegressor</a></li>
+<ol><li><a class="" href="#Parameters-of-the-VotingRegressor">Parameters of the VotingRegressor</a></li>
+<li><a class="" href="#Attributes-of-the-VotingRegressor">Attributes of the VotingRegressor</a></li>
+</ol><li><a class="" href="#StackingClassifier">StackingClassifier</a></li>
+<ol><li><a class="" href="#Parameters-of-the-StackingClassifier">Parameters of the StackingClassifier</a></li>
+<li><a class="" href="#Attributes-of-the-StackingClassifier">Attributes of the StackingClassifier</a></li>
+</ol><li><a class="" href="#StackingRegressor">StackingRegressor</a></li>
+<ol><li><a class="" href="#Parameters-of-the-StackingRegressor">Parameters of the StackingRegressor</a></li>
+<li><a class="" href="#Attributes-of-the-StackingRegressor">Attributes of the StackingRegressor</a></li>
+</ol><li><a class="" href="#AdaBoostClassifier">AdaBoostClassifier</a></li>
+<ol><li><a class="" href="#Parameters-of-the-AdaBoostClassifier">Parameters of the AdaBoostClassifier</a></li>
+<li><a class="" href="#Attributes-of-the-AdaBoostClassifier">Attributes of the AdaBoostClassifier</a></li>
+</ol><li><a class="" href="#AdaBoostRegressor">AdaBoostRegressor</a></li>
+<ol><li><a class="" href="#Parameters-of-the-AdaBoostRegressor">Parameters of the AdaBoostRegressor</a></li>
+<li><a class="" href="#Attributes-of-the-AdaBoostRegressor">Attributes of the AdaBoostRegressor</a></li>
+</ol><li><a class="" href="#GradientBoostingClassifier">GradientBoostingClassifier</a></li>
+<ol><li><a class="" href="#Attributes-of-the-GradientBoostingClassifier">Attributes of the GradientBoostingClassifier</a></li>
+</ol><li><a class="" href="#GradientBoostingRegressor">GradientBoostingRegressor</a></li>
+<ol><li><a class="" href="#Parameters-of-the-GradientBoostingRegressor">Parameters of the GradientBoostingRegressor</a></li>
+<li><a class="" href="#Attributes-of-the-GradientBoostingRegressor">Attributes of the GradientBoostingRegressor</a></li>
+</ol><li><a class="" href="#HistGradientBoostingClassifier">HistGradientBoostingClassifier</a></li>
+<ol><li><a class="" href="#Parameters-of-the-HistGradientBoostingClassifier">Parameters of the HistGradientBoostingClassifier</a></li>
+<li><a class="" href="#Attributes-of-the-HistGradientBoostingClassifier">Attributes of the HistGradientBoostingClassifier</a></li>
+</ol><li><a class="" href="#HistGradientBoostingRegressor">HistGradientBoostingRegressor</a></li>
+<ol><li><a class="" href="#Parameters-of-the-HistGradientBoostingRegressor">Parameters of the HistGradientBoostingRegressor</a></li>
+<li><a class="" href="#Attributes-of-the-HistGradientBoostingRegressor">Attributes of the HistGradientBoostingRegressor</a></li>
+</ol>
 </div>
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Maximal-Margin-Classifier">Maximal Margin Classifier<a class="anchor-link" href="#Maximal-Margin-Classifier">&#182;</a></h2>
+<h1 id="Ensemble-Learning">Ensemble Learning<a class="anchor-link" href="#Ensemble-Learning">&#182;</a></h1>
 </div>
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="Hyperplane">Hyperplane<a class="anchor-link" href="#Hyperplane">&#182;</a></h3>
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>In a p-dimensional space, a hyperplane is a flat affine subspace of
-hyperplane
-dimension p − 1. For instance, in two dimensions, a hyperplane is a flat
-one-dimensional subspace—in other words, a line. In three dimensions, a
-hyperplane is a flat two-dimensional subspace—that is, a plane. In p-dimensions, a hyperplane is defined as:
-$$
-\beta_0 + \beta_1 X_1 + \beta_2 X_2 + \cdots + \beta_p X_p = 0
-$$</p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>We can also think of the
-hyperplane as dividing p-dimensional space into two halves. One can easily
-determine on which side of the hyperplane a point lies by simply calculating
-the sign of the left hand side of the above equation. A two dimensional hyperplane is shown in the figure below.</p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p><img src="images/09_01.png" alt=""></p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="Classification-Using-a-Separating-Hyperplane">Classification Using a Separating Hyperplane<a class="anchor-link" href="#Classification-Using-a-Separating-Hyperplane">&#182;</a></h3>
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>Suppose that we have a $n\times p$ data matrix X that consists of n training
-observations in p-dimensional space. These observations falls into two categories: 1 and -1. Suppose that it is possible to construct a hyperplane that separates the
-training observations perfectly according to their class labels. That is, we have a hyperplane such that:
-$$
-\beta_0 + \beta_1 x_{i1} + \beta_2 x_{i2} + \cdots + \beta_p x_{ip} &gt; 0 \quad \text{if} \quad y_{i} = 1
-$$
-and
-$$
-\beta_0 + \beta_1 x_{i1} + \beta_2 x_{i2} + \cdots + \beta_p x_{ip} &lt; 0 \quad \text{if} \quad y_{i} = -1
-$$
-This is equivalent to:
-$$
-y_i(\beta_0 + \beta_1 x_{i1} + \beta_2 x_{i2} + \cdots + \beta_p x_{ip}) &gt; 0
-$$</p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>If a separating hyperplane exists, we can use it to construct a very natural
-classifier: a test observation is assigned a class depending on which side of
-the hyperplane it is located. We can even use the value $f(x) = \beta_0 + \beta_1 x_{1} + \beta_2 x_{2} + \cdots + \beta_p x_{p}$ to determining how "sure" the classifier is about the class of the test observation.</p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p><img src="images/09_02.png" alt=""></p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="The-Maximal-Margin-Classifier">The Maximal Margin Classifier<a class="anchor-link" href="#The-Maximal-Margin-Classifier">&#182;</a></h3>
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>In general, if our data can be perfectly separated using a hyperplane, then
-there will in fact exist an infinite number of such hyperplanes. In order to construct a classifier based upon a separating
-hyperplane, we must have a reasonable way to decide which of the infinite
-possible separating hyperplanes to use.</p>
-<p>A natural choice is the maximal margin hyperplane, which is the separating hyperplane that
-is farthest from the training observations. That is, we can compute the
-(perpendicular) distance from each training observation to a given separating hyperplane; the smallest such distance is the minimal distance from the
-observations to the hyperplane, and is known as the margin. The maximal
-margin
-margin hyperplane is the separating hyperplane for which the margin is
-largest—that is, it is the hyperplane that has the farthest minimum distance to the training observations. We can then classify a test observation
-based on which side of the maximal margin hyperplane it lies. This is known
-as the maximal margin classifier.</p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p><img src="images/09_03.png" alt=""></p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>In the figure above, we see that three training observations are equidistant from the maximal margin hyperplane and lie along the dashed lines
-indicating the width of the margin. These three observations are known as <em>support vectors</em>, since they are vectors in p-dimensional space and they “support” the maximal margin hyperplane in the sense vector
-that if these points were moved slightly then the maximal margin hyperplane would move as well. Interestingly, the maximal margin hyperplane
-depends directly on the support vectors, but not on the other observations:
-a movement to any of the other observations would not affect the separating
-hyperplane, provided that the observation’s movement does not cause it to
-cross the boundary set by the margin.</p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h4 id="Construction-of-the-Maximal-Margin-Classifier">Construction of the Maximal Margin Classifier<a class="anchor-link" href="#Construction-of-the-Maximal-Margin-Classifier">&#182;</a></h4>
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>We need to find the hyperplane constraint to:
-$$
-y_i(\beta_0 + \beta_1 x_{i1} + \beta_2 x_{i2} + \cdots + \beta_p x_{ip}) \ge M \quad \forall i=1,2,\dots,n
-$$
-the constraint requires that each
-observation be on the correct side of the hyperplane, with some cushion,
-provided that M is positive.</p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Support-Vector-Classifiers">Support Vector Classifiers<a class="anchor-link" href="#Support-Vector-Classifiers">&#182;</a></h2>
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>Many times the hyperplane that separates the training observations does not exist. Furthermore, maximal margin hyperplane is extremely sensitive to a change in a single observation
-suggests that it may have overfit the training data. In this case, we might be willing to consider a classifier based on a hyperplane that does not perfectly separate the two classes, in the interest of:</p>
+<p>The goal of ensemble methods is to combine the predictions of several base estimators built with a given learning algorithm in order to improve generalizability / robustness over a single estimator.</p>
+<p>Two families of ensemble methods are usually distinguished:</p>
 <ul>
-<li>Greater robustness to individual observations, and</li>
-<li>Better classification of most of the training observations</li>
+<li><p>In averaging methods, the driving principle is to build several estimators independently and then to average their predictions. On average, the combined estimator is usually better than any of the single base estimator because its variance is reduced.</p>
+<p>Examples: Bagging methods, Forests of randomized trees etc.</p>
+</li>
+<li><p>By contrast, in boosting methods, base estimators are built sequentially and one tries to reduce the bias of the combined estimator. The motivation is to combine several weak models to produce a powerful ensemble.</p>
+<p>Examples: AdaBoost, Gradient Tree Boosting</p>
+</li>
 </ul>
 
 </div>
@@ -13287,12 +13202,21 @@ suggests that it may have overfit the training data. In this case, we might be w
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>The support vector classifier, sometimes called a soft margin classifier,
-does exactly this. Rather than seeking the largest possible margin so that
-every observation is not only on the correct side of the hyperplane but
-also on the correct side of the margin, we instead allow some observations
-to be on the incorrect side of the margin, or even the incorrect side of
-the hyperplane.</p>
+<h1 id="Average-Ensemble-Methods">Average Ensemble Methods<a class="anchor-link" href="#Average-Ensemble-Methods">&#182;</a></h1>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Bagging-meta-estimator">Bagging meta-estimator<a class="anchor-link" href="#Bagging-meta-estimator">&#182;</a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>In ensemble algorithms, bagging methods form a class of algorithms which build several instances of a black-box estimator on random subsets of the original training set and then aggregate their individual predictions to form a final prediction. These methods are used as a way to reduce the variance of a base estimator (e.g., a decision tree), by introducing randomization into its construction procedure and then making an ensemble out of it.</p>
 
 </div>
 </div>
@@ -13300,25 +13224,8 @@ the hyperplane.</p>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="Details-of-the-Support-Vector-Classifier">Details of the Support Vector Classifier<a class="anchor-link" href="#Details-of-the-Support-Vector-Classifier">&#182;</a></h3>
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>The support vector classifier classifies a test observation depending on
-which side of a hyperplane it lies. The hyperplane is chosen to correctly separate most of the training observations into the two classes, but may
-misclassify a few observations. It is the solution to the optimization problem:
-$$
-\text{maximize}_{\beta_0, \beta_1, \cdots, \beta_p, \epsilon_0, \epsilon_1, \cdots, \epsilon_p} M
-$$
-subjected to the constraints:
-$$
-\sum_{j=1}^p\beta_j^2 = 1\\
-y_i(\beta_0 + \beta_1 x_{i1} + \beta_2 x_{i2} + \cdots + \beta_p x_{ip}) \ge M(1-\epsilon_i)\\
-\epsilon_i \ge 0, \sum_{j=1}^n\epsilon_j = C
-$$</p>
+<blockquote><p>As they provide a way to reduce overfitting, bagging methods work best with strong and complex models (e.g., fully developed decision trees), in contrast with boosting methods which usually work best with weak models (e.g., shallow decision trees).</p>
+</blockquote>
 
 </div>
 </div>
@@ -13326,22 +13233,17 @@ $$</p>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Here C is a nonnegative tuning parameter. M is the width
-of the margin; we seek to make this quantity as large as possible. $\epsilon_1, \cdots, \epsilon_n$ are slack variables that allow individual observations to be on
-slack
-the wrong side of the margin or the hyperplane.</p>
-<p>the slack variable $\epsilon_i$ tells us where the ith observation is located,
-relative to the hyperplane and relative to the margin. If $\epsilon_i=0$ then the ith observation is on the correct side of the margin. If $\epsilon_i &gt; 0$ then the ith observation is on the wrong side of the margin, and
-we say that the ith observation has violated the margin. If $\epsilon_i &gt; 1$ then it
-is on the wrong side of the hyperplane.</p>
-<p>C bounds
-the sum of the $\epsilon_i$’s, and so it determines the number and severity of the violations to the margin (and to the hyperplane) that we will tolerate. We can
-think of C as a budget for the amount that the margin can be violated
-by the n observations. For C &gt; 0 no more than C observations can be on the wrong side of the hyperplane. C controls the bias-variance trade-off of the support
-vector classifier. When the tuning parameter C is large, then the margin is
-wide, many observations violate the margin, and so there are many support
-vectors. In this case, many observations are involved in determining the
-hyperplane.</p>
+<p>Bagging methods come in many flavours but mostly differ from each other by the way they draw random subsets of the training set:</p>
+<ul>
+<li><p>When random subsets of the dataset are drawn as random subsets of the samples, then this algorithm is known as <strong>Pasting</strong>.</p>
+</li>
+<li><p>When samples are drawn with replacement, then the method is known as <strong>Bagging</strong>.</p>
+</li>
+<li><p>When random subsets of the dataset are drawn as random subsets of the features, then the method is known as <strong>Random Subspaces</strong>.</p>
+</li>
+<li><p>Finally, when base estimators are built on subsets of both samples and features, then the method is known as <strong>Random Patches</strong>.</p>
+</li>
+</ul>
 
 </div>
 </div>
@@ -13349,15 +13251,35 @@ hyperplane.</p>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>The optimization problem has a very interesting property:
-it turns out that only observations that either lie on the margin or that
-violate the margin will affect the hyperplane, and hence the classifier obtained. In other words, an observation that lies strictly on the correct side
-of the margin does not affect the support vector classifier! Changing the
-position of that observation would not change the classifier at all, provided
-that its position remains on the correct side of the margin. Observations
-that lie directly on the margin, or on the wrong side of the margin for
-their class, are known as support vectors. These observations do affect the
-support vector classifier.</p>
+<p>In scikit-learn, bagging methods are offered as a unified <code>BaggingClassifier</code> meta-estimator (resp. <code>BaggingRegressor</code>), taking as input a user-specified base estimator along with parameters specifying the strategy to draw random subsets. In particular, <code>max_samples</code> and <code>max_features</code> control the size of the subsets (in terms of samples and features), while <code>bootstrap</code> and <code>bootstrap_features</code> control whether samples and features are drawn with or without replacement. When using a subset of the available samples the generalization accuracy can be estimated with the out-of-bag samples by setting <code>oob_score=True</code>.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[1]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.ensemble</span> <span class="kn">import</span> <span class="n">BaggingClassifier</span>
+<span class="kn">from</span> <span class="nn">sklearn.neighbors</span> <span class="kn">import</span> <span class="n">KNeighborsClassifier</span>
+<span class="n">bagging</span> <span class="o">=</span> <span class="n">BaggingClassifier</span><span class="p">(</span><span class="n">KNeighborsClassifier</span><span class="p">(),</span>
+                            <span class="n">max_samples</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">max_features</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>For details see the papers:</p>
+<p><a href="http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.308.8562&amp;rep=rep1&amp;type=pdf">1</a></p>
+<p><a href="http://www.cs.utsa.edu/~bylander/cs6243/breiman96bagging.pdf">2</a></p>
+<p><a href="https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&amp;arnumber=709601">3</a></p>
+<p><a href="https://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.708.3190&amp;rep=rep1&amp;type=pdf">4</a></p>
 
 </div>
 </div>
@@ -13365,7 +13287,14 @@ support vector classifier.</p>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p><img src="images/09_04.png" alt=""></p>
+<h2 id="Forests-of-randomized-trees">Forests of randomized trees<a class="anchor-link" href="#Forests-of-randomized-trees">&#182;</a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>The <code>sklearn.ensemble</code> module includes two averaging algorithms based on randomized decision trees: the RandomForest algorithm and the Extra-Trees method. Both algorithms are perturb-and-combine techniques specifically designed for trees. The prediction of the ensemble is given as the averaged prediction of the individual classifiers.</p>
 
 </div>
 </div>
@@ -13373,7 +13302,14 @@ support vector classifier.</p>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>The figure above shows classifiers fit with different values of C. Largest C corresponds to the top-left image.</p>
+<h3 id="Random-Forest">Random Forest<a class="anchor-link" href="#Random-Forest">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>In random forests, each tree in the ensemble is built from a sample drawn with replacement (i.e., a bootstrap sample) from the training set. Furthermore, when splitting each node during the construction of a tree, the best split is found either from all input features or a random subset of size <code>max_features</code>.</p>
 
 </div>
 </div>
@@ -13381,23 +13317,8 @@ support vector classifier.</p>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Support-Vector-Machines">Support Vector Machines<a class="anchor-link" href="#Support-Vector-Machines">&#182;</a></h2>
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>The support vector classifier is a natural approach for classification in the
-two-class setting, if the boundary between the two classes is linear. However, in practice we are sometimes faced with non-linear class boundaries. A natural solution to this problem is to enlarge the feature space quadratic or cubic terms. For instance, rather than fitting a
-support vector classifier using p features:
-$$
-X_1, X_2, \cdots, X_p 
-$$
-we could instead fit a support vector classifier using 2p features:
-$$
-X_1, X_1^2, X_2, X_2^2, \cdots, X_n, X_p^2
-$$</p>
+<p>The purpose of these two sources of randomness is to decrease the variance of the forest estimator. The injected randomness in forests yield decision trees with somewhat decoupled prediction errors. By taking an average of those predictions, some errors can cancel out. Random forests achieve a reduced variance by combining diverse trees, sometimes at the cost of a slight increase in bias.</p>
+<p>For details, see the <a href="https://www.stat.berkeley.edu/~breiman/randomforest2001.pdf">paper</a>.</p>
 
 </div>
 </div>
@@ -13405,9 +13326,7 @@ $$</p>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>The support vector machine (SVM) is an extension of the support vector
-classifier that results from enlarging the feature space in a specific way,
-using kernels.</p>
+<p>In scikit-learn, the <code>RandomForestClassifier</code> and <code>RandomForestRegressor</code> estimators are available.</p>
 
 </div>
 </div>
@@ -13415,22 +13334,146 @@ using kernels.</p>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="Kernel">Kernel<a class="anchor-link" href="#Kernel">&#182;</a></h3>
+<h3 id="Extremely-Randomized-Trees">Extremely Randomized Trees<a class="anchor-link" href="#Extremely-Randomized-Trees">&#182;</a></h3>
 </div>
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>A kernel is a
-function that quantifies the similarity of two observations. Suppose we have two vectors $x_i, x_{i^{'}}$. The inner product of these two vectors can be computed as
-$$
-\langle x_i, x_{i^{'}} \rangle = \sum_{j=1}^p x_{ij} x_{{i}^{'}j}
-$$ 
-This also forms a kernel, called a linear kernel:
-$$
-K(x_i, x_{i^{'}}) = \sum_{j=1}^p x_{ij} x_{{i}^{'}j}
-$$</p>
+<p>In extremely randomized trees, randomness goes one step further in the way splits are computed. As in random forests, a random subset of candidate features is used, but instead of looking for the most discriminative thresholds, thresholds are drawn at random for each candidate feature and the best of these randomly-generated thresholds is picked as the splitting rule. This usually allows to reduce the variance of the model a bit more, at the expense of a slightly greater increase in bias.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[2]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">cross_val_score</span>
+<span class="kn">from</span> <span class="nn">sklearn.datasets</span> <span class="kn">import</span> <span class="n">make_blobs</span>
+<span class="kn">from</span> <span class="nn">sklearn.ensemble</span> <span class="kn">import</span> <span class="n">RandomForestClassifier</span>
+<span class="kn">from</span> <span class="nn">sklearn.ensemble</span> <span class="kn">import</span> <span class="n">ExtraTreesClassifier</span>
+<span class="kn">from</span> <span class="nn">sklearn.tree</span> <span class="kn">import</span> <span class="n">DecisionTreeClassifier</span>
+
+<span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">make_blobs</span><span class="p">(</span><span class="n">n_samples</span><span class="o">=</span><span class="mi">10000</span><span class="p">,</span> <span class="n">n_features</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">centers</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+    <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+<span class="n">clf</span> <span class="o">=</span> <span class="n">DecisionTreeClassifier</span><span class="p">(</span><span class="n">max_depth</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">min_samples_split</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+    <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">scores</span> <span class="o">=</span> <span class="n">cross_val_score</span><span class="p">(</span><span class="n">clf</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">cv</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+<span class="n">scores</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt output_prompt">Out[2]:</div>
+
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>0.9823000000000001</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[3]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">clf</span> <span class="o">=</span> <span class="n">RandomForestClassifier</span><span class="p">(</span><span class="n">n_estimators</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">max_depth</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">min_samples_split</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">scores</span> <span class="o">=</span> <span class="n">cross_val_score</span><span class="p">(</span><span class="n">clf</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">cv</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+<span class="n">scores</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt output_prompt">Out[3]:</div>
+
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>0.9997</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[4]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">clf</span> <span class="o">=</span> <span class="n">ExtraTreesClassifier</span><span class="p">(</span><span class="n">n_estimators</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">max_depth</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">min_samples_split</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">scores</span> <span class="o">=</span> <span class="n">cross_val_score</span><span class="p">(</span><span class="n">clf</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">cv</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+<span class="n">scores</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt output_prompt">Out[4]:</div>
+
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>1.0</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Parameters">Parameters<a class="anchor-link" href="#Parameters">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>The main parameters to adjust when using these methods is <code>n_estimators</code> and <code>max_features</code>. The former is the number of trees in the forest. The larger the better, but also the longer it will take to compute. In addition, note that results will stop getting significantly better beyond a critical number of trees. The latter is the size of the random subsets of features to consider when splitting a node. The lower the greater the reduction of variance, but also the greater the increase in bias. Empirical good default values are <code>max_features=1.0</code>or equivalently <code>max_features=None</code> (always considering all features instead of a random subset) for regression problems, and <code>max_features="sqrt"</code> (using a random subset of size <code>sqrt(n_features)</code>) for classification tasks (where n_features is the number of features in the data). The default value of <code>max_features=1.0</code> is equivalent to bagged trees and more randomness can be achieved by setting smaller values.</p>
 
 </div>
 </div>
@@ -13438,14 +13481,7 @@ $$</p>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>We could generalize the linear kernel as:
-$$
-K(x_i, x_{i^{'}}) =(1+\sum_{j=1}^p x_{ij} x_{{i}^{'}j})^d
-$$
-which is a polynoimal kernel of order d. Using such a kernel with d &gt; 1, instead of the standard linear kernel in the support vector classifier algorithm leads to a much more
-flexible decision boundary. It essentially amounts to fitting a support vector
-classifier in a higher-dimensional space involving polynomials of degree d,
-rather than in the original feature space.</p>
+<p>Good results are often achieved when setting <code>max_depth=None</code> in combination with <code>min_samples_split=2</code> (i.e., when fully developing the trees). When using bootstrap sampling the generalization error can be estimated on the left out or out-of-bag samples. This can be enabled by setting <code>oob_score=True</code>.</p>
 
 </div>
 </div>
@@ -13453,11 +13489,14 @@ rather than in the original feature space.</p>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Radial Basis Function (RBF) Kernel, another popular kernel takes form:
-$$
-K(x_i, x_{i^{'}}) = e^{-\gamma \sum_{j=1}^{p}(x_i - x_{i^{'}j})^2}
-$$
-Where $\gamma$, a positive constant, is a parameter that controls the width of the kernel.</p>
+<h3 id="Time-Complexity">Time Complexity<a class="anchor-link" href="#Time-Complexity">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>The size of the model with the default parameters is $O( M * N * log (N) )$, where $M$ is the number of trees and $N$ is the number of samples.</p>
 
 </div>
 </div>
@@ -13465,8 +13504,14 @@ Where $\gamma$, a positive constant, is a parameter that controls the width of t
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p><img src="images/09_05.png" alt="">
-Polynomial Kernel and Radial Basis Function (RBF) Kernel</p>
+<h3 id="Parallelization">Parallelization<a class="anchor-link" href="#Parallelization">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>If <code>n_jobs=k</code> then computations are partitioned into <code>k</code> jobs, and run on <code>k</code> cores of the machine. If <code>n_jobs=-1</code> then all cores available on the machine are used. Note that because of inter-process communication overhead, the speedup might not be linear (i.e., using <code>k</code> jobs will unfortunately not be <code>k</code> times as fast).</p>
 
 </div>
 </div>
@@ -13474,18 +13519,14 @@ Polynomial Kernel and Radial Basis Function (RBF) Kernel</p>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="SVMs-with-More-than-Two-Classes">SVMs with More than Two Classes<a class="anchor-link" href="#SVMs-with-More-than-Two-Classes">&#182;</a></h2>
+<h3 id="Feature-Importance">Feature Importance<a class="anchor-link" href="#Feature-Importance">&#182;</a></h3>
 </div>
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>It turns out that the concept of separating hyperplanes upon which SVMs
-are based does not lend itself naturally to more than two classes. Though
-a number of proposals for extending SVMs to the K-class case have been
-made, the two most popular are the <em>one-versus-one</em> and <em>one-versus-all</em>
-approaches.</p>
+<p>The relative rank (i.e. depth) of a feature used as a decision node in a tree can be used to assess the relative importance of that feature with respect to the predictability of the target variable. Features used at the top of the tree contribute to the final prediction decision of a larger fraction of the input samples. The expected fraction of the samples they contribute to can thus be used as an estimate of the relative importance of the features. In scikit-learn, the fraction of samples a feature contributes to is combined with the decrease in impurity from splitting them to create a normalized estimate of the predictive power of that feature.</p>
 
 </div>
 </div>
@@ -13493,21 +13534,8 @@ approaches.</p>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="One-Versus-One-Classification">One-Versus-One Classification<a class="anchor-link" href="#One-Versus-One-Classification">&#182;</a></h3>
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>Suppose that we would like to perform classification using SVMs, and there
-are K &gt; 2 classes. A one-versus-one or all-pairs approach constructs $^kP_2$. SVMs, each of which compares a pair of classes. For example, one such
-SVM might compare the kth class, coded as +1, to the $k^{'}$ th class, coded
-as −1. We classify a test observation using each of the $^kP_2$ classifiers, and
-we tally the number of times that the test observation is assigned to each
-of the K classes. The final classification is performed by assigning the test
-observation to the class to which it was most frequently assigned in these
-$^kP_2$ pairwise classifications.</p>
+<p>In practice those estimates are stored as an attribute named <code>feature_importances_</code> on the fitted model. This is an array with shape <code>(n_features,)</code> whose values are positive and sum to 1.0. The higher the value, the more important is the contribution of the matching feature to the prediction function.</p>
+<p>You can have a look at this <a href="https://arxiv.org/pdf/1407.7502.pdf">paper</a> for more details.</p>
 
 </div>
 </div>
@@ -13515,19 +13543,2159 @@ $^kP_2$ pairwise classifications.</p>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="One-Versus-All-Classification">One-Versus-All Classification<a class="anchor-link" href="#One-Versus-All-Classification">&#182;</a></h3>
+<h2 id="Voting-Classifier">Voting Classifier<a class="anchor-link" href="#Voting-Classifier">&#182;</a></h2>
 </div>
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>The one-versus-all approach is an alternative procedure for applying SVMs in the case of K &gt; 2 classes. We fit K SVMs, each time comparing one of all
-the K classes to the remaining K − 1 classes. Let $\beta_{0k}, \beta_{1k}, \cdots , \beta_{pk}$ denote
-the parameters that result from fitting an SVM comparing the kth class
-(coded as +1) to the others (coded as −1). Let $x^∗$ denote a test observation.
-We assign the observation to the class for which $\beta_{0k} +\beta_{1k}{x^∗_1} +\beta_{2k}{x^∗_2} +\cdots+\beta_{pk}{x^∗_p}$ is largest, as this amounts to a high level of confidence that the test
-observation belongs to the kth class rather than to any of the other classes</p>
+<p>The idea behind the <code>VotingClassifier</code> is to combine conceptually different machine learning classifiers and use a majority vote or the average predicted probabilities (soft vote) to predict the class labels. Such a classifier can be useful for a set of equally well performing model in order to balance out their individual weaknesses.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Majority-Class-Labels-(Hard-Voting)">Majority Class Labels (Hard Voting)<a class="anchor-link" href="#Majority-Class-Labels-(Hard-Voting)">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>In majority voting, the predicted class label for a particular sample is the class label that represents the majority (mode) of the class labels predicted by each individual classifier. This can be done by using <code>voting='hard'</code> in the <code>VotingClassifier</code> constructor.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[22]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn</span> <span class="kn">import</span> <span class="n">datasets</span>
+<span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">cross_val_score</span>
+<span class="kn">from</span> <span class="nn">sklearn.linear_model</span> <span class="kn">import</span> <span class="n">LogisticRegression</span>
+<span class="kn">from</span> <span class="nn">sklearn.naive_bayes</span> <span class="kn">import</span> <span class="n">GaussianNB</span>
+<span class="kn">from</span> <span class="nn">sklearn.ensemble</span> <span class="kn">import</span> <span class="n">RandomForestClassifier</span>
+<span class="kn">from</span> <span class="nn">sklearn.ensemble</span> <span class="kn">import</span> <span class="n">VotingClassifier</span>
+
+<span class="n">iris</span> <span class="o">=</span> <span class="n">datasets</span><span class="o">.</span><span class="n">load_iris</span><span class="p">()</span>
+<span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">iris</span><span class="o">.</span><span class="n">data</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">:</span><span class="mi">3</span><span class="p">],</span> <span class="n">iris</span><span class="o">.</span><span class="n">target</span>
+
+<span class="n">clf1</span> <span class="o">=</span> <span class="n">LogisticRegression</span><span class="p">(</span><span class="n">random_state</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">clf2</span> <span class="o">=</span> <span class="n">RandomForestClassifier</span><span class="p">(</span><span class="n">n_estimators</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">clf3</span> <span class="o">=</span> <span class="n">GaussianNB</span><span class="p">()</span>
+
+<span class="n">eclf</span> <span class="o">=</span> <span class="n">VotingClassifier</span><span class="p">(</span>
+    <span class="n">estimators</span><span class="o">=</span><span class="p">[(</span><span class="s1">&#39;lr&#39;</span><span class="p">,</span> <span class="n">clf1</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;rf&#39;</span><span class="p">,</span> <span class="n">clf2</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;gnb&#39;</span><span class="p">,</span> <span class="n">clf3</span><span class="p">)],</span>
+    <span class="n">voting</span><span class="o">=</span><span class="s1">&#39;hard&#39;</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">clf</span><span class="p">,</span> <span class="n">label</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">([</span><span class="n">clf1</span><span class="p">,</span> <span class="n">clf2</span><span class="p">,</span> <span class="n">clf3</span><span class="p">,</span> <span class="n">eclf</span><span class="p">],</span> <span class="p">[</span><span class="s1">&#39;Logistic Regression&#39;</span><span class="p">,</span> <span class="s1">&#39;Random Forest&#39;</span><span class="p">,</span> <span class="s1">&#39;naive Bayes&#39;</span><span class="p">,</span> <span class="s1">&#39;Ensemble&#39;</span><span class="p">]):</span>
+    <span class="n">scores</span> <span class="o">=</span> <span class="n">cross_val_score</span><span class="p">(</span><span class="n">clf</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">scoring</span><span class="o">=</span><span class="s1">&#39;accuracy&#39;</span><span class="p">,</span> <span class="n">cv</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Accuracy: </span><span class="si">%0.2f</span><span class="s2"> (+/- </span><span class="si">%0.2f</span><span class="s2">) [</span><span class="si">%s</span><span class="s2">]&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">scores</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span> <span class="n">scores</span><span class="o">.</span><span class="n">std</span><span class="p">(),</span> <span class="n">label</span><span class="p">))</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>Accuracy: 0.95 (+/- 0.04) [Logistic Regression]
+Accuracy: 0.94 (+/- 0.04) [Random Forest]
+Accuracy: 0.91 (+/- 0.04) [naive Bayes]
+Accuracy: 0.95 (+/- 0.04) [Ensemble]
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Weighted-Average-Probabilities-(Soft-Voting)">Weighted Average Probabilities (Soft Voting)<a class="anchor-link" href="#Weighted-Average-Probabilities-(Soft-Voting)">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>In contrast to majority voting (hard voting), soft voting returns the class label as argmax of the sum of predicted probabilities.</p>
+<p>Specific weights can be assigned to each classifier via the weights parameter. When weights are provided, the predicted class probabilities for each classifier are collected, multiplied by the classifier weight, and averaged. The final class label is then derived from the class label with the highest average probability.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[24]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn</span> <span class="kn">import</span> <span class="n">datasets</span>
+<span class="kn">from</span> <span class="nn">sklearn.tree</span> <span class="kn">import</span> <span class="n">DecisionTreeClassifier</span>
+<span class="kn">from</span> <span class="nn">sklearn.neighbors</span> <span class="kn">import</span> <span class="n">KNeighborsClassifier</span>
+<span class="kn">from</span> <span class="nn">sklearn.svm</span> <span class="kn">import</span> <span class="n">SVC</span>
+<span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">product</span>
+<span class="kn">from</span> <span class="nn">sklearn.ensemble</span> <span class="kn">import</span> <span class="n">VotingClassifier</span>
+
+<span class="c1"># Loading some example data</span>
+<span class="n">iris</span> <span class="o">=</span> <span class="n">datasets</span><span class="o">.</span><span class="n">load_iris</span><span class="p">()</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">iris</span><span class="o">.</span><span class="n">data</span><span class="p">[:,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">]]</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">iris</span><span class="o">.</span><span class="n">target</span>
+
+<span class="c1"># Training classifiers</span>
+<span class="n">clf1</span> <span class="o">=</span> <span class="n">DecisionTreeClassifier</span><span class="p">(</span><span class="n">max_depth</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+<span class="n">clf2</span> <span class="o">=</span> <span class="n">KNeighborsClassifier</span><span class="p">(</span><span class="n">n_neighbors</span><span class="o">=</span><span class="mi">7</span><span class="p">)</span>
+<span class="n">clf3</span> <span class="o">=</span> <span class="n">SVC</span><span class="p">(</span><span class="n">kernel</span><span class="o">=</span><span class="s1">&#39;rbf&#39;</span><span class="p">,</span> <span class="n">probability</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">eclf</span> <span class="o">=</span> <span class="n">VotingClassifier</span><span class="p">(</span><span class="n">estimators</span><span class="o">=</span><span class="p">[(</span><span class="s1">&#39;dt&#39;</span><span class="p">,</span> <span class="n">clf1</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;knn&#39;</span><span class="p">,</span> <span class="n">clf2</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;svc&#39;</span><span class="p">,</span> <span class="n">clf3</span><span class="p">)],</span>
+                        <span class="n">voting</span><span class="o">=</span><span class="s1">&#39;soft&#39;</span><span class="p">,</span> <span class="n">weights</span><span class="o">=</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">])</span>
+
+<span class="k">for</span> <span class="n">clf</span><span class="p">,</span> <span class="n">label</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">([</span><span class="n">clf1</span><span class="p">,</span> <span class="n">clf2</span><span class="p">,</span> <span class="n">clf3</span><span class="p">,</span> <span class="n">eclf</span><span class="p">],</span> <span class="p">[</span><span class="s1">&#39;Decision Tree&#39;</span><span class="p">,</span> <span class="s1">&#39;Neighnours&#39;</span><span class="p">,</span> <span class="s1">&#39;SVM&#39;</span><span class="p">,</span> <span class="s1">&#39;Ensemble&#39;</span><span class="p">]):</span>
+    <span class="n">scores</span> <span class="o">=</span> <span class="n">cross_val_score</span><span class="p">(</span><span class="n">clf</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">scoring</span><span class="o">=</span><span class="s1">&#39;accuracy&#39;</span><span class="p">,</span> <span class="n">cv</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Accuracy: </span><span class="si">%0.2f</span><span class="s2"> (+/- </span><span class="si">%0.2f</span><span class="s2">) [</span><span class="si">%s</span><span class="s2">]&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">scores</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span> <span class="n">scores</span><span class="o">.</span><span class="n">std</span><span class="p">(),</span> <span class="n">label</span><span class="p">))</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>Accuracy: 0.95 (+/- 0.03) [Decision Tree]
+Accuracy: 0.94 (+/- 0.04) [Neighnours]
+Accuracy: 0.95 (+/- 0.03) [SVM]
+Accuracy: 0.93 (+/- 0.07) [Ensemble]
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Using-the-VotingClassifier-with-GridSearchCV">Using the <code>VotingClassifier</code> with <code>GridSearchCV</code><a class="anchor-link" href="#Using-the-VotingClassifier-with-GridSearchCV">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>The <code>VotingClassifier</code> can also be used together with <code>GridSearchCV</code> in order to tune the hyperparameters of the individual estimators:</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[26]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">GridSearchCV</span>
+<span class="kn">import</span> <span class="nn">warnings</span>
+<span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s2">&quot;ignore&quot;</span><span class="p">)</span>
+<span class="n">clf1</span> <span class="o">=</span> <span class="n">LogisticRegression</span><span class="p">(</span><span class="n">random_state</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">clf2</span> <span class="o">=</span> <span class="n">RandomForestClassifier</span><span class="p">(</span><span class="n">random_state</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">clf3</span> <span class="o">=</span> <span class="n">GaussianNB</span><span class="p">()</span>
+<span class="n">eclf</span> <span class="o">=</span> <span class="n">VotingClassifier</span><span class="p">(</span>
+    <span class="n">estimators</span><span class="o">=</span><span class="p">[(</span><span class="s1">&#39;lr&#39;</span><span class="p">,</span> <span class="n">clf1</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;rf&#39;</span><span class="p">,</span> <span class="n">clf2</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;gnb&#39;</span><span class="p">,</span> <span class="n">clf3</span><span class="p">)],</span>
+    <span class="n">voting</span><span class="o">=</span><span class="s1">&#39;soft&#39;</span>
+<span class="p">)</span>
+
+<span class="n">params</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;lr__C&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">100.0</span><span class="p">],</span> <span class="s1">&#39;rf__n_estimators&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">20</span><span class="p">,</span> <span class="mi">200</span><span class="p">]}</span>
+
+<span class="n">grid</span> <span class="o">=</span> <span class="n">GridSearchCV</span><span class="p">(</span><span class="n">estimator</span><span class="o">=</span><span class="n">eclf</span><span class="p">,</span> <span class="n">param_grid</span><span class="o">=</span><span class="n">params</span><span class="p">,</span> <span class="n">cv</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+<span class="n">grid</span> <span class="o">=</span> <span class="n">grid</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">iris</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">iris</span><span class="o">.</span><span class="n">target</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Voting-Regressor">Voting Regressor<a class="anchor-link" href="#Voting-Regressor">&#182;</a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>The idea behind the <code>VotingRegressor</code> is to combine conceptually different machine learning regressors and return the average predicted values. Such a regressor can be useful for a set of equally well performing models in order to balance out their individual weaknesses.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[27]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.datasets</span> <span class="kn">import</span> <span class="n">load_diabetes</span>
+<span class="kn">from</span> <span class="nn">sklearn.ensemble</span> <span class="kn">import</span> <span class="n">GradientBoostingRegressor</span>
+<span class="kn">from</span> <span class="nn">sklearn.ensemble</span> <span class="kn">import</span> <span class="n">RandomForestRegressor</span>
+<span class="kn">from</span> <span class="nn">sklearn.linear_model</span> <span class="kn">import</span> <span class="n">LinearRegression</span>
+<span class="kn">from</span> <span class="nn">sklearn.ensemble</span> <span class="kn">import</span> <span class="n">VotingRegressor</span>
+
+<span class="c1"># Loading some example data</span>
+<span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">load_diabetes</span><span class="p">(</span><span class="n">return_X_y</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="c1"># Training classifiers</span>
+<span class="n">reg1</span> <span class="o">=</span> <span class="n">GradientBoostingRegressor</span><span class="p">(</span><span class="n">random_state</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">reg2</span> <span class="o">=</span> <span class="n">RandomForestRegressor</span><span class="p">(</span><span class="n">random_state</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">reg3</span> <span class="o">=</span> <span class="n">LinearRegression</span><span class="p">()</span>
+<span class="n">ereg</span> <span class="o">=</span> <span class="n">VotingRegressor</span><span class="p">(</span><span class="n">estimators</span><span class="o">=</span><span class="p">[(</span><span class="s1">&#39;gb&#39;</span><span class="p">,</span> <span class="n">reg1</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;rf&#39;</span><span class="p">,</span> <span class="n">reg2</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;lr&#39;</span><span class="p">,</span> <span class="n">reg3</span><span class="p">)])</span>
+<span class="n">ereg</span> <span class="o">=</span> <span class="n">ereg</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><img src="https://scikit-learn.org/stable/_images/sphx_glr_plot_voting_regressor_001.png" alt=""></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Stacked-generalization">Stacked generalization<a class="anchor-link" href="#Stacked-generalization">&#182;</a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Stacked generalization is a method for combining estimators to reduce their biases. More precisely, the predictions of each individual estimator are stacked together and used as input to a final estimator to compute the prediction. This final estimator is trained through cross-validation.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>The <code>StackingClassifier</code> and <code>StackingRegressor</code> provide such strategies which can be applied to classification and regression problems.</p>
+<p>The <code>estimators</code> parameter corresponds to the list of the estimators which are stacked together in parallel on the input data. It should be given as a list of names and estimators:</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[28]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.linear_model</span> <span class="kn">import</span> <span class="n">RidgeCV</span><span class="p">,</span> <span class="n">LassoCV</span>
+<span class="kn">from</span> <span class="nn">sklearn.neighbors</span> <span class="kn">import</span> <span class="n">KNeighborsRegressor</span>
+<span class="n">estimators</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">&#39;ridge&#39;</span><span class="p">,</span> <span class="n">RidgeCV</span><span class="p">()),</span>
+              <span class="p">(</span><span class="s1">&#39;lasso&#39;</span><span class="p">,</span> <span class="n">LassoCV</span><span class="p">(</span><span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">)),</span>
+              <span class="p">(</span><span class="s1">&#39;knr&#39;</span><span class="p">,</span> <span class="n">KNeighborsRegressor</span><span class="p">(</span><span class="n">n_neighbors</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span>
+                                          <span class="n">metric</span><span class="o">=</span><span class="s1">&#39;euclidean&#39;</span><span class="p">))]</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>The <code>final_estimator</code> will use the predictions of the estimators as input. It needs to be a classifier or a regressor when using <code>StackingClassifier</code> or <code>StackingRegressor</code>, respectively:</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[29]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.ensemble</span> <span class="kn">import</span> <span class="n">GradientBoostingRegressor</span>
+<span class="kn">from</span> <span class="nn">sklearn.ensemble</span> <span class="kn">import</span> <span class="n">StackingRegressor</span>
+<span class="n">final_estimator</span> <span class="o">=</span> <span class="n">GradientBoostingRegressor</span><span class="p">(</span>
+    <span class="n">n_estimators</span><span class="o">=</span><span class="mi">25</span><span class="p">,</span> <span class="n">subsample</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">min_samples_leaf</span><span class="o">=</span><span class="mi">25</span><span class="p">,</span> <span class="n">max_features</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+    <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
+<span class="n">reg</span> <span class="o">=</span> <span class="n">StackingRegressor</span><span class="p">(</span>
+    <span class="n">estimators</span><span class="o">=</span><span class="n">estimators</span><span class="p">,</span>
+    <span class="n">final_estimator</span><span class="o">=</span><span class="n">final_estimator</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[30]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.datasets</span> <span class="kn">import</span> <span class="n">load_diabetes</span>
+<span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">load_diabetes</span><span class="p">(</span><span class="n">return_X_y</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">train_test_split</span>
+<span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span>
+                                                    <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
+<span class="n">reg</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt output_prompt">Out[30]:</div>
+
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<style>#sk-container-id-1 {color: black;background-color: white;}#sk-container-id-1 pre{padding: 0;}#sk-container-id-1 div.sk-toggleable {background-color: white;}#sk-container-id-1 label.sk-toggleable__label {cursor: pointer;display: block;width: 100%;margin-bottom: 0;padding: 0.3em;box-sizing: border-box;text-align: center;}#sk-container-id-1 label.sk-toggleable__label-arrow:before {content: "▸";float: left;margin-right: 0.25em;color: #696969;}#sk-container-id-1 label.sk-toggleable__label-arrow:hover:before {color: black;}#sk-container-id-1 div.sk-estimator:hover label.sk-toggleable__label-arrow:before {color: black;}#sk-container-id-1 div.sk-toggleable__content {max-height: 0;max-width: 0;overflow: hidden;text-align: left;background-color: #f0f8ff;}#sk-container-id-1 div.sk-toggleable__content pre {margin: 0.2em;color: black;border-radius: 0.25em;background-color: #f0f8ff;}#sk-container-id-1 input.sk-toggleable__control:checked~div.sk-toggleable__content {max-height: 200px;max-width: 100%;overflow: auto;}#sk-container-id-1 input.sk-toggleable__control:checked~label.sk-toggleable__label-arrow:before {content: "▾";}#sk-container-id-1 div.sk-estimator input.sk-toggleable__control:checked~label.sk-toggleable__label {background-color: #d4ebff;}#sk-container-id-1 div.sk-label input.sk-toggleable__control:checked~label.sk-toggleable__label {background-color: #d4ebff;}#sk-container-id-1 input.sk-hidden--visually {border: 0;clip: rect(1px 1px 1px 1px);clip: rect(1px, 1px, 1px, 1px);height: 1px;margin: -1px;overflow: hidden;padding: 0;position: absolute;width: 1px;}#sk-container-id-1 div.sk-estimator {font-family: monospace;background-color: #f0f8ff;border: 1px dotted black;border-radius: 0.25em;box-sizing: border-box;margin-bottom: 0.5em;}#sk-container-id-1 div.sk-estimator:hover {background-color: #d4ebff;}#sk-container-id-1 div.sk-parallel-item::after {content: "";width: 100%;border-bottom: 1px solid gray;flex-grow: 1;}#sk-container-id-1 div.sk-label:hover label.sk-toggleable__label {background-color: #d4ebff;}#sk-container-id-1 div.sk-serial::before {content: "";position: absolute;border-left: 1px solid gray;box-sizing: border-box;top: 0;bottom: 0;left: 50%;z-index: 0;}#sk-container-id-1 div.sk-serial {display: flex;flex-direction: column;align-items: center;background-color: white;padding-right: 0.2em;padding-left: 0.2em;position: relative;}#sk-container-id-1 div.sk-item {position: relative;z-index: 1;}#sk-container-id-1 div.sk-parallel {display: flex;align-items: stretch;justify-content: center;background-color: white;position: relative;}#sk-container-id-1 div.sk-item::before, #sk-container-id-1 div.sk-parallel-item::before {content: "";position: absolute;border-left: 1px solid gray;box-sizing: border-box;top: 0;bottom: 0;left: 50%;z-index: -1;}#sk-container-id-1 div.sk-parallel-item {display: flex;flex-direction: column;z-index: 1;position: relative;background-color: white;}#sk-container-id-1 div.sk-parallel-item:first-child::after {align-self: flex-end;width: 50%;}#sk-container-id-1 div.sk-parallel-item:last-child::after {align-self: flex-start;width: 50%;}#sk-container-id-1 div.sk-parallel-item:only-child::after {width: 0;}#sk-container-id-1 div.sk-dashed-wrapped {border: 1px dashed gray;margin: 0 0.4em 0.5em 0.4em;box-sizing: border-box;padding-bottom: 0.4em;background-color: white;}#sk-container-id-1 div.sk-label label {font-family: monospace;font-weight: bold;display: inline-block;line-height: 1.2em;}#sk-container-id-1 div.sk-label-container {text-align: center;}#sk-container-id-1 div.sk-container {/* jupyter's `normalize.less` sets `[hidden] { display: none; }` but bootstrap.min.css set `[hidden] { display: none !important; }` so we also need the `!important` here to be able to override the default hidden behavior on the sphinx rendered scikit-learn.org. See: https://github.com/scikit-learn/scikit-learn/issues/21755 */display: inline-block !important;position: relative;}#sk-container-id-1 div.sk-text-repr-fallback {display: none;}</style><div id="sk-container-id-1" class="sk-top-container"><div class="sk-text-repr-fallback"><pre>StackingRegressor(estimators=[(&#x27;ridge&#x27;, RidgeCV()),
+                              (&#x27;lasso&#x27;, LassoCV(random_state=42)),
+                              (&#x27;knr&#x27;,
+                               KNeighborsRegressor(metric=&#x27;euclidean&#x27;,
+                                                   n_neighbors=20))],
+                  final_estimator=GradientBoostingRegressor(max_features=1,
+                                                            min_samples_leaf=25,
+                                                            n_estimators=25,
+                                                            random_state=42,
+                                                            subsample=0.5))</pre><b>In a Jupyter environment, please rerun this cell to show the HTML representation or trust the notebook. <br />On GitHub, the HTML representation is unable to render, please try loading this page with nbviewer.org.</b></div><div class="sk-container" hidden><div class="sk-item sk-dashed-wrapped"><div class="sk-label-container"><div class="sk-label sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-1" type="checkbox" ><label for="sk-estimator-id-1" class="sk-toggleable__label sk-toggleable__label-arrow">StackingRegressor</label><div class="sk-toggleable__content"><pre>StackingRegressor(estimators=[(&#x27;ridge&#x27;, RidgeCV()),
+                              (&#x27;lasso&#x27;, LassoCV(random_state=42)),
+                              (&#x27;knr&#x27;,
+                               KNeighborsRegressor(metric=&#x27;euclidean&#x27;,
+                                                   n_neighbors=20))],
+                  final_estimator=GradientBoostingRegressor(max_features=1,
+                                                            min_samples_leaf=25,
+                                                            n_estimators=25,
+                                                            random_state=42,
+                                                            subsample=0.5))</pre></div></div></div><div class="sk-serial"><div class="sk-item"><div class="sk-parallel"><div class="sk-parallel-item"><div class="sk-item"><div class="sk-label-container"><div class="sk-label sk-toggleable"><label>ridge</label></div></div><div class="sk-serial"><div class="sk-item"><div class="sk-estimator sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-2" type="checkbox" ><label for="sk-estimator-id-2" class="sk-toggleable__label sk-toggleable__label-arrow">RidgeCV</label><div class="sk-toggleable__content"><pre>RidgeCV()</pre></div></div></div></div></div></div><div class="sk-parallel-item"><div class="sk-item"><div class="sk-label-container"><div class="sk-label sk-toggleable"><label>lasso</label></div></div><div class="sk-serial"><div class="sk-item"><div class="sk-estimator sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-3" type="checkbox" ><label for="sk-estimator-id-3" class="sk-toggleable__label sk-toggleable__label-arrow">LassoCV</label><div class="sk-toggleable__content"><pre>LassoCV(random_state=42)</pre></div></div></div></div></div></div><div class="sk-parallel-item"><div class="sk-item"><div class="sk-label-container"><div class="sk-label sk-toggleable"><label>knr</label></div></div><div class="sk-serial"><div class="sk-item"><div class="sk-estimator sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-4" type="checkbox" ><label for="sk-estimator-id-4" class="sk-toggleable__label sk-toggleable__label-arrow">KNeighborsRegressor</label><div class="sk-toggleable__content"><pre>KNeighborsRegressor(metric=&#x27;euclidean&#x27;, n_neighbors=20)</pre></div></div></div></div></div></div></div></div><div class="sk-item"><div class="sk-parallel"><div class="sk-parallel-item"><div class="sk-item"><div class="sk-label-container"><div class="sk-label sk-toggleable"><label>final_estimator</label></div></div><div class="sk-serial"><div class="sk-item"><div class="sk-estimator sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-5" type="checkbox" ><label for="sk-estimator-id-5" class="sk-toggleable__label sk-toggleable__label-arrow">GradientBoostingRegressor</label><div class="sk-toggleable__content"><pre>GradientBoostingRegressor(max_features=1, min_samples_leaf=25, n_estimators=25,
+                          random_state=42, subsample=0.5)</pre></div></div></div></div></div></div></div></div></div></div></div></div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>During training, the estimators are fitted on the whole training data <code>X_train</code>. They will be used when calling predict or <code>predict_proba</code>. To generalize and avoid over-fitting, the <code>final_estimator</code> is trained on out-samples using sklearn.<code>model_selection.cross_val_predict</code> internally.</p>
+<p>For <code>StackingClassifier</code>, note that the output of the estimators is controlled by the parameter <code>stack_method</code> and it is called by each estimator. This parameter is either a string, being estimator method names, or <code>'auto'</code> which will automatically identify an available method depending on the availability, tested in the order of preference: <code>predict_proba</code>, <code>decision_function</code> and <code>predict</code>.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Note that it is also possible to get the output of the stacked <code>estimators</code> using the <code>transform</code> method:</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[31]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">reg</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">X_test</span><span class="p">[:</span><span class="mi">5</span><span class="p">])</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt output_prompt">Out[31]:</div>
+
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>array([[142.36209608, 138.30724927, 146.1       ],
+       [179.700576  , 182.89812552, 151.75      ],
+       [139.89817956, 132.46803343, 158.25      ],
+       [286.95180286, 292.65695767, 225.4       ],
+       [126.88317154, 124.1215975 , 164.65      ]])</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<blockquote><p>In practice, a stacking predictor predicts as good as the best predictor of the base layer and even sometimes outperforms it by combining the different strengths of the these predictors. However, training a stacking predictor is computationally expensive.</p>
+</blockquote>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<blockquote><p>Multiple stacking layers can be achieved by assigning <code>final_estimator</code> to a <code>StackingClassifier</code> or <code>StackingRegressor</code>:</p>
+</blockquote>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[34]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">final_layer_rfr</span> <span class="o">=</span> <span class="n">RandomForestRegressor</span><span class="p">(</span>
+    <span class="n">n_estimators</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">max_features</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">max_leaf_nodes</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span><span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
+<span class="n">final_layer_gbr</span> <span class="o">=</span> <span class="n">GradientBoostingRegressor</span><span class="p">(</span>
+    <span class="n">n_estimators</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">max_features</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">max_leaf_nodes</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span><span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
+<span class="n">final_layer</span> <span class="o">=</span> <span class="n">StackingRegressor</span><span class="p">(</span>
+    <span class="n">estimators</span><span class="o">=</span><span class="p">[(</span><span class="s1">&#39;rf&#39;</span><span class="p">,</span> <span class="n">final_layer_rfr</span><span class="p">),</span>
+                <span class="p">(</span><span class="s1">&#39;gbrt&#39;</span><span class="p">,</span> <span class="n">final_layer_gbr</span><span class="p">)],</span>
+    <span class="n">final_estimator</span><span class="o">=</span><span class="n">RidgeCV</span><span class="p">()</span>
+    <span class="p">)</span>
+<span class="n">multi_layer_regressor</span> <span class="o">=</span> <span class="n">StackingRegressor</span><span class="p">(</span>
+    <span class="n">estimators</span><span class="o">=</span><span class="p">[(</span><span class="s1">&#39;ridge&#39;</span><span class="p">,</span> <span class="n">RidgeCV</span><span class="p">()),</span>
+                <span class="p">(</span><span class="s1">&#39;lasso&#39;</span><span class="p">,</span> <span class="n">LassoCV</span><span class="p">(</span><span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">)),</span>
+                <span class="p">(</span><span class="s1">&#39;knr&#39;</span><span class="p">,</span> <span class="n">KNeighborsRegressor</span><span class="p">(</span><span class="n">n_neighbors</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span>
+                                            <span class="n">metric</span><span class="o">=</span><span class="s1">&#39;euclidean&#39;</span><span class="p">))],</span>
+    <span class="n">final_estimator</span><span class="o">=</span><span class="n">final_layer</span>
+<span class="p">)</span>
+<span class="n">multi_layer_regressor</span> 
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt output_prompt">Out[34]:</div>
+
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<style>#sk-container-id-2 {color: black;background-color: white;}#sk-container-id-2 pre{padding: 0;}#sk-container-id-2 div.sk-toggleable {background-color: white;}#sk-container-id-2 label.sk-toggleable__label {cursor: pointer;display: block;width: 100%;margin-bottom: 0;padding: 0.3em;box-sizing: border-box;text-align: center;}#sk-container-id-2 label.sk-toggleable__label-arrow:before {content: "▸";float: left;margin-right: 0.25em;color: #696969;}#sk-container-id-2 label.sk-toggleable__label-arrow:hover:before {color: black;}#sk-container-id-2 div.sk-estimator:hover label.sk-toggleable__label-arrow:before {color: black;}#sk-container-id-2 div.sk-toggleable__content {max-height: 0;max-width: 0;overflow: hidden;text-align: left;background-color: #f0f8ff;}#sk-container-id-2 div.sk-toggleable__content pre {margin: 0.2em;color: black;border-radius: 0.25em;background-color: #f0f8ff;}#sk-container-id-2 input.sk-toggleable__control:checked~div.sk-toggleable__content {max-height: 200px;max-width: 100%;overflow: auto;}#sk-container-id-2 input.sk-toggleable__control:checked~label.sk-toggleable__label-arrow:before {content: "▾";}#sk-container-id-2 div.sk-estimator input.sk-toggleable__control:checked~label.sk-toggleable__label {background-color: #d4ebff;}#sk-container-id-2 div.sk-label input.sk-toggleable__control:checked~label.sk-toggleable__label {background-color: #d4ebff;}#sk-container-id-2 input.sk-hidden--visually {border: 0;clip: rect(1px 1px 1px 1px);clip: rect(1px, 1px, 1px, 1px);height: 1px;margin: -1px;overflow: hidden;padding: 0;position: absolute;width: 1px;}#sk-container-id-2 div.sk-estimator {font-family: monospace;background-color: #f0f8ff;border: 1px dotted black;border-radius: 0.25em;box-sizing: border-box;margin-bottom: 0.5em;}#sk-container-id-2 div.sk-estimator:hover {background-color: #d4ebff;}#sk-container-id-2 div.sk-parallel-item::after {content: "";width: 100%;border-bottom: 1px solid gray;flex-grow: 1;}#sk-container-id-2 div.sk-label:hover label.sk-toggleable__label {background-color: #d4ebff;}#sk-container-id-2 div.sk-serial::before {content: "";position: absolute;border-left: 1px solid gray;box-sizing: border-box;top: 0;bottom: 0;left: 50%;z-index: 0;}#sk-container-id-2 div.sk-serial {display: flex;flex-direction: column;align-items: center;background-color: white;padding-right: 0.2em;padding-left: 0.2em;position: relative;}#sk-container-id-2 div.sk-item {position: relative;z-index: 1;}#sk-container-id-2 div.sk-parallel {display: flex;align-items: stretch;justify-content: center;background-color: white;position: relative;}#sk-container-id-2 div.sk-item::before, #sk-container-id-2 div.sk-parallel-item::before {content: "";position: absolute;border-left: 1px solid gray;box-sizing: border-box;top: 0;bottom: 0;left: 50%;z-index: -1;}#sk-container-id-2 div.sk-parallel-item {display: flex;flex-direction: column;z-index: 1;position: relative;background-color: white;}#sk-container-id-2 div.sk-parallel-item:first-child::after {align-self: flex-end;width: 50%;}#sk-container-id-2 div.sk-parallel-item:last-child::after {align-self: flex-start;width: 50%;}#sk-container-id-2 div.sk-parallel-item:only-child::after {width: 0;}#sk-container-id-2 div.sk-dashed-wrapped {border: 1px dashed gray;margin: 0 0.4em 0.5em 0.4em;box-sizing: border-box;padding-bottom: 0.4em;background-color: white;}#sk-container-id-2 div.sk-label label {font-family: monospace;font-weight: bold;display: inline-block;line-height: 1.2em;}#sk-container-id-2 div.sk-label-container {text-align: center;}#sk-container-id-2 div.sk-container {/* jupyter's `normalize.less` sets `[hidden] { display: none; }` but bootstrap.min.css set `[hidden] { display: none !important; }` so we also need the `!important` here to be able to override the default hidden behavior on the sphinx rendered scikit-learn.org. See: https://github.com/scikit-learn/scikit-learn/issues/21755 */display: inline-block !important;position: relative;}#sk-container-id-2 div.sk-text-repr-fallback {display: none;}</style><div id="sk-container-id-2" class="sk-top-container"><div class="sk-text-repr-fallback"><pre>StackingRegressor(estimators=[(&#x27;ridge&#x27;, RidgeCV()),
+                              (&#x27;lasso&#x27;, LassoCV(random_state=42)),
+                              (&#x27;knr&#x27;,
+                               KNeighborsRegressor(metric=&#x27;euclidean&#x27;,
+                                                   n_neighbors=20))],
+                  final_estimator=StackingRegressor(estimators=[(&#x27;rf&#x27;,
+                                                                 RandomForestRegressor(max_features=1,
+                                                                                       max_leaf_nodes=5,
+                                                                                       n_estimators=10,
+                                                                                       random_state=42)),
+                                                                (&#x27;gbrt&#x27;,
+                                                                 GradientBoostingRegressor(max_features=1,
+                                                                                           max_leaf_nodes=5,
+                                                                                           n_estimators=10,
+                                                                                           random_state=42))],
+                                                    final_estimator=RidgeCV()))</pre><b>In a Jupyter environment, please rerun this cell to show the HTML representation or trust the notebook. <br />On GitHub, the HTML representation is unable to render, please try loading this page with nbviewer.org.</b></div><div class="sk-container" hidden><div class="sk-item sk-dashed-wrapped"><div class="sk-label-container"><div class="sk-label sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-6" type="checkbox" ><label for="sk-estimator-id-6" class="sk-toggleable__label sk-toggleable__label-arrow">StackingRegressor</label><div class="sk-toggleable__content"><pre>StackingRegressor(estimators=[(&#x27;ridge&#x27;, RidgeCV()),
+                              (&#x27;lasso&#x27;, LassoCV(random_state=42)),
+                              (&#x27;knr&#x27;,
+                               KNeighborsRegressor(metric=&#x27;euclidean&#x27;,
+                                                   n_neighbors=20))],
+                  final_estimator=StackingRegressor(estimators=[(&#x27;rf&#x27;,
+                                                                 RandomForestRegressor(max_features=1,
+                                                                                       max_leaf_nodes=5,
+                                                                                       n_estimators=10,
+                                                                                       random_state=42)),
+                                                                (&#x27;gbrt&#x27;,
+                                                                 GradientBoostingRegressor(max_features=1,
+                                                                                           max_leaf_nodes=5,
+                                                                                           n_estimators=10,
+                                                                                           random_state=42))],
+                                                    final_estimator=RidgeCV()))</pre></div></div></div><div class="sk-serial"><div class="sk-item"><div class="sk-parallel"><div class="sk-parallel-item"><div class="sk-item"><div class="sk-label-container"><div class="sk-label sk-toggleable"><label>ridge</label></div></div><div class="sk-serial"><div class="sk-item"><div class="sk-estimator sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-7" type="checkbox" ><label for="sk-estimator-id-7" class="sk-toggleable__label sk-toggleable__label-arrow">RidgeCV</label><div class="sk-toggleable__content"><pre>RidgeCV()</pre></div></div></div></div></div></div><div class="sk-parallel-item"><div class="sk-item"><div class="sk-label-container"><div class="sk-label sk-toggleable"><label>lasso</label></div></div><div class="sk-serial"><div class="sk-item"><div class="sk-estimator sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-8" type="checkbox" ><label for="sk-estimator-id-8" class="sk-toggleable__label sk-toggleable__label-arrow">LassoCV</label><div class="sk-toggleable__content"><pre>LassoCV(random_state=42)</pre></div></div></div></div></div></div><div class="sk-parallel-item"><div class="sk-item"><div class="sk-label-container"><div class="sk-label sk-toggleable"><label>knr</label></div></div><div class="sk-serial"><div class="sk-item"><div class="sk-estimator sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-9" type="checkbox" ><label for="sk-estimator-id-9" class="sk-toggleable__label sk-toggleable__label-arrow">KNeighborsRegressor</label><div class="sk-toggleable__content"><pre>KNeighborsRegressor(metric=&#x27;euclidean&#x27;, n_neighbors=20)</pre></div></div></div></div></div></div></div></div><div class="sk-item"><div class="sk-parallel"><div class="sk-parallel-item"><div class="sk-item"><div class="sk-label-container"><div class="sk-label sk-toggleable"><label>final_estimator</label></div></div><div class="sk-serial"><div class="sk-item"><div class="sk-serial"><div class="sk-item"><div class="sk-parallel"><div class="sk-parallel-item"><div class="sk-item"><div class="sk-label-container"><div class="sk-label sk-toggleable"><label>rf</label></div></div><div class="sk-serial"><div class="sk-item"><div class="sk-estimator sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-10" type="checkbox" ><label for="sk-estimator-id-10" class="sk-toggleable__label sk-toggleable__label-arrow">RandomForestRegressor</label><div class="sk-toggleable__content"><pre>RandomForestRegressor(max_features=1, max_leaf_nodes=5, n_estimators=10,
+                      random_state=42)</pre></div></div></div></div></div></div><div class="sk-parallel-item"><div class="sk-item"><div class="sk-label-container"><div class="sk-label sk-toggleable"><label>gbrt</label></div></div><div class="sk-serial"><div class="sk-item"><div class="sk-estimator sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-11" type="checkbox" ><label for="sk-estimator-id-11" class="sk-toggleable__label sk-toggleable__label-arrow">GradientBoostingRegressor</label><div class="sk-toggleable__content"><pre>GradientBoostingRegressor(max_features=1, max_leaf_nodes=5, n_estimators=10,
+                          random_state=42)</pre></div></div></div></div></div></div></div></div><div class="sk-item"><div class="sk-parallel"><div class="sk-parallel-item"><div class="sk-item"><div class="sk-label-container"><div class="sk-label sk-toggleable"><label>final_estimator</label></div></div><div class="sk-serial"><div class="sk-item"><div class="sk-estimator sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-12" type="checkbox" ><label for="sk-estimator-id-12" class="sk-toggleable__label sk-toggleable__label-arrow">RidgeCV</label><div class="sk-toggleable__content"><pre>RidgeCV()</pre></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[36]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">multi_layer_regressor</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;R2 score: </span><span class="si">{:.2f}</span><span class="s1">&#39;</span>
+      <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">multi_layer_regressor</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">X_test</span><span class="p">,</span> <span class="n">y_test</span><span class="p">)))</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>R2 score: 0.53
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="Boosting-Methods">Boosting Methods<a class="anchor-link" href="#Boosting-Methods">&#182;</a></h1>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="AdaBoost">AdaBoost<a class="anchor-link" href="#AdaBoost">&#182;</a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>The module sklearn.ensemble includes the popular boosting algorithm <code>AdaBoost</code>.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>The core principle of AdaBoost is to fit a sequence of weak learners (i.e., models that are only slightly better than random guessing, such as small decision trees) on repeatedly modified versions of the data. The predictions from all of them are then combined through a weighted majority vote (or sum) to produce the final prediction. The data modifications at each so-called boosting iteration consist of applying weights $w_1, w_2, \ldots, w_N$  to each of the training samples. Initially, those weights are all set to $1/N$, so that the first step simply trains a weak learner on the original data. For each successive iteration, the sample weights are individually modified and the learning algorithm is reapplied to the reweighted data. At a given step, those training examples that were incorrectly predicted by the boosted model induced at the previous step have their weights increased, whereas the weights are decreased for those that were predicted correctly. As iterations proceed, examples that are difficult to predict receive ever-increasing influence. Each subsequent weak learner is thereby forced to concentrate on the examples that are missed by the previous ones in the sequence.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><img src="https://scikit-learn.org/stable/_images/sphx_glr_plot_adaboost_hastie_10_2_001.png" alt=""></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>AdaBoost can be used both for classification and regression problems:</p>
+<ul>
+<li><p>For multi-class classification, <code>AdaBoostClassifier</code> implements AdaBoost-SAMME and AdaBoost-SAMME.R.
+  The paper can be found <a href="https://hastie.su.domains/Papers/SII-2-3-A8-Zhu.pdf">here</a>.</p>
+</li>
+<li><p>For regression, <code>AdaBoostRegressor</code> implements AdaBoost.R2.
+  The paper can be found <a href="http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.31.314&amp;rep=rep1&amp;type=pdf">here</a>.</p>
+</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>The number of weak learners is controlled by the parameter <code>n_estimators</code>. The <code>learning_rate</code> parameter controls the contribution of the weak learners in the final combination. By default, weak learners are decision stumps. Different weak learners can be specified through the <code>base_estimator</code> parameter. The main parameters to tune to obtain good results are <code>n_estimators</code> and the complexity of the base estimators (e.g., its depth <code>max_depth</code> or minimum required number of samples to consider a split <code>min_samples_split</code>).</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Gradient-Tree-Boosting">Gradient Tree Boosting<a class="anchor-link" href="#Gradient-Tree-Boosting">&#182;</a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Gradient Tree Boosting or Gradient Boosted Decision Trees (GBDT) is a generalization of boosting to arbitrary differentiable loss function. GBDT is an accurate and effective off-the-shelf procedure that can be used for both regression and classification problems in a variety of areas.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>The module <code>sklearn.ensemble</code> provides methods for both classification and regression via gradient boosted decision trees.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>The number of weak learners (i.e. regression trees) is controlled by the parameter <code>n_estimators</code>; The size of each tree can be controlled either by setting the tree depth via <code>max_depth</code> or by setting the number of leaf nodes via <code>max_leaf_nodes</code>. The <code>learning_rate</code> is a hyper-parameter in the range (0.0, 1.0] that controls overfitting via shrinkage.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[6]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">mean_squared_error</span>
+<span class="kn">from</span> <span class="nn">sklearn.datasets</span> <span class="kn">import</span> <span class="n">make_friedman1</span>
+<span class="kn">from</span> <span class="nn">sklearn.ensemble</span> <span class="kn">import</span> <span class="n">GradientBoostingRegressor</span>
+
+<span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">make_friedman1</span><span class="p">(</span><span class="n">n_samples</span><span class="o">=</span><span class="mi">1200</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">noise</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>
+<span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span> <span class="o">=</span> <span class="n">X</span><span class="p">[:</span><span class="mi">200</span><span class="p">],</span> <span class="n">X</span><span class="p">[</span><span class="mi">200</span><span class="p">:]</span>
+<span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">y</span><span class="p">[:</span><span class="mi">200</span><span class="p">],</span> <span class="n">y</span><span class="p">[</span><span class="mi">200</span><span class="p">:]</span>
+<span class="n">est</span> <span class="o">=</span> <span class="n">GradientBoostingRegressor</span><span class="p">(</span>
+    <span class="n">n_estimators</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">learning_rate</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">max_depth</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+    <span class="n">loss</span><span class="o">=</span><span class="s1">&#39;squared_error&#39;</span>
+<span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+<span class="n">mean_squared_error</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">est</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">))</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt output_prompt">Out[6]:</div>
+
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>5.009154859960321</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Both <code>GradientBoostingRegressor</code> and <code>GradientBoostingClassifier</code> support <code>warm_start=True</code> which allows you to add more estimators to an already fitted model.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[7]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">_</span> <span class="o">=</span> <span class="n">est</span><span class="o">.</span><span class="n">set_params</span><span class="p">(</span><span class="n">n_estimators</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span> <span class="n">warm_start</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>  <span class="c1"># set warm_start and new nr of trees</span>
+<span class="n">_</span> <span class="o">=</span> <span class="n">est</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span> <span class="c1"># fit additional 100 trees to est</span>
+<span class="n">mean_squared_error</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">est</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">))</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt output_prompt">Out[7]:</div>
+
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>3.840234741105356</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Controlling-the-Tree-Size">Controlling the Tree Size<a class="anchor-link" href="#Controlling-the-Tree-Size">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>The size of the trees can be controlled either by setting the tree depth via <code>max_depth</code> or by setting the number of leaf nodes via <code>max_leaf_nodes</code>.</p>
+<p>If you specify <code>max_depth=h</code> then complete binary trees of depth <code>h</code> will be grown. Such trees will have (at most) <code>2**h</code> leaf nodes and <code>2**h - 1</code> split nodes.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Alternatively, you can control the tree size by specifying the number of leaf nodes via the parameter <code>max_leaf_nodes</code>. In this case, trees will be grown using best-first search where nodes with the highest improvement in impurity will be expanded first. A tree with <code>max_leaf_nodes=k</code> has k<code>- 1</code> split nodes and thus can model interactions of up to order <code>max_leaf_nodes - 1</code> .</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Usually <code>max_leaf_nodes=k</code> gives comparable results to <code>max_depth=k-1</code> but is significantly faster to train at the expense of a slightly higher training error.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Loss-Functions">Loss Functions<a class="anchor-link" href="#Loss-Functions">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>The following loss functions are supported and can be specified using the parameter <code>loss</code>:</p>
+<ol>
+<li><p>Regression</p>
+<ul>
+<li><p>Squared error (<code>'squared_error'</code>): The natural choice for regression due to its superior computational properties. The initial model is given by the mean of the target values.</p>
+</li>
+<li><p>Least absolute deviation (<code>'lad'</code>): A robust loss function for regression. The initial model is given by the median of the target values.</p>
+</li>
+<li><p>Huber (<code>'huber'</code>): Another robust loss function that combines least squares and least absolute deviation; use <code>alpha</code> to control the sensitivity with regards to outliers.</p>
+</li>
+<li><p>Quantile (<code>'quantile'</code>): A loss function for quantile regression. Use <code>0 &lt; alpha &lt; 1</code> to specify the quantile. This loss function can be used to create prediction intervals</p>
+</li>
+</ul>
+</li>
+</ol>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<ol>
+<li><p>Classification</p>
+<ul>
+<li><p>Binary log-loss (<code>'log-loss'</code>): The binomial negative log-likelihood loss function for binary classification. It provides probability estimates. The initial model is given by the log odds-ratio.</p>
+</li>
+<li><p>Multi-class log-loss (<code>'log-loss'</code>): The multinomial negative log-likelihood loss function for multi-class classification with <code>n_classes</code> mutually exclusive classes. It provides probability estimates. The initial model is given by the prior probability of each class. At each iteration <code>n_classes</code> regression trees have to be constructed which makes GBRT rather inefficient for data sets with a large number of classes.</p>
+</li>
+<li><p>Exponential loss (<code>'exponential'</code>): The same loss function as <code>AdaBoostClassifier</code>. Less robust to mislabeled examples than <code>'log-loss'</code>; can only be used for binary classification.</p>
+</li>
+</ul>
+</li>
+</ol>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Histogram-Based-Gradient-Boosting">Histogram-Based Gradient Boosting<a class="anchor-link" href="#Histogram-Based-Gradient-Boosting">&#182;</a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Scikit-learn provides a histogram-based gradient boosting method called <code>HistGradientBoostingRegressor</code> or <code>HistGradientBoostingClassifier</code> based on LightGBM.</p>
+<p>These histogram-based estimators can be orders of magnitude faster than GradientBoostingClassifier and GradientBoostingRegressor when the number of samples is larger than tens of thousands of samples.</p>
+<p>They also have built-in support for missing values, which avoids the need for an imputer.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>These fast estimators first bin the input samples X into integer-valued bins (typically 256 bins) which tremendously reduces the number of splitting points to consider, and allows the algorithm to leverage integer-based data structures (histograms) instead of relying on sorted continuous values when building the trees. The API of these estimators is slightly different, and some of the features from <code>GradientBoostingClassifier</code> and <code>GradientBoostingRegressor</code> are not yet supported, for instance some loss functions.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>The <code>n_estimators</code> parameters is changed with <code>max_iter</code> while most of the other parameters are the same as <code>GradientBoostingClassifier</code> and <code>GradientBoostingRegressor</code>.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[8]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.ensemble</span> <span class="kn">import</span> <span class="n">HistGradientBoostingClassifier</span>
+<span class="kn">from</span> <span class="nn">sklearn.datasets</span> <span class="kn">import</span> <span class="n">make_hastie_10_2</span>
+
+<span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">make_hastie_10_2</span><span class="p">(</span><span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span> <span class="o">=</span> <span class="n">X</span><span class="p">[:</span><span class="mi">2000</span><span class="p">],</span> <span class="n">X</span><span class="p">[</span><span class="mi">2000</span><span class="p">:]</span>
+<span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">y</span><span class="p">[:</span><span class="mi">2000</span><span class="p">],</span> <span class="n">y</span><span class="p">[</span><span class="mi">2000</span><span class="p">:]</span>
+
+<span class="n">clf</span> <span class="o">=</span> <span class="n">HistGradientBoostingClassifier</span><span class="p">(</span><span class="n">max_iter</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+<span class="n">clf</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">X_test</span><span class="p">,</span> <span class="n">y_test</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt output_prompt">Out[8]:</div>
+
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>0.8965</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[10]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">clf</span> <span class="o">=</span> <span class="n">RandomForestClassifier</span><span class="p">(</span><span class="n">n_estimators</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+<span class="n">clf</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">X_test</span><span class="p">,</span> <span class="n">y_test</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt output_prompt">Out[10]:</div>
+
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>0.8715</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Available losses for regression are ‘squared_error’, ‘absolute_error’, which is less sensitive to outliers, and ‘poisson’, which is well suited to model counts and frequencies. For classification, ‘log_loss’ is the only option. For binary classification it uses the binary log loss, also kown as binomial deviance or binary cross-entropy. For <code>n_classes &gt;= 3</code>, it uses the multi-class log loss function, with multinomial deviance and categorical cross-entropy as alternative names. The appropriate loss version is selected based on <code>y</code> passed to <code>fit</code>.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>The size of the trees can be controlled through the <code>max_leaf_nodes</code>, <code>max_depth</code>, and <code>min_samples_leaf</code> parameters.</p>
+<p>The number of bins used to bin the data is controlled with the <code>max_bins</code> parameter. Using less bins acts as a form of regularization. It is generally recommended to use as many bins as possible, which is the default.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Missing-values-support">Missing values support<a class="anchor-link" href="#Missing-values-support">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><code>HistGradientBoostingClassifier</code> and <code>HistGradientBoostingRegressor</code> have built-in support for missing values (NaNs).</p>
+<p>During training, the tree grower learns at each split point whether samples with missing values should go to the left or right child, based on the potential gain. When predicting, samples with missing values are assigned to the left or right child consequently.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[11]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">])</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">y</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
+<span class="n">gbdt</span> <span class="o">=</span> <span class="n">HistGradientBoostingClassifier</span><span class="p">(</span><span class="n">min_samples_leaf</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                                      <span class="n">max_depth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+                                      <span class="n">learning_rate</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                                      <span class="n">max_iter</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+<span class="n">gbdt</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt output_prompt">Out[11]:</div>
+
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>array([0, 1, 0, 0, 1])</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>If no missing values were encountered for a given feature during training, then samples with missing values are mapped to whichever child has the most samples.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Sample-weight-support">Sample weight support<a class="anchor-link" href="#Sample-weight-support">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><code>HistGradientBoostingClassifier</code> and <code>HistGradientBoostingRegressor</code> sample support weights during fit.</p>
+<p>The following toy example demonstrates how the model ignores the samples with zero sample weights:</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[12]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">X</span> <span class="o">=</span> <span class="p">[[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+     <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+     <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+     <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]]</span>
+<span class="n">y</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
+<span class="c1"># ignore the first 2 training samples by setting their weight to 0</span>
+<span class="n">sample_weight</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
+<span class="n">gb</span> <span class="o">=</span> <span class="n">HistGradientBoostingClassifier</span><span class="p">(</span><span class="n">min_samples_leaf</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">gb</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">sample_weight</span><span class="o">=</span><span class="n">sample_weight</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">gb</span><span class="o">.</span><span class="n">predict</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]]))</span>
+
+<span class="n">gb</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]])[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>[1]
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+    <div class="prompt output_prompt">Out[12]:</div>
+
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>0.9990209190235209</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>As you can see, the <code>[1, 0]</code> is comfortably classified as 1 since the first two samples are ignored due to their sample weights.</p>
+<blockquote><p>Implementation detail: taking sample weights into account amounts to multiplying the gradients (and the hessians) by the sample weights</p>
+</blockquote>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Monotonic-Constraints">Monotonic Constraints<a class="anchor-link" href="#Monotonic-Constraints">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Depending on the problem at hand, you may have prior knowledge indicating that a given feature should in general have a positive (or negative) effect on the target value. For example, all else being equal, a higher credit score should increase the probability of getting approved for a loan. Monotonic constraints allow you to incorporate such prior knowledge into the model.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>A positive monotonic constraint is a constraint of the form:
+$$x_1 \leq x_1' \implies F(x_1, x_2) \leq F(x_1', x_2)$$
+where  is the predictor with two features.</p>
+<p>Similarly, a negative monotonic constraint is of the form:
+$$x_1 \leq x_1' \implies F(x_1, x_2) \geq F(x_1', x_2)$$</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>You can specify a monotonic constraint on each feature using the <code>monotonic_cst</code> parameter. For each feature, a value of 0 indicates no constraint, while -1 and 1 indicate a negative and positive constraint, respectively:</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[13]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.ensemble</span> <span class="kn">import</span> <span class="n">HistGradientBoostingRegressor</span>
+
+<span class="c1"># positive, negative, and no constraint on the 3 features</span>
+<span class="n">gbdt</span> <span class="o">=</span> <span class="n">HistGradientBoostingRegressor</span><span class="p">(</span><span class="n">monotonic_cst</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<blockquote><p>In a binary classification context, imposing a monotonic constraint means that the feature is supposed to have a positive / negative effect on the probability to belong to the positive class. Monotonic constraints are not supported for multiclass context.</p>
+</blockquote>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="Algorithms">Algorithms<a class="anchor-link" href="#Algorithms">&#182;</a></h1>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="BaggingClassifier"><code>BaggingClassifier</code><a class="anchor-link" href="#BaggingClassifier">&#182;</a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Parameters-of-the-BaggingClassifier">Parameters of the <code>BaggingClassifier</code><a class="anchor-link" href="#Parameters-of-the-BaggingClassifier">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Here are some of the parameters of the <code>BaggingClassifier</code>:</p>
+<ul>
+<li><p><strong>base_estimator</strong>: object, default=None</p>
+<p>The base estimator to fit on random subsets of the dataset. If None, then the base estimator is a <code>DecisionTreeClassifier</code>.</p>
+</li>
+<li><p><strong>n_estimators</strong>: int, default=10</p>
+<p>The number of base estimators in the ensemble.</p>
+</li>
+<li><p><strong>max_samples</strong>: int or float, default=1.0</p>
+<p>The number of samples to draw from X to train each base estimator (with replacement by default).</p>
+<ul>
+<li><p>If int, then draw <code>max_samples</code> samples.</p>
+</li>
+<li><p>If float, then draw <code>max_samples * X.shape[0]</code> samples.</p>
+</li>
+</ul>
+</li>
+<li><p><strong>max_features</strong>: int or float, default=1.0</p>
+<p>The number of features to draw from X to train each base estimator (with replacement by default).</p>
+<ul>
+<li><p>If int, then draw <code>max_features</code> features.</p>
+</li>
+<li><p>If float, then draw <code>max_features * X.shape[1]</code> features.</p>
+</li>
+</ul>
+</li>
+<li><p><strong>bootstrap</strong>: boolean, default=True</p>
+<p>If True, bootstrap samples are used to train each base estimator.</p>
+</li>
+<li><p><strong>bootstrap_features</strong>: boolean, default=False</p>
+<p>If True, bootstrap samples are used to train each base estimator.</p>
+</li>
+<li><p><strong>oob_score</strong>: boolean, default=False</p>
+<p>If True, the base estimators are trained on the out-of-bag samples. Only available if <code>bootstrap=True</code>.</p>
+</li>
+<li><p><strong>warm_start</strong>: boolean, default=False</p>
+<p>When set to True, reuse the solution of the previous call to fit and add more estimators to the ensemble, otherwise, just fit a whole new ensemble.</p>
+</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Attributes-of-the-BaggingClassifier">Attributes of the <code>BaggingClassifier</code><a class="anchor-link" href="#Attributes-of-the-BaggingClassifier">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Here are some of the attributes of the <code>BaggingClassifier</code>:</p>
+<ul>
+<li><p><strong>estimators_</strong>: list of estimators</p>
+<p>The collection of fitted base estimators.</p>
+</li>
+<li><p><strong>base<em>estimator</em></strong>: estimator</p>
+<p>The base estimator from which the ensemble is grown.</p>
+</li>
+<li><p><strong>n<em>features</em></strong>: int</p>
+<p>The number of features when <code>fit</code> is performed.</p>
+</li>
+<li><p><strong>n<em>classes</em></strong>: int</p>
+<p>The number of classes when <code>fit</code> is performed.</p>
+</li>
+<li><p><strong>classes_</strong>: ndarray of shape (n_classes,)</p>
+<p>The classes labels.</p>
+</li>
+<li><p><strong>estimators<em>samples</em></strong>: array-like of shape [n_estimators, n_samples]</p>
+<p>The subset of drawn samples (i.e., the training samples) for each base estimator.</p>
+</li>
+<li><p><strong>estimators<em>features</em></strong>: array-like of shape [n_estimators, n_features]</p>
+<p>The subset of drawn features for each base estimator.</p>
+</li>
+<li><p><strong>oob<em>score</em></strong>: float</p>
+<p>Score of the training dataset obtained using an out-of-bag estimate.</p>
+</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="BaggingRegressor"><code>BaggingRegressor</code><a class="anchor-link" href="#BaggingRegressor">&#182;</a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Parameters-of-the-BaggingRegressor">Parameters of the <code>BaggingRegressor</code><a class="anchor-link" href="#Parameters-of-the-BaggingRegressor">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Same as <code>BaggingClassifier</code>.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Attributes-of-the-BaggingRegressor">Attributes of the <code>BaggingRegressor</code><a class="anchor-link" href="#Attributes-of-the-BaggingRegressor">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Same as <code>BaggingClassifier</code> but excluding the classes related attributes.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="RandomForestClassifier"><code>RandomForestClassifier</code><a class="anchor-link" href="#RandomForestClassifier">&#182;</a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Parameters-of-the-RandomForestClassifier">Parameters of the <code>RandomForestClassifier</code><a class="anchor-link" href="#Parameters-of-the-RandomForestClassifier">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Here are some of the parameters of the <code>RandomForestClassifier</code>:</p>
+<ul>
+<li><p><strong>n_estimators</strong>: int, default=10</p>
+<p>The number of trees in the forest.</p>
+</li>
+<li><p><strong>criterion</strong>: {“gini”, “entropy”, “log_loss”}, default=”gini”</p>
+<p>The function to measure the quality of a split. Supported criteria are "gini" for the Gini impurity and "entropy" for the information gain.</p>
+</li>
+<li><p><strong>max_depth</strong>: int or None, default=None</p>
+<p>The maximum depth of the tree. If None, then nodes are expanded until all leaves are pure or until all leaves contain less than min_samples_split samples.</p>
+</li>
+<li><p><strong>max_leaf_nodes</strong>: int or None, default=None</p>
+<p>Grow trees with max_leaf_nodes in best-first fashion. Best nodes are defined as relative reduction in impurity. If None then unlimited number of leaf nodes.</p>
+</li>
+<li><p><strong>splitter</strong>: {“best”, “random”}, default=”best”</p>
+<p>The strategy used to choose the best split. Valid options are “best” to choose the best split and “random” to choose at random.</p>
+</li>
+<li><p><strong>min_samples_split</strong>: int, default=2</p>
+<p>The minimum number of samples required to split an internal node.</p>
+<ul>
+<li><p>If int, then consider <code>min_samples_split</code> as the minimum number.</p>
+</li>
+<li><p>If float, then <code>min_samples_split</code> is a fraction and <code>ceil(min_samples_split * n_samples)</code> are the minimum number of samples for each split.</p>
+</li>
+</ul>
+</li>
+<li><p><strong>min_samples_leaf</strong>: int, default=1</p>
+<p>The minimum number of samples required to be at a leaf node.</p>
+<ul>
+<li><p>If int, then consider <code>min_samples_leaf</code> as the minimum number.</p>
+</li>
+<li><p>If float, then <code>min_samples_leaf</code> is a fraction and <code>ceil(min_samples_leaf * n_samples)</code> are the minimum number of samples for each node.</p>
+</li>
+</ul>
+</li>
+<li><p><strong>min_weight_fraction_leaf</strong>: float, default=0.0</p>
+<p>The minimum weighted fraction of the sum total of weights (of all the input samples) required to be at a leaf node.</p>
+</li>
+<li><p><strong>max_features</strong>: “sqrt”, “log2”, None}, int or float, default=”sqrt”</p>
+<p>The number of features to consider when looking for the best split:</p>
+<ul>
+<li>If int, then consider <code>max_features</code> features at each split.</li>
+<li>If float, then <code>max_features</code> is a fraction and <code>int(max_features * n_features)</code> features are considered at each split.</li>
+<li>If “auto”, then <code>max_features=sqrt(n_features)</code>.</li>
+<li>If “sqrt”, then <code>max_features=sqrt(n_features)</code>.</li>
+<li>If “log2”, then <code>max_features=log2(n_features)</code>.</li>
+<li>If None, then <code>max_features=n_features</code>.</li>
+</ul>
+</li>
+<li><p><strong>max_leaf_nodes</strong>: int or None, default=None</p>
+<p>Grow trees with <code>max_leaf_nodes</code> in best-first fashion. Best nodes are defined as relative reduction in impurity. If None then unlimited number of leaf nodes.</p>
+</li>
+<li><p><strong>bootstrap</strong>: boolean, default=True</p>
+<p>Whether bootstrap samples are used when building trees.</p>
+</li>
+<li><p><strong>oob_score</strong>: boolean, default=False</p>
+<p>Whether to use out-of-bag samples to estimate the generalization accuracy. Only available if bootstrap=True.</p>
+</li>
+<li><p><strong>warm_start</strong>: boolean, default=False</p>
+<p>When set to True, reuse the solution of the previous call to fit and add more estimators to the ensemble, otherwise, just fit a whole new ensemble.</p>
+</li>
+<li><p><strong>class_weight</strong>: dict, list of dicts, “balanced”, or None, default=None</p>
+<p>Weights associated with classes in the form {class_label: weight}. If not given, all classes are supposed to have weight one. For multi-output problems, a list of dicts can be provided in the same order as the columns of y.</p>
+<ul>
+<li>For multi-output, the weights are assigned to the first output of each base learner.</li>
+<li>If “balanced”, then classes are reweighted such that they sum to n_samples.</li>
+<li>If a dict or list of dicts, then the weights are assigned to the keys.</li>
+<li>If None, then all classes are supposed to have weight one.</li>
+</ul>
+</li>
+<li><p><strong>max_sample_count</strong>: int, default=None</p>
+<p>If bootstrap is True, the number of samples to draw from X to train each base estimator.</p>
+<ul>
+<li><p>If None (default), then draw X.shape[0] samples.</p>
+</li>
+<li><p>If int, then draw max_samples samples.</p>
+<ul>
+<li>If float, then draw max_samples * X.shape[0] samples. Thus, max_samples should be in the interval (0.0, 1.0].</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Attributes-of-the-RandomForestClassifier">Attributes of the <code>RandomForestClassifier</code><a class="anchor-link" href="#Attributes-of-the-RandomForestClassifier">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Here are some of the attributes of the <code>RandomForestClassifier</code>:</p>
+<ul>
+<li><p><strong>n<em>estimators</em></strong>: int</p>
+<p>The number of trees in the forest.</p>
+</li>
+<li><p><strong>estimators_</strong>: list of estimators</p>
+<p>The collection of fitted base estimators.</p>
+</li>
+<li><p><strong>classes_</strong>: ndarray of shape (n_classes,)</p>
+<p>The classes labels.</p>
+</li>
+<li><p><strong>base<em>estimator</em></strong>: estimator</p>
+<p>The base estimator from which the ensemble is grown.</p>
+</li>
+<li><p><strong>oob<em>score</em></strong>: float</p>
+<p>Score of the training dataset obtained using an out-of-bag estimate.</p>
+</li>
+<li><p><strong>feature<em>importances</em></strong>: ndarray of shape (n_features,)</p>
+<p>The feature importances attribute of the forest.</p>
+</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="RandomForestRegressor"><code>RandomForestRegressor</code><a class="anchor-link" href="#RandomForestRegressor">&#182;</a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Parameters-of-the-RandomForestRegressor">Parameters of the <code>RandomForestRegressor</code><a class="anchor-link" href="#Parameters-of-the-RandomForestRegressor">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Same as <code>RandomForestClassifier</code> but with following exception/addition:</p>
+<ul>
+<li><p><strong>criterion</strong>: {“squared_error”, “absolute_error”, “poisson”}, default=”squared_error”</p>
+<p>The function to measure the quality of a split. Supported criteria are “squared_error” for the mean squared error, which is equal to variance reduction as feature selection criterion, “absolute_error” for the mean absolute error, and “poisson” which uses reduction in Poisson deviance to find splits. Training using “absolute_error” is significantly slower than when using “squared_error”.</p>
+</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Attributes-of-the-RandomForestRegressor">Attributes of the <code>RandomForestRegressor</code><a class="anchor-link" href="#Attributes-of-the-RandomForestRegressor">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Same as <code>RandomForestClassifier</code> excluding the class related attributes.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="ExtraTreesClassifier"><code>ExtraTreesClassifier</code><a class="anchor-link" href="#ExtraTreesClassifier">&#182;</a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Parameters-of-the-ExtraTreesClassifier">Parameters of the <code>ExtraTreesClassifier</code><a class="anchor-link" href="#Parameters-of-the-ExtraTreesClassifier">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Same as <code>RandomForestClassifier</code>.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Attributes-of-the-ExtraTreesClassifier">Attributes of the <code>ExtraTreesClassifier</code><a class="anchor-link" href="#Attributes-of-the-ExtraTreesClassifier">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Same as <code>RandomForestClassifier</code>.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="ExtraTreesRegressor"><code>ExtraTreesRegressor</code><a class="anchor-link" href="#ExtraTreesRegressor">&#182;</a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Parameters-of-the-ExtraTreesRegressor">Parameters of the <code>ExtraTreesRegressor</code><a class="anchor-link" href="#Parameters-of-the-ExtraTreesRegressor">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Same as <code>RandomForestRegressor</code>. But the <code>criterion</code> parameter does not support “poisson”.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Attributes-of-the-ExtraTreesRegressor">Attributes of the <code>ExtraTreesRegressor</code><a class="anchor-link" href="#Attributes-of-the-ExtraTreesRegressor">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Same as <code>RandomForestRegressor</code>.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="VotingClassifier"><code>VotingClassifier</code><a class="anchor-link" href="#VotingClassifier">&#182;</a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Parameters-of-the-VotingClassifier">Parameters of the <code>VotingClassifier</code><a class="anchor-link" href="#Parameters-of-the-VotingClassifier">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Here are some of the parameters of the <code>VotingClassifier</code>:</p>
+<ul>
+<li><p><strong>voting</strong>: {“hard”, “soft”}, default=”hard”</p>
+<p>If “hard”, uses predicted class labels for majority voting.
+  If “soft”, predicts the class label that is most common in the majority class subset.</p>
+</li>
+<li><p><strong>estimators</strong>: tuples or list of estimator</p>
+<p>The base estimators for the voting classifier. If list of tuples, the weights of the estimators are used for voting. If list of estimators, the estimators are used for voting.</p>
+</li>
+<li><p><strong>weights</strong>: array-like of shape (n_classifiers,), default=None</p>
+<p>Sequence of weights (float or int) to weight the occurrences of predicted class labels (hard voting) or class probabilities before averaging (soft voting). Uses uniform weights if None.</p>
+</li>
+<li><p><strong>n_jobs</strong>: int, default=1</p>
+<p>The number of jobs to run in parallel for both <code>fit</code> and <code>predict</code>. If -1, then the number of jobs is set to the number of cores.</p>
+</li>
+<li><p><strong>flatten_transform</strong>: boolean, default=True</p>
+<p>Affects shape of transform output only when voting=’soft’ If voting=’soft’ and flatten_transform=True, transform method returns matrix with shape (n_samples, n_classifiers * n_classes). If flatten_transform=False, it returns (n_classifiers, n_samples, n_classes).</p>
+</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Attributes-of-the-VotingClassifier">Attributes of the <code>VotingClassifier</code><a class="anchor-link" href="#Attributes-of-the-VotingClassifier">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Here are some of the attributes of the <code>VotingClassifier</code>:</p>
+<ul>
+<li><p><strong>estimators_</strong>: list of estimators</p>
+<p>The collection of fitted base estimators.</p>
+</li>
+<li><p><strong>named_estimators</strong>: dict of estimators</p>
+
+<pre><code>  A dictionary mapping the names of the estimators to the fitted estimators.</code></pre>
+</li>
+<li><p><strong>le_</strong>: LabelEncoder</p>
+<p>The LabelEncoder used to encode the class labels.</p>
+</li>
+<li><p><strong>classes_</strong>: ndarray of shape (n_classes,)</p>
+<p>The classes labels.</p>
+</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="VotingRegressor"><code>VotingRegressor</code><a class="anchor-link" href="#VotingRegressor">&#182;</a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Parameters-of-the-VotingRegressor">Parameters of the <code>VotingRegressor</code><a class="anchor-link" href="#Parameters-of-the-VotingRegressor">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Here are some of the parameters of the <code>VotingRegressor</code>:</p>
+<ul>
+<li><p><strong>estimators</strong>: tuples or list of estimator</p>
+<p>The base estimators for the voting classifier. If list of tuples, the weights of the estimators are used for voting. If list of estimators, the estimators are used for voting.</p>
+</li>
+<li><p><strong>weights</strong>: array-like of shape (n_classifiers,), default=None</p>
+<p>Sequence of weights (float or int) to weight the occurrences of predicted class labels (hard voting) or class probabilities before averaging (soft voting). Uses uniform weights if None.</p>
+</li>
+<li><p><strong>n_jobs</strong>: int, default=1</p>
+<p>The number of jobs to run in parallel for both <code>fit</code> and <code>predict</code>. If -1, then the number of jobs is set to the number of cores.</p>
+</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Attributes-of-the-VotingRegressor">Attributes of the <code>VotingRegressor</code><a class="anchor-link" href="#Attributes-of-the-VotingRegressor">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Here are some of the attributes of the <code>VotingRegressor</code>:</p>
+<ul>
+<li><p><strong>estimators_</strong>: list of estimators</p>
+<p>The collection of fitted base estimators.</p>
+</li>
+<li><p><strong>named_estimators</strong>: dict of estimators</p>
+
+<pre><code>  A dictionary mapping the names of the estimators to the fitted estimators.</code></pre>
+</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="StackingClassifier"><code>StackingClassifier</code><a class="anchor-link" href="#StackingClassifier">&#182;</a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Parameters-of-the-StackingClassifier">Parameters of the <code>StackingClassifier</code><a class="anchor-link" href="#Parameters-of-the-StackingClassifier">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Here are some of the parameters of the <code>StackingClassifier</code>:</p>
+<ul>
+<li><p><strong>estimators</strong>: list of estimators</p>
+<p>Base estimators which will be stacked together. Each element of the list is defined as a tuple of string (i.e. name) and an estimator instance. An estimator can be set to ‘drop’ using set_params.</p>
+</li>
+<li><p><strong>final_estimator</strong>: estimator, default=None</p>
+<p>The final estimator to be used in the StackingClassifier.  The default classifier is a LogisticRegression.</p>
+</li>
+<li><p><strong>cv</strong>: int, cross-validation generator or an iterable, default=None</p>
+<p>Determines the cross-validation splitting strategy. Possible inputs for cv are:</p>
+<ul>
+<li>None, to use the default 5-fold cross-validation,</li>
+<li>integer, to specify the number of folds.</li>
+<li>An object to be used as a cross-validation generator.</li>
+<li>An iterable yielding train, test splits.</li>
+<li>An iterable yielding (train, test) splits.</li>
+<li>A mapping from output names to (train, test) splits.</li>
+<li><p>A callable, which returns a training and test set.</p>
+<p>If “prefit” is passed, it is assumed that all estimators have been fitted already. The final<em>estimator</em> is trained on the estimators predictions on the full training set and are not cross validated predictions. Please note that if the models have been trained on the same data to train the stacking model, there is a very high risk of overfitting.</p>
+</li>
+</ul>
+</li>
+<li><p><strong>stack_method</strong>: {‘auto’, ‘predict_proba’, ‘decision_function’, ‘predict’}, default=’auto’</p>
+<p>The method used to combine the predictions of the base estimators. If “predict”, the mean of the predicted values of the base estimators is used. If “predict_proba”, the mean of the predicted probabilities of the base estimators is used. If “decision_function”, the mean of the predicted decision function of the base estimators is used.</p>
+</li>
+<li><p><strong>passthrough</strong>: boolean, default=False</p>
+<p>When False, only the predictions of estimators will be used as training data for final_estimator. When True, the final_estimator is trained on the predictions as well as the original training data.</p>
+</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Attributes-of-the-StackingClassifier">Attributes of the <code>StackingClassifier</code><a class="anchor-link" href="#Attributes-of-the-StackingClassifier">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Here are some of the attributes of the <code>StackingClassifier</code>:</p>
+<ul>
+<li><p><strong>estimators_</strong>: list of estimators</p>
+<p>The collection of fitted base estimators.</p>
+</li>
+<li><p><strong>named_estimators</strong>: dict of estimators</p>
+
+<pre><code>  A dictionary mapping the names of the estimators to the fitted estimators.</code></pre>
+</li>
+<li><p><strong>classes_</strong>: ndarray of shape (n_classes,)</p>
+<p>The classes labels.</p>
+</li>
+<li><p><strong>final<em>estimator</em></strong>: estimator</p>
+<p>TThe classifier which predicts given the output of <code>estimators_</code>.</p>
+</li>
+<li><p><strong>stack<em>method</em></strong>: list ot str</p>
+<p>The method used by each base estimator.</p>
+</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="StackingRegressor"><code>StackingRegressor</code><a class="anchor-link" href="#StackingRegressor">&#182;</a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Parameters-of-the-StackingRegressor">Parameters of the <code>StackingRegressor</code><a class="anchor-link" href="#Parameters-of-the-StackingRegressor">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Same as <code>StackingClassifier</code> except for the <code>stack_method</code> parameter.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Attributes-of-the-StackingRegressor">Attributes of the <code>StackingRegressor</code><a class="anchor-link" href="#Attributes-of-the-StackingRegressor">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Same as <code>StackingClassifier</code> except for the class related attributes.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="AdaBoostClassifier"><code>AdaBoostClassifier</code><a class="anchor-link" href="#AdaBoostClassifier">&#182;</a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Parameters-of-the-AdaBoostClassifier">Parameters of the <code>AdaBoostClassifier</code><a class="anchor-link" href="#Parameters-of-the-AdaBoostClassifier">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Here are some of the parameters of the <code>AdaBoostClassifier</code>:</p>
+<ul>
+<li><p><strong>base_estimator</strong>: estimator, default=None</p>
+<p>The base estimator to fit on random subsets of the dataset. If None, then the base estimator is a decision tree.</p>
+</li>
+<li><p><strong>n_estimators</strong>: int, default=50</p>
+<p>The maximum number of estimators at which boosting is terminated.</p>
+</li>
+<li><p><strong>learning_rate</strong>: float, default=1.</p>
+<p>Weight applied to each classifier at each boosting iteration. A higher learning rate increases the contribution of each classifier.of each classifier by <code>learning_rate</code>. There is a trade-off between <code>learning_rate</code> and <code>n_estimators</code>.</p>
+</li>
+<li><p><strong>algorithm</strong>: {‘SAMME’, ‘SAMME.R’}, default=’SAMME.R’</p>
+<p>If ‘SAMME.R’ then use the SAMME.R real boosting algorithm. <code>base_estimator</code> must support calculation of class probabilities. If ‘SAMME’ then use the SAMME discrete boosting algorithm. The SAMME.R algorithm typically converges faster than SAMME, achieving a lower test error with fewer boosting iterations.</p>
+</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Attributes-of-the-AdaBoostClassifier">Attributes of the <code>AdaBoostClassifier</code><a class="anchor-link" href="#Attributes-of-the-AdaBoostClassifier">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Here are some of the attributes of the <code>AdaBoostClassifier</code>:</p>
+<ul>
+<li><p><strong>estimators_</strong>: list of estimators</p>
+<p>The collection of fitted base estimators.</p>
+</li>
+<li><p><strong>base<em>estimator</em></strong>: estimator</p>
+<p>The base estimator from which the boosted ensemble is built.</p>
+</li>
+<li><p><strong>classes_</strong>: ndarray of shape (n_classes,)</p>
+<p>The classes labels.</p>
+</li>
+<li><p><strong>n<em>classes</em></strong>: int</p>
+<p>The number of classes.</p>
+</li>
+<li><p><strong>estimator<em>weights</em></strong>: ndarray of shape (n_estimators,)</p>
+<p>The weights for each estimator in the boosted ensemble.</p>
+</li>
+<li><p><strong>estimator<em>errors</em></strong>: ndarray of shape (n_estimators,)</p>
+<p>The classifier loss functions for each estimator in the boosted ensemble.</p>
+</li>
+<li><p><strong>feature<em>importances</em></strong>: ndarray of shape (n_features,)</p>
+<p>The impurity-based feature importances.</p>
+</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="AdaBoostRegressor"><code>AdaBoostRegressor</code><a class="anchor-link" href="#AdaBoostRegressor">&#182;</a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Parameters-of-the-AdaBoostRegressor">Parameters of the <code>AdaBoostRegressor</code><a class="anchor-link" href="#Parameters-of-the-AdaBoostRegressor">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Same as <code>AdaBoostClassifier</code> except for the <code>loss</code> parameter.</p>
+<ul>
+<li><p><strong>loss</strong>: {‘linear’, ‘square’, ‘exponential’}, default=’linear’</p>
+<p>The loss function to be used. ‘linear’, ‘square’, and ‘exponential’ perform linear, squared, and exponential loss, respectively.</p>
+</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Attributes-of-the-AdaBoostRegressor">Attributes of the <code>AdaBoostRegressor</code><a class="anchor-link" href="#Attributes-of-the-AdaBoostRegressor">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Same as <code>AdaBoostClassifier</code> except for the class related attributes.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="GradientBoostingClassifier"><code>GradientBoostingClassifier</code><a class="anchor-link" href="#GradientBoostingClassifier">&#182;</a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Here are some of the parameters of the <code>GradientBoostingClassifier</code>:</p>
+<ul>
+<li><p><strong>loss</strong>:{‘log_loss’, ‘deviance’, ‘exponential’}, default=’log_loss’</p>
+<p>The loss function to be optimized. ‘log_loss’ refers to binomial and multinomial deviance, the same as used in logistic regression. It is a good choice for classification with probabilistic outputs. For loss ‘exponential’, gradient boosting recovers the AdaBoost algorithm.</p>
+</li>
+<li><p><strong>learning_rate</strong>: float, default=0.1</p>
+<p>Learning rate shrinks the contribution of each tree by <code>learning_rate</code>. There is a trade-off between <code>learning_rate</code> and <code>n_estimators</code>.</p>
+</li>
+<li><p><strong>n_estimators</strong>: int, default=100</p>
+<p>The maximum number of estimators at which boosting is terminated.</p>
+</li>
+<li><p><strong>subsample</strong>: float, default=1.0</p>
+<p>The fraction of samples to be used for fitting the individual base learners. If smaller than 1.0, the model will randomly sample this fraction of samples when fitting each base learters. If greater than 1.0, it will use the entire dataset for fitting each base learters.</p>
+</li>
+<li><p><strong>criterion</strong>: {‘friedman_mse’, ‘mse’, ‘mae’}, default=’friedman_mse’</p>
+<p>The function to measure the quality of a split. Supported criteria are ‘friedman_mse’, ‘mse’, and ‘mae’. The best split is the one that minimizes the criterion function.</p>
+</li>
+<li><p><strong>init</strong>: estimator or ‘zero’, default=None</p>
+<p>An estimator object that is used to compute the initial predictions. <code>init</code> has to provide <code>fit</code> and <code>predict_proba</code>. If ‘zero’, the initial raw predictions are set to zero. By default, a <code>DummyEstimator</code> predicting the classes priors is used.</p>
+</li>
+<li><p><strong>validation_fraction</strong>: float, default=0.1</p>
+<p>The proportion of training data to set aside as validation set for early stopping. Must be between 0 and 1. Only used if validation_fraction &gt; 0.</p>
+</li>
+</ul>
+<p><strong>Plus other parameters of the <code>RandomForestClassifier</code> like <code>max_depth</code>, <code>min_samples_split</code>, <code>min_samples_leaf</code>, <code>min_weight_fraction_leaf</code>, <code>max_features</code>, <code>max_leaf_nodes</code>, <code>min_impurity_decrease</code>, <code>min_impurity_split</code>, <code>bootstrap</code>, <code>oob_score</code>, <code>n_jobs</code>, <code>random_state</code>, <code>verbose</code>, <code>warm_start</code>, <code>class_weight</code></strong></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Attributes-of-the-GradientBoostingClassifier">Attributes of the <code>GradientBoostingClassifier</code><a class="anchor-link" href="#Attributes-of-the-GradientBoostingClassifier">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Here are some of the attributes of the <code>GradientBoostingClassifier</code>:</p>
+<ul>
+<li><p><strong>estimators_</strong>: list of estimators</p>
+<p>The collection of fitted base estimators.</p>
+</li>
+<li><p><strong>n<em>estimators</em></strong>: int</p>
+<p>The number of estimators in the fitted ensemble.</p>
+</li>
+<li><p><strong>feature<em>importances</em></strong>: ndarray of shape (n_features,)</p>
+<p>The impurity-based feature importances.</p>
+</li>
+<li><p><strong>oob<em>improvement</em></strong>: ndarray of shape (n_estimators,)</p>
+<p>The improvement in loss (= deviance) on the out-of-bag samples relative to the previous iteration. <code>oob_improvement_[0]</code> is the improvement in loss of the first stage over the <code>init</code> estimator. Only available if <code>subsample &lt; 1.0</code></p>
+</li>
+<li><p><strong>train<em>score</em></strong>: ndarray of shape (n_estimators,)</p>
+<p>The i-th score train<em>score</em>[i] is the deviance (= loss) of the model at iteration i on the in-bag sample. If subsample == 1 this is the deviance on the training data.</p>
+</li>
+<li><p><strong>classes_</strong>: ndarray of shape (n_classes,)</p>
+<p>The classes labels.</p>
+</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="GradientBoostingRegressor"><code>GradientBoostingRegressor</code><a class="anchor-link" href="#GradientBoostingRegressor">&#182;</a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Parameters-of-the-GradientBoostingRegressor">Parameters of the <code>GradientBoostingRegressor</code><a class="anchor-link" href="#Parameters-of-the-GradientBoostingRegressor">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Same as <code>GradientBoostingClassifier</code> except for the <code>loss</code> parameter.</p>
+<ul>
+<li><p><strong>loss</strong>: ‘squared_error’, ‘absolute_error’, ‘huber’, ‘quantile’}, default=’squared_error’</p>
+<p>Loss function to be optimized. ‘squared_error’ refers to the squared error for regression. ‘absolute_error’ refers to the absolute error of regression and is a robust loss function. ‘huber’ is a combination of the two. ‘quantile’ allows quantile regression (use <code>alpha</code> to specify the quantile).</p>
+</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Attributes-of-the-GradientBoostingRegressor">Attributes of the <code>GradientBoostingRegressor</code><a class="anchor-link" href="#Attributes-of-the-GradientBoostingRegressor">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Same as <code>GradientBoostingClassifier</code> except for the class related attributes.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="HistGradientBoostingClassifier"><code>HistGradientBoostingClassifier</code><a class="anchor-link" href="#HistGradientBoostingClassifier">&#182;</a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Parameters-of-the-HistGradientBoostingClassifier">Parameters of the <code>HistGradientBoostingClassifier</code><a class="anchor-link" href="#Parameters-of-the-HistGradientBoostingClassifier">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>HHere are some of the parameters of the <code>HistGradientBoostingClassifier</code>:</p>
+<ul>
+<li><p><strong>loss</strong>: {‘log_loss’, ‘auto’, ‘binary_crossentropy’, ‘categorical_crossentropy’}, default=’log_loss’</p>
+<p>The loss function to use in the boosting process.</p>
+<p>For binary classification problems, ‘log_loss’ is also known as logistic loss, binomial deviance or binary crossentropy. Internally, the model fits one tree per boosting iteration and uses the logistic sigmoid function (expit) as inverse link function to compute the predicted positive class probability.</p>
+<p>For multiclass classification problems, ‘log_loss’ is also known as multinomial deviance or categorical crossentropy. Internally, the model fits one tree per boosting iteration and per class and uses the softmax function as inverse link function to compute the predicted probabilities of the classes.</p>
+</li>
+<li><p><strong>learning_rate</strong>: float, default=0.1</p>
+<p>The learning rate, also known as shrinkage. This is used as a multiplicative factor for the leaves values. Use 1 for no shrinkage.</p>
+</li>
+<li><p><strong>max_iter</strong>: int, default=100</p>
+<p>The maximum number of iterations of the boosting process, i.e. the maximum number of trees for binary classification. For multiclass classification, n_classes trees per iteration are built.</p>
+</li>
+<li><p><strong>l2_regularization</strong>: float, default=0.0</p>
+<p>L2 regularization parameter. The larger this is, the more regularization, the less regularization, the more sparsity.</p>
+</li>
+<li><p><strong>monotonic_cst</strong>: array-like of int of shape (n_features), default=Nonearray-like of int of shape (n_features), default=None</p>
+<p>Indicates the monotonic constraint to enforce on each feature. -1, 1 and 0 respectively correspond to a negative constraint, positive constraint and no constraint.</p>
+</li>
+<li><p><strong>early_stopping</strong>: bool, default=False</p>
+<p>If ‘auto’, early stopping is enabled if the sample size is larger than 10000. If True, early stopping is enabled, otherwise early stopping is disabled.</p>
+</li>
+<li><p><strong>validation_fraction</strong>: float, default=0.1</p>
+<p>The proportion of training data to set aside as validation set for early stopping. Must be between 0 and 1. Only used if validation_fraction &gt; 0.</p>
+</li>
+<li><p><strong>scoring</strong>: str, default=None</p>
+<p>A string or a callable to evaluate the predictions on the test set. If ‘None’, the score method of the estimator is used. If a callable is given, it is called with two arguments and must return a scalar value.</p>
+</li>
+</ul>
+<p><strong>Plus Other parameters from the <code>GradientBoostingClassifier</code> like <code>max_depth</code>, <code>min_samples_split</code>, <code>min_samples_leaf</code>, <code>min_weight_fraction_leaf</code>, <code>max_features</code>, <code>max_leaf_nodes</code>, <code>min_impurity_decrease</code>, <code>min_impurity_split</code>, <code>bootstrap</code>, <code>oob_score</code>, <code>n_jobs</code>, <code>random_state</code>, <code>verbose</code>, <code>warm_start</code>, <code>class_weight</code></strong></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Attributes-of-the-HistGradientBoostingClassifier">Attributes of the <code>HistGradientBoostingClassifier</code><a class="anchor-link" href="#Attributes-of-the-HistGradientBoostingClassifier">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Here are some of the attributes of the <code>HistGradientBoostingClassifier</code>:</p>
+<ul>
+<li><p><strong>classes_</strong>: ndarray of shape (n_classes,)</p>
+<p>The classes labels.</p>
+</li>
+<li><p><strong>do_early<em>stopping</em></strong>: bool</p>
+<p>Whether early stopping is performed.</p>
+</li>
+<li><p><strong>n<em>iter</em></strong>: int</p>
+<p>The number of boosting iterations computed.</p>
+</li>
+<li><p><strong>train<em>score</em></strong>: ndarray of shape (n_iter,)</p>
+<p>The scores at each iteration on the training data. The first entry is the score of the ensemble before the first iteration. Scores are computed according to the scoring parameter. If <code>scoring</code> is not ‘loss’, scores are computed on a subset of at most 10 000 samples. Empty if no early stopping.</p>
+</li>
+<li><p><strong>validation<em>score</em></strong>: ndarray of shape (n_iter,)</p>
+<p>The scores at each iteration on the held-out validation data. The first entry is the score of the ensemble before the first iteration. Scores are computed according to the <code>scoring</code> parameter. Empty if no early stopping or if <code>validation_fraction</code> is None.</p>
+</li>
+<li><p><strong>n_trees_per<em>iteration</em></strong>: int</p>
+<p>The number of tree that are built at each iteration. This is equal to 1 for binary classification, and to <code>n_classes</code> for multiclass classification.</p>
+</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="HistGradientBoostingRegressor"><code>HistGradientBoostingRegressor</code><a class="anchor-link" href="#HistGradientBoostingRegressor">&#182;</a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Parameters-of-the-HistGradientBoostingRegressor">Parameters of the <code>HistGradientBoostingRegressor</code><a class="anchor-link" href="#Parameters-of-the-HistGradientBoostingRegressor">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Same as <code>HistGradientBoostingClassifier</code> except for the <code>loss</code> parameter.</p>
+<ul>
+<li><p><strong>loss</strong>: {‘squared_error’, ‘absolute_error’, ‘poisson’, ‘quantile’}, default=’squared_error’</p>
+<p>The loss function to use in the boosting process. Note that the “squared error” and “poisson” losses actually implement “half least squares loss” and “half poisson deviance” to simplify the computation of the gradient. Furthermore, “poisson” loss internally uses a log-link and requires <code>y &gt;= 0</code>. “quantile” uses the pinball loss.</p>
+</li>
+<li><p><strong>quantile</strong>: float, default=None</p>
+<p>The quantile used to compute the quantile loss. Must be between 0 and 1. Only used if loss is ‘quantile’.</p>
+</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Attributes-of-the-HistGradientBoostingRegressor">Attributes of the <code>HistGradientBoostingRegressor</code><a class="anchor-link" href="#Attributes-of-the-HistGradientBoostingRegressor">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Same as <code>HistGradientBoostingClassifier</code> except for the class related attributes.</p>
 
 </div>
 </div>

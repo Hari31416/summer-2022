@@ -1,18 +1,27 @@
 # Uses python3
 import sys
 
-def get_majority_element(a, left, right):
-    if left == right:
-        return -1
-    if left + 1 == right:
-        return a[left]
-    #write your code here
+
+def majority(arr):
+    arr.sort()
+    el_c = arr[0]
+    cnt = 1
+    for i in range(1, len(arr)):
+        if arr[i] == el_c:
+            cnt += 1
+        else:
+            cnt = 1
+            el_c = arr[i]
+
+        if cnt > len(arr) // 2:
+            return el_c
     return -1
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     input = sys.stdin.read()
     n, *a = list(map(int, input.split()))
-    if get_majority_element(a, 0, n) != -1:
+    if majority(a) != -1:
         print(1)
     else:
         print(0)

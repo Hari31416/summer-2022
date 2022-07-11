@@ -3,7 +3,7 @@
 <head><meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Support Vector Machine</title><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
+<title>Unsupervised Learning</title><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
 
 <style type="text/css">
   pre { line-height: 125%; }
@@ -13096,34 +13096,167 @@ div#notebook {
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="Support-Vector-Machine">Support Vector Machine<a class="anchor-link" href="#Support-Vector-Machine">&#182;</a></h1>
+<h1 id="Unsupervised-Learning">Unsupervised Learning<a class="anchor-link" href="#Unsupervised-Learning">&#182;</a></h1>
 </div>
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Maximal-Margin-Classifier">Maximal Margin Classifier<a class="anchor-link" href="#Maximal-Margin-Classifier">&#182;</a></h2>
+<p>Unsupervised learning deals with a set of statistical tools intended for the setting in which we have only a set of features $X_1, X_2, \ldots , X_p$ measured on n observations. We are not interested
+in prediction, because we do not have an associated response variable Y .
+Rather, the goal is to discover interesting things about the measurements
+on $X_1, X_2, \ldots , X_p$.</p>
+
 </div>
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="Hyperplane">Hyperplane<a class="anchor-link" href="#Hyperplane">&#182;</a></h3>
+<h2 id="Principal-Components-Analysis">Principal Components Analysis<a class="anchor-link" href="#Principal-Components-Analysis">&#182;</a></h2>
 </div>
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>In a p-dimensional space, a hyperplane is a flat affine subspace of
-hyperplane
-dimension p − 1. For instance, in two dimensions, a hyperplane is a flat
-one-dimensional subspace—in other words, a line. In three dimensions, a
-hyperplane is a flat two-dimensional subspace—that is, a plane. In p-dimensions, a hyperplane is defined as:
+<p>Principal component analysis (PCA) refers to the process by which principal components are computed, and the subsequent use of these components in understanding the data.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="What-Are-Principal-Components?">What Are Principal Components?<a class="anchor-link" href="#What-Are-Principal-Components?">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>The
+idea is that each of the n observations lives in p-dimensional space, but not
+all of these dimensions are equally interesting. PCA seeks a small number
+of dimensions that are as interesting as possible, where the concept of interesting is measured by the amount that the observations vary along each
+dimension. Each of the dimensions found by PCA is a linear combination
+of the p features.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>The first principal component of a set of features $X_1, X_2, \ldots , X_p$ is the
+normalized linear combination of the features:
 $$
-\beta_0 + \beta_1 X_1 + \beta_2 X_2 + \cdots + \beta_p X_p = 0
+Z_1 = \phi_{11}X_1 + \phi_{21}X_2 + \ldots + \phi_{p1}X_p\\
+\sum_{i=1}^p \phi_{i1}^2 = 1
+$$
+The elements $\phi_{11}, \ldots, \phi_{p1}$ are called the <em>loading</em> of the first principal. These can be calculated by minimizing the variance subjected to the constraint that the sum of the square of loading is 1.</p>
+<blockquote><p>The loading forms a vector $\phi$ and they point in the directions in feature space along which the data vary the most,
+and the principal component scores as projections along these directions.</p>
+</blockquote>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>After the first principal component $Z_1$ of the features has been determined, we can find the second principal component $Z_2$. The second principal component is the linear combination of $X_1, X_2, \ldots , X_p$ that has maximal
+variance out of all linear combinations that are uncorrelated with $Z_1$. The
+second principal component scores $z_{12}, z_{22}, \cdots , z_{n2}$ take the form:
+$$
+z_{12} = \phi_{12}x_{i1} + \phi_{22}x_{i2} + \ldots + \phi_{p2}x_{ip}
+$$
+It turns out that constraining $Z_2$ to be uncorrelated with
+$Z_1$ is equivalent to constraining the direction $\phi_2$ to be orthogonal (perpendicular) to the direction $\phi_1$.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Once we have computed the principal components, we can plot them
+against each other in order to produce low-dimensional views of the data.
+For instance, we can plot the score vector $Z_1$ against $Z_2$, $Z_1$ against $Z_3$,
+$Z_2$ against Z3, and so forth. Geometrically, this amounts to projecting
+the original data down onto the subspace spanned by $\phi_{1}$, $\phi_{2}$, and $\phi_{3}$, and
+plotting the projected points.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="More-on-PCA">More on PCA<a class="anchor-link" href="#More-on-PCA">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h4 id="Scaling-the-Variables">Scaling the Variables<a class="anchor-link" href="#Scaling-the-Variables">&#182;</a></h4>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>The results obtained
+when we perform PCA will also depend on whether the variables have been
+individually scaled, that is, if the features are scaled, the PCA will also change.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h4 id="Uniqueness-of-the-Principal-Components">Uniqueness of the Principal Components<a class="anchor-link" href="#Uniqueness-of-the-Principal-Components">&#182;</a></h4>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Each principal component loading vector is unique, up to a sign flip. This
+means that two different software packages will yield the same principal
+component loading vectors, although the signs of those loading vectors
+may differ. The signs may differ because each principal component loading
+vector specifies a direction in p-dimensional space: flipping the sign has no
+effect as the direction does not change.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h4 id="The-Proportion-of-Variance-Explained">The Proportion of Variance Explained<a class="anchor-link" href="#The-Proportion-of-Variance-Explained">&#182;</a></h4>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>The total variance present in a data set (assuming
+that the variables have been centered to have mean zero) is defined as:
+$$
+\sum_{i=1}^p \text{Var}(X_j) = \sum_{j=1}^p\frac{1}{n}\sum_{i=1}^n x_{ij}^2
+$$
+While the variance explained by the first principal component is:
+$$
+\frac{1}{n}\sum_{i=1}^n z_{im}^2 = \frac{1}{n}\sum_{i=1}^n\left( \sum_{j=1}^p\phi_{jm}x_{ij} \right)^2
+$$
+and hence, PVE is:
+$$
+\frac{\sum_{i=1}^p \left( \sum_{j=1}^p\phi_{jm}x_{ij} \right)^2}{\sum_{i=1}^p \frac{1}{n}\sum_{i=1}^n x_{im}^2}
 $$</p>
 
 </div>
@@ -13132,10 +13265,23 @@ $$</p>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>We can also think of the
-hyperplane as dividing p-dimensional space into two halves. One can easily
-determine on which side of the hyperplane a point lies by simply calculating
-the sign of the left hand side of the above equation. A two dimensional hyperplane is shown in the figure below.</p>
+<h4 id="Deciding-How-Many-Principal-Components-to-Use">Deciding How Many Principal Components to Use<a class="anchor-link" href="#Deciding-How-Many-Principal-Components-to-Use">&#182;</a></h4>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>In general, a $n\times p$ data matrix X has $\min(n − 1, p)$ distinct principal
+components. However, we usually are not interested in all of them. In fact, we would like to use the smallest
+number of principal components required to get a good understanding of the
+data. We typically decide on the number of principal components required
+to visualize the data by examining a <em>scree plot</em>. We choose the smallest number of
+principal components that are required in order to explain a sizable amount
+of the variation in the data. This is done by eyeballing the scree plot, and
+looking for a point at which the proportion of variance explained by each
+subsequent principal component drops off. This is often referred to as an
+elbow in the scree plot.</p>
 
 </div>
 </div>
@@ -13143,7 +13289,19 @@ the sign of the left hand side of the above equation. A two dimensional hyperpla
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p><img src="images/09_01.png" alt=""></p>
+<h2 id="Clustering-Methods">Clustering Methods<a class="anchor-link" href="#Clustering-Methods">&#182;</a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Clustering refers to a very broad set of techniques for finding subgroups, or
+clustering
+clusters, in a data set. When we cluster the observations of a data set, we
+seek to partition them into distinct groups so that the observations within
+each group are quite similar to each other, while observations in different
+groups are quite different from each other.</p>
 
 </div>
 </div>
@@ -13151,135 +13309,13 @@ the sign of the left hand side of the above equation. A two dimensional hyperpla
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="Classification-Using-a-Separating-Hyperplane">Classification Using a Separating Hyperplane<a class="anchor-link" href="#Classification-Using-a-Separating-Hyperplane">&#182;</a></h3>
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>Suppose that we have a $n\times p$ data matrix X that consists of n training
-observations in p-dimensional space. These observations falls into two categories: 1 and -1. Suppose that it is possible to construct a hyperplane that separates the
-training observations perfectly according to their class labels. That is, we have a hyperplane such that:
-$$
-\beta_0 + \beta_1 x_{i1} + \beta_2 x_{i2} + \cdots + \beta_p x_{ip} &gt; 0 \quad \text{if} \quad y_{i} = 1
-$$
-and
-$$
-\beta_0 + \beta_1 x_{i1} + \beta_2 x_{i2} + \cdots + \beta_p x_{ip} &lt; 0 \quad \text{if} \quad y_{i} = -1
-$$
-This is equivalent to:
-$$
-y_i(\beta_0 + \beta_1 x_{i1} + \beta_2 x_{i2} + \cdots + \beta_p x_{ip}) &gt; 0
-$$</p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>If a separating hyperplane exists, we can use it to construct a very natural
-classifier: a test observation is assigned a class depending on which side of
-the hyperplane it is located. We can even use the value $f(x) = \beta_0 + \beta_1 x_{1} + \beta_2 x_{2} + \cdots + \beta_p x_{p}$ to determining how "sure" the classifier is about the class of the test observation.</p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p><img src="images/09_02.png" alt=""></p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="The-Maximal-Margin-Classifier">The Maximal Margin Classifier<a class="anchor-link" href="#The-Maximal-Margin-Classifier">&#182;</a></h3>
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>In general, if our data can be perfectly separated using a hyperplane, then
-there will in fact exist an infinite number of such hyperplanes. In order to construct a classifier based upon a separating
-hyperplane, we must have a reasonable way to decide which of the infinite
-possible separating hyperplanes to use.</p>
-<p>A natural choice is the maximal margin hyperplane, which is the separating hyperplane that
-is farthest from the training observations. That is, we can compute the
-(perpendicular) distance from each training observation to a given separating hyperplane; the smallest such distance is the minimal distance from the
-observations to the hyperplane, and is known as the margin. The maximal
-margin
-margin hyperplane is the separating hyperplane for which the margin is
-largest—that is, it is the hyperplane that has the farthest minimum distance to the training observations. We can then classify a test observation
-based on which side of the maximal margin hyperplane it lies. This is known
-as the maximal margin classifier.</p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p><img src="images/09_03.png" alt=""></p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>In the figure above, we see that three training observations are equidistant from the maximal margin hyperplane and lie along the dashed lines
-indicating the width of the margin. These three observations are known as <em>support vectors</em>, since they are vectors in p-dimensional space and they “support” the maximal margin hyperplane in the sense vector
-that if these points were moved slightly then the maximal margin hyperplane would move as well. Interestingly, the maximal margin hyperplane
-depends directly on the support vectors, but not on the other observations:
-a movement to any of the other observations would not affect the separating
-hyperplane, provided that the observation’s movement does not cause it to
-cross the boundary set by the margin.</p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h4 id="Construction-of-the-Maximal-Margin-Classifier">Construction of the Maximal Margin Classifier<a class="anchor-link" href="#Construction-of-the-Maximal-Margin-Classifier">&#182;</a></h4>
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>We need to find the hyperplane constraint to:
-$$
-y_i(\beta_0 + \beta_1 x_{i1} + \beta_2 x_{i2} + \cdots + \beta_p x_{ip}) \ge M \quad \forall i=1,2,\dots,n
-$$
-the constraint requires that each
-observation be on the correct side of the hyperplane, with some cushion,
-provided that M is positive.</p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Support-Vector-Classifiers">Support Vector Classifiers<a class="anchor-link" href="#Support-Vector-Classifiers">&#182;</a></h2>
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>Many times the hyperplane that separates the training observations does not exist. Furthermore, maximal margin hyperplane is extremely sensitive to a change in a single observation
-suggests that it may have overfit the training data. In this case, we might be willing to consider a classifier based on a hyperplane that does not perfectly separate the two classes, in the interest of:</p>
+<blockquote><p>Both clustering and PCA seek to simplify the data via a small number
+of summaries, but their mechanisms are different:</p>
 <ul>
-<li>Greater robustness to individual observations, and</li>
-<li>Better classification of most of the training observations</li>
+<li>PCA looks to find a low-dimensional representation of the observations that explain a good fraction of the variance;</li>
+<li>Clustering looks to find homogeneous subgroups among the observations.</li>
 </ul>
+</blockquote>
 
 </div>
 </div>
@@ -13287,12 +13323,18 @@ suggests that it may have overfit the training data. In this case, we might be w
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>The support vector classifier, sometimes called a soft margin classifier,
-does exactly this. Rather than seeking the largest possible margin so that
-every observation is not only on the correct side of the hyperplane but
-also on the correct side of the margin, we instead allow some observations
-to be on the incorrect side of the margin, or even the incorrect side of
-the hyperplane.</p>
+<h3 id="K-Means-Clustering">K-Means Clustering<a class="anchor-link" href="#K-Means-Clustering">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>K-means clustering is a simple and elegant approach for partitioning a
+data set into K distinct, non-overlapping clusters. To perform K-means
+clustering, we must first specify the desired number of clusters K; then the
+K-means algorithm will assign each observation to exactly one of the K
+clusters.</p>
 
 </div>
 </div>
@@ -13300,25 +13342,7 @@ the hyperplane.</p>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="Details-of-the-Support-Vector-Classifier">Details of the Support Vector Classifier<a class="anchor-link" href="#Details-of-the-Support-Vector-Classifier">&#182;</a></h3>
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>The support vector classifier classifies a test observation depending on
-which side of a hyperplane it lies. The hyperplane is chosen to correctly separate most of the training observations into the two classes, but may
-misclassify a few observations. It is the solution to the optimization problem:
-$$
-\text{maximize}_{\beta_0, \beta_1, \cdots, \beta_p, \epsilon_0, \epsilon_1, \cdots, \epsilon_p} M
-$$
-subjected to the constraints:
-$$
-\sum_{j=1}^p\beta_j^2 = 1\\
-y_i(\beta_0 + \beta_1 x_{i1} + \beta_2 x_{i2} + \cdots + \beta_p x_{ip}) \ge M(1-\epsilon_i)\\
-\epsilon_i \ge 0, \sum_{j=1}^n\epsilon_j = C
-$$</p>
+<p><img src="images/10_01.png" alt=""></p>
 
 </div>
 </div>
@@ -13326,22 +13350,19 @@ $$</p>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Here C is a nonnegative tuning parameter. M is the width
-of the margin; we seek to make this quantity as large as possible. $\epsilon_1, \cdots, \epsilon_n$ are slack variables that allow individual observations to be on
-slack
-the wrong side of the margin or the hyperplane.</p>
-<p>the slack variable $\epsilon_i$ tells us where the ith observation is located,
-relative to the hyperplane and relative to the margin. If $\epsilon_i=0$ then the ith observation is on the correct side of the margin. If $\epsilon_i &gt; 0$ then the ith observation is on the wrong side of the margin, and
-we say that the ith observation has violated the margin. If $\epsilon_i &gt; 1$ then it
-is on the wrong side of the hyperplane.</p>
-<p>C bounds
-the sum of the $\epsilon_i$’s, and so it determines the number and severity of the violations to the margin (and to the hyperplane) that we will tolerate. We can
-think of C as a budget for the amount that the margin can be violated
-by the n observations. For C &gt; 0 no more than C observations can be on the wrong side of the hyperplane. C controls the bias-variance trade-off of the support
-vector classifier. When the tuning parameter C is large, then the margin is
-wide, many observations violate the margin, and so there are many support
-vectors. In this case, many observations are involved in determining the
-hyperplane.</p>
+<p>The algorithm for K-means clustering is as follows:</p>
+<ol>
+<li>Randomly assign a number, from 1 to K, to each of the observations.
+These serve as initial cluster assignments for the observations.</li>
+<li>Iterate until the cluster assignments stop changing:<ul>
+<li>For each of the K clusters, compute the cluster centroid. The
+kth cluster centroid is the vector of the p feature means for the
+observations in the kth cluster.</li>
+<li>Assign each observation to the cluster whose centroid is closest
+(where closest is defined using Euclidean distance)</li>
+</ul>
+</li>
+</ol>
 
 </div>
 </div>
@@ -13349,15 +13370,9 @@ hyperplane.</p>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>The optimization problem has a very interesting property:
-it turns out that only observations that either lie on the margin or that
-violate the margin will affect the hyperplane, and hence the classifier obtained. In other words, an observation that lies strictly on the correct side
-of the margin does not affect the support vector classifier! Changing the
-position of that observation would not change the classifier at all, provided
-that its position remains on the correct side of the margin. Observations
-that lie directly on the margin, or on the wrong side of the margin for
-their class, are known as support vectors. These observations do affect the
-support vector classifier.</p>
+<p>K-means algorithm finds a local rather than a global optimum and hence the results obtained will depend on the initial (random) cluster assignment of each observation in Step 1 of the Algorithm. For this reason,
+it is important to run the algorithm multiple times from different random initial configurations. Then one selects the best solution, i.e. that for which
+the objective is smallest.</p>
 
 </div>
 </div>
@@ -13365,7 +13380,18 @@ support vector classifier.</p>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p><img src="images/09_04.png" alt=""></p>
+<h3 id="Hierarchical-Clustering">Hierarchical Clustering<a class="anchor-link" href="#Hierarchical-Clustering">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>One potential disadvantage of K-means clustering is that it requires us to
+pre-specify the number of clusters K. Hierarchical clustering is an alternative approach which does not require that we commit to a particular
+choice of K. Hierarchical clustering has an added advantage over K-means
+clustering in that it results in an attractive tree-based representation of the
+observations, called a dendrogram.</p>
 
 </div>
 </div>
@@ -13373,7 +13399,7 @@ support vector classifier.</p>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>The figure above shows classifiers fit with different values of C. Largest C corresponds to the top-left image.</p>
+<p><img src="images/10_03.png" alt=""></p>
 
 </div>
 </div>
@@ -13381,23 +13407,17 @@ support vector classifier.</p>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Support-Vector-Machines">Support Vector Machines<a class="anchor-link" href="#Support-Vector-Machines">&#182;</a></h2>
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>The support vector classifier is a natural approach for classification in the
-two-class setting, if the boundary between the two classes is linear. However, in practice we are sometimes faced with non-linear class boundaries. A natural solution to this problem is to enlarge the feature space quadratic or cubic terms. For instance, rather than fitting a
-support vector classifier using p features:
-$$
-X_1, X_2, \cdots, X_p 
-$$
-we could instead fit a support vector classifier using 2p features:
-$$
-X_1, X_1^2, X_2, X_2^2, \cdots, X_n, X_p^2
-$$</p>
+<p>In the left-hand panel of the figure above, each leaf of the dendrogram represents one of the 45 observations. However, as we move
+up the tree, some leaves begin to fuse into branches. These correspond to
+observations that are similar to each other. As we move higher up the tree,
+branches themselves fuse, either with leaves or other branches. The earlier
+(lower in the tree) fusions occur, the more similar the groups of observations are to each other. On the other hand, observations that fuse later
+(near the top of the tree) can be quite different. In fact, this statement
+can be made precise: for any two observations, we can look for the point in
+the tree where branches containing those two observations are first fused.
+The height of this fusion, as measured on the vertical axis, indicates how different the two observations are. Thus, observations that fuse at the very
+bottom of the tree are quite similar to each other, whereas observations
+that fuse close to the top of the tree will tend to be quite different.</p>
 
 </div>
 </div>
@@ -13405,9 +13425,22 @@ $$</p>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>The support vector machine (SVM) is an extension of the support vector
-classifier that results from enlarging the feature space in a specific way,
-using kernels.</p>
+<h4 id="The-Hierarchical-Clustering-Algorithm">The Hierarchical Clustering Algorithm<a class="anchor-link" href="#The-Hierarchical-Clustering-Algorithm">&#182;</a></h4>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>The hierarchical clustering dendrogram is obtained via an extremely simple
+algorithm. We begin by defining some sort of dissimilarity measure between
+each pair of observations. Most often, Euclidean distance is used. The algorithm proceeds iteratively. Starting out at the bottom of the dendrogram,
+each of the n observations is treated as its own cluster. The two clusters
+that are most similar to each other are then fused so that there now are
+n− 1 clusters. Next the two clusters that are most similar to each other are
+fused again, so that there now are n − 2 clusters. The algorithm proceeds
+in this fashion until all of the observations belong to one single cluster, and
+the dendrogram is complete.</p>
 
 </div>
 </div>
@@ -13415,22 +13448,12 @@ using kernels.</p>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="Kernel">Kernel<a class="anchor-link" href="#Kernel">&#182;</a></h3>
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>A kernel is a
-function that quantifies the similarity of two observations. Suppose we have two vectors $x_i, x_{i^{'}}$. The inner product of these two vectors can be computed as
-$$
-\langle x_i, x_{i^{'}} \rangle = \sum_{j=1}^p x_{ij} x_{{i}^{'}j}
-$$ 
-This also forms a kernel, called a linear kernel:
-$$
-K(x_i, x_{i^{'}}) = \sum_{j=1}^p x_{ij} x_{{i}^{'}j}
-$$</p>
+<p>However, for this algorithm to work The concept of dissimilarity
+between a pair of observations needs to be extended to a pair of groups
+of observations. This extension is achieved by developing the notion of
+linkage, which defines the dissimilarity between two groups of observalinkage
+tions. The four most common types of linkage—complete, average, single,
+and centroid.</p>
 
 </div>
 </div>
@@ -13438,14 +13461,7 @@ $$</p>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>We could generalize the linear kernel as:
-$$
-K(x_i, x_{i^{'}}) =(1+\sum_{j=1}^p x_{ij} x_{{i}^{'}j})^d
-$$
-which is a polynoimal kernel of order d. Using such a kernel with d &gt; 1, instead of the standard linear kernel in the support vector classifier algorithm leads to a much more
-flexible decision boundary. It essentially amounts to fitting a support vector
-classifier in a higher-dimensional space involving polynomials of degree d,
-rather than in the original feature space.</p>
+<p><img src="images/10_04.png" alt=""></p>
 
 </div>
 </div>
@@ -13453,11 +13469,20 @@ rather than in the original feature space.</p>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Radial Basis Function (RBF) Kernel, another popular kernel takes form:
-$$
-K(x_i, x_{i^{'}}) = e^{-\gamma \sum_{j=1}^{p}(x_i - x_{i^{'}j})^2}
-$$
-Where $\gamma$, a positive constant, is a parameter that controls the width of the kernel.</p>
+<p>The algorithm proceeds in the following manner:</p>
+<ol>
+<li>Begin with n observations and a measure (such as Euclidean distance) of all the $^nP_2 = n(n − 1)/2$ pairwise dissimilarities. Treat each
+observation as its own cluster.</li>
+<li>For $i = n, n − 1, \ldots , 2$:<ul>
+<li>Examine all pairwise inter-cluster dissimilarities among the i
+clusters and identify the pair of clusters that are least dissimilar
+(that is, most similar). Fuse these two clusters. The dissimilarity
+between these two clusters indicates the height in the dendrogram at which the fusion should be placed.</li>
+<li>Compute the new pairwise inter-cluster dissimilarities among
+the i − 1 remaining clusters</li>
+</ul>
+</li>
+</ol>
 
 </div>
 </div>
@@ -13465,8 +13490,7 @@ Where $\gamma$, a positive constant, is a parameter that controls the width of t
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p><img src="images/09_05.png" alt="">
-Polynomial Kernel and Radial Basis Function (RBF) Kernel</p>
+<p><img src="images/10_05.png" alt=""></p>
 
 </div>
 </div>
@@ -13474,60 +13498,18 @@ Polynomial Kernel and Radial Basis Function (RBF) Kernel</p>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="SVMs-with-More-than-Two-Classes">SVMs with More than Two Classes<a class="anchor-link" href="#SVMs-with-More-than-Two-Classes">&#182;</a></h2>
+<h4 id="Choice-of-Dissimilarity-Measure">Choice of Dissimilarity Measure<a class="anchor-link" href="#Choice-of-Dissimilarity-Measure">&#182;</a></h4>
 </div>
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>It turns out that the concept of separating hyperplanes upon which SVMs
-are based does not lend itself naturally to more than two classes. Though
-a number of proposals for extending SVMs to the K-class case have been
-made, the two most popular are the <em>one-versus-one</em> and <em>one-versus-all</em>
-approaches.</p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="One-Versus-One-Classification">One-Versus-One Classification<a class="anchor-link" href="#One-Versus-One-Classification">&#182;</a></h3>
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>Suppose that we would like to perform classification using SVMs, and there
-are K &gt; 2 classes. A one-versus-one or all-pairs approach constructs $^kP_2$. SVMs, each of which compares a pair of classes. For example, one such
-SVM might compare the kth class, coded as +1, to the $k^{'}$ th class, coded
-as −1. We classify a test observation using each of the $^kP_2$ classifiers, and
-we tally the number of times that the test observation is assigned to each
-of the K classes. The final classification is performed by assigning the test
-observation to the class to which it was most frequently assigned in these
-$^kP_2$ pairwise classifications.</p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="One-Versus-All-Classification">One-Versus-All Classification<a class="anchor-link" href="#One-Versus-All-Classification">&#182;</a></h3>
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>The one-versus-all approach is an alternative procedure for applying SVMs in the case of K &gt; 2 classes. We fit K SVMs, each time comparing one of all
-the K classes to the remaining K − 1 classes. Let $\beta_{0k}, \beta_{1k}, \cdots , \beta_{pk}$ denote
-the parameters that result from fitting an SVM comparing the kth class
-(coded as +1) to the others (coded as −1). Let $x^∗$ denote a test observation.
-We assign the observation to the class for which $\beta_{0k} +\beta_{1k}{x^∗_1} +\beta_{2k}{x^∗_2} +\cdots+\beta_{pk}{x^∗_p}$ is largest, as this amounts to a high level of confidence that the test
-observation belongs to the kth class rather than to any of the other classes</p>
+<p>The choice of dissimilarity measure is very important, as it has a strong
+effect on the resulting dendrogram. In general, careful attention should be
+paid to the type of data being clustered and the scientific question at hand.
+These considerations should determine what type of dissimilarity measure
+is used for hierarchical clustering.</p>
 
 </div>
 </div>

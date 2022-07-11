@@ -13096,6 +13096,45 @@ div#notebook {
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
+<p><h1 id="Contents">Contents<a href="#Contents"></a></h1>
+        <ol>
+        <li><a class="" href="#Support-Vector-Machine">Support Vector Machine</a></li></p>
+<ol><li><a class="" href="#Mathematical-Formulation">Mathematical Formulation</a></li>
+<ol><li><a class="" href="#SVC">SVC</a></li>
+<li><a class="" href="#LinearSVC">LinearSVC</a></li>
+<li><a class="" href="#SVR">SVR</a></li>
+<li><a class="" href="#LinearSVR">LinearSVR</a></li>
+</ol><li><a class="" href="#Classifier">Classifier</a></li>
+<ol><li><a class="" href="#Multi-class-classification">Multi-class classification</a></li>
+</ol><li><a class="" href="#Regression">Regression</a></li>
+<ol><li><a class="" href="#Complexity">Complexity</a></li>
+</ol><li><a class="" href="#Kernel">Kernel</a></li>
+<ol><li><a class="" href="#Parameters-of-Kernel">Parameters of Kernel</a></li>
+<li><a class="" href="#Using-Python-functions-as-kernels">Using Python functions as kernels</a></li>
+</ol><li><a class="" href="#SVC">SVC</a></li>
+<ol><li><a class="" href="#Parameters-of-SVC">Parameters of SVC</a></li>
+<li><a class="" href="#Attributes-of-SVC">Attributes of SVC</a></li>
+</ol><li><a class="" href="#SVR">SVR</a></li>
+<ol><li><a class="" href="#Parameters-of-SVR">Parameters of SVR</a></li>
+<li><a class="" href="#Attributes-of-SVR">Attributes of SVR</a></li>
+</ol><li><a class="" href="#LinearSVC">LinearSVC</a></li>
+<ol><li><a class="" href="#Attributes-of-LinearSVC">Attributes of LinearSVC</a></li>
+</ol><li><a class="" href="#LinearSVR">LinearSVR</a></li>
+<ol><li><a class="" href="#Parameters-of-LinearSVR">Parameters of LinearSVR</a></li>
+<li><a class="" href="#Attributes-of-LinearSVR">Attributes of LinearSVR</a></li>
+</ol><li><a class="" href="#NuSVC">NuSVC</a></li>
+<ol><li><a class="" href="#Parameters-of-NuSVC">Parameters of NuSVC</a></li>
+<li><a class="" href="#Attributes-of-NuSVC">Attributes of NuSVC</a></li>
+</ol><li><a class="" href="#NuSVR">NuSVR</a></li>
+<ol><li><a class="" href="#Parameters-of-NuSVR">Parameters of NuSVR</a></li>
+<li><a class="" href="#Attributes-of-NuSVR">Attributes of NuSVR</a></li>
+</ol>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
 <h1 id="Support-Vector-Machine">Support Vector Machine<a class="anchor-link" href="#Support-Vector-Machine">&#182;</a></h1>
 </div>
 </div>
@@ -13103,182 +13142,22 @@ div#notebook {
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Maximal-Margin-Classifier">Maximal Margin Classifier<a class="anchor-link" href="#Maximal-Margin-Classifier">&#182;</a></h2>
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="Hyperplane">Hyperplane<a class="anchor-link" href="#Hyperplane">&#182;</a></h3>
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>In a p-dimensional space, a hyperplane is a flat affine subspace of
-hyperplane
-dimension p − 1. For instance, in two dimensions, a hyperplane is a flat
-one-dimensional subspace—in other words, a line. In three dimensions, a
-hyperplane is a flat two-dimensional subspace—that is, a plane. In p-dimensions, a hyperplane is defined as:
-$$
-\beta_0 + \beta_1 X_1 + \beta_2 X_2 + \cdots + \beta_p X_p = 0
-$$</p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>We can also think of the
-hyperplane as dividing p-dimensional space into two halves. One can easily
-determine on which side of the hyperplane a point lies by simply calculating
-the sign of the left hand side of the above equation. A two dimensional hyperplane is shown in the figure below.</p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p><img src="images/09_01.png" alt=""></p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="Classification-Using-a-Separating-Hyperplane">Classification Using a Separating Hyperplane<a class="anchor-link" href="#Classification-Using-a-Separating-Hyperplane">&#182;</a></h3>
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>Suppose that we have a $n\times p$ data matrix X that consists of n training
-observations in p-dimensional space. These observations falls into two categories: 1 and -1. Suppose that it is possible to construct a hyperplane that separates the
-training observations perfectly according to their class labels. That is, we have a hyperplane such that:
-$$
-\beta_0 + \beta_1 x_{i1} + \beta_2 x_{i2} + \cdots + \beta_p x_{ip} &gt; 0 \quad \text{if} \quad y_{i} = 1
-$$
-and
-$$
-\beta_0 + \beta_1 x_{i1} + \beta_2 x_{i2} + \cdots + \beta_p x_{ip} &lt; 0 \quad \text{if} \quad y_{i} = -1
-$$
-This is equivalent to:
-$$
-y_i(\beta_0 + \beta_1 x_{i1} + \beta_2 x_{i2} + \cdots + \beta_p x_{ip}) &gt; 0
-$$</p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>If a separating hyperplane exists, we can use it to construct a very natural
-classifier: a test observation is assigned a class depending on which side of
-the hyperplane it is located. We can even use the value $f(x) = \beta_0 + \beta_1 x_{1} + \beta_2 x_{2} + \cdots + \beta_p x_{p}$ to determining how "sure" the classifier is about the class of the test observation.</p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p><img src="images/09_02.png" alt=""></p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="The-Maximal-Margin-Classifier">The Maximal Margin Classifier<a class="anchor-link" href="#The-Maximal-Margin-Classifier">&#182;</a></h3>
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>In general, if our data can be perfectly separated using a hyperplane, then
-there will in fact exist an infinite number of such hyperplanes. In order to construct a classifier based upon a separating
-hyperplane, we must have a reasonable way to decide which of the infinite
-possible separating hyperplanes to use.</p>
-<p>A natural choice is the maximal margin hyperplane, which is the separating hyperplane that
-is farthest from the training observations. That is, we can compute the
-(perpendicular) distance from each training observation to a given separating hyperplane; the smallest such distance is the minimal distance from the
-observations to the hyperplane, and is known as the margin. The maximal
-margin
-margin hyperplane is the separating hyperplane for which the margin is
-largest—that is, it is the hyperplane that has the farthest minimum distance to the training observations. We can then classify a test observation
-based on which side of the maximal margin hyperplane it lies. This is known
-as the maximal margin classifier.</p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p><img src="images/09_03.png" alt=""></p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>In the figure above, we see that three training observations are equidistant from the maximal margin hyperplane and lie along the dashed lines
-indicating the width of the margin. These three observations are known as <em>support vectors</em>, since they are vectors in p-dimensional space and they “support” the maximal margin hyperplane in the sense vector
-that if these points were moved slightly then the maximal margin hyperplane would move as well. Interestingly, the maximal margin hyperplane
-depends directly on the support vectors, but not on the other observations:
-a movement to any of the other observations would not affect the separating
-hyperplane, provided that the observation’s movement does not cause it to
-cross the boundary set by the margin.</p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h4 id="Construction-of-the-Maximal-Margin-Classifier">Construction of the Maximal Margin Classifier<a class="anchor-link" href="#Construction-of-the-Maximal-Margin-Classifier">&#182;</a></h4>
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>We need to find the hyperplane constraint to:
-$$
-y_i(\beta_0 + \beta_1 x_{i1} + \beta_2 x_{i2} + \cdots + \beta_p x_{ip}) \ge M \quad \forall i=1,2,\dots,n
-$$
-the constraint requires that each
-observation be on the correct side of the hyperplane, with some cushion,
-provided that M is positive.</p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Support-Vector-Classifiers">Support Vector Classifiers<a class="anchor-link" href="#Support-Vector-Classifiers">&#182;</a></h2>
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>Many times the hyperplane that separates the training observations does not exist. Furthermore, maximal margin hyperplane is extremely sensitive to a change in a single observation
-suggests that it may have overfit the training data. In this case, we might be willing to consider a classifier based on a hyperplane that does not perfectly separate the two classes, in the interest of:</p>
+<p>Support vector machines (SVMs) are a set of supervised learning methods used for classification, regression and outliers detection.</p>
+<p>The advantages of support vector machines are:</p>
 <ul>
-<li>Greater robustness to individual observations, and</li>
-<li>Better classification of most of the training observations</li>
+<li><p>Effective in high dimensional spaces.</p>
+</li>
+<li><p>Still effective in cases where number of dimensions is greater than the number of samples.</p>
+</li>
+<li><p>Uses a subset of training points in the decision function (called support vectors), so it is also memory efficient.</p>
+</li>
+<li><p>Versatile: different Kernel functions can be specified for the decision function. Common kernels are provided, but it is also possible to specify custom kernels.</p>
+<p>The disadvantages of support vector machines include:</p>
+</li>
+<li><p>If the number of features is much greater than the number of samples, avoid over-fitting in choosing Kernel functions and regularization term is crucial.</p>
+</li>
+<li><p>SVMs do not directly provide probability estimates, these are calculated using an expensive five-fold cross-validation (see Scores and probabilities, below).</p>
+</li>
 </ul>
 
 </div>
@@ -13287,12 +13166,14 @@ suggests that it may have overfit the training data. In this case, we might be w
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>The support vector classifier, sometimes called a soft margin classifier,
-does exactly this. Rather than seeking the largest possible margin so that
-every observation is not only on the correct side of the hyperplane but
-also on the correct side of the margin, we instead allow some observations
-to be on the incorrect side of the margin, or even the incorrect side of
-the hyperplane.</p>
+<h2 id="Mathematical-Formulation">Mathematical Formulation<a class="anchor-link" href="#Mathematical-Formulation">&#182;</a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>A support vector machine constructs a hyper-plane or set of hyper-planes in a high or infinite dimensional space, which can be used for classification, regression or other tasks. Intuitively, a good separation is achieved by the hyper-plane that has the largest distance to the nearest training data points of any class (so-called functional margin), since in general the larger the margin the lower the generalization error of the classifier. The figure below shows the decision function for a linearly separable problem, with three samples on the margin boundaries, called “support vectors”.</p>
 
 </div>
 </div>
@@ -13300,24 +13181,36 @@ the hyperplane.</p>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="Details-of-the-Support-Vector-Classifier">Details of the Support Vector Classifier<a class="anchor-link" href="#Details-of-the-Support-Vector-Classifier">&#182;</a></h3>
+<p><img src="https://scikit-learn.org/stable/_images/sphx_glr_plot_separating_hyperplane_001.png" alt=""></p>
+
 </div>
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>The support vector classifier classifies a test observation depending on
-which side of a hyperplane it lies. The hyperplane is chosen to correctly separate most of the training observations into the two classes, but may
-misclassify a few observations. It is the solution to the optimization problem:
+<blockquote><p>In general, when the problem isn’t linearly separable, the support vectors are the samples within the margin boundaries.</p>
+</blockquote>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="SVC">SVC<a class="anchor-link" href="#SVC">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Given training vectors $x_i \in \mathbb{R}^p$ , i=1,…, n, in two classes, and a vector $y \in \{1, -1\}^n$, our goal is to find $w \in
+\mathbb{R}^p$ and $b \in \mathbb{R}$ such that the prediction given by $\text{sign} (w^T\phi(x) + b)$ is correct for most samples.</p>
+<p>SVC solves the following primal problem:
 $$
-\text{maximize}_{\beta_0, \beta_1, \cdots, \beta_p, \epsilon_0, \epsilon_1, \cdots, \epsilon_p} M
-$$
-subjected to the constraints:
-$$
-\sum_{j=1}^p\beta_j^2 = 1\\
-y_i(\beta_0 + \beta_1 x_{i1} + \beta_2 x_{i2} + \cdots + \beta_p x_{ip}) \ge M(1-\epsilon_i)\\
-\epsilon_i \ge 0, \sum_{j=1}^n\epsilon_j = C
+\begin{align*}\begin{aligned}\min_ {w, b, \zeta} \frac{1}{2} w^T w + C \sum_{i=1}^{n} \zeta_i\\\begin{split}\textrm {subject to } &amp; y_i (w^T \phi (x_i) + b) \geq 1 - \zeta_i,\\
+&amp; \zeta_i \geq 0, i=1, ..., n\end{split}\end{aligned}\end{align*}
 $$</p>
 
 </div>
@@ -13326,22 +13219,8 @@ $$</p>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Here C is a nonnegative tuning parameter. M is the width
-of the margin; we seek to make this quantity as large as possible. $\epsilon_1, \cdots, \epsilon_n$ are slack variables that allow individual observations to be on
-slack
-the wrong side of the margin or the hyperplane.</p>
-<p>the slack variable $\epsilon_i$ tells us where the ith observation is located,
-relative to the hyperplane and relative to the margin. If $\epsilon_i=0$ then the ith observation is on the correct side of the margin. If $\epsilon_i &gt; 0$ then the ith observation is on the wrong side of the margin, and
-we say that the ith observation has violated the margin. If $\epsilon_i &gt; 1$ then it
-is on the wrong side of the hyperplane.</p>
-<p>C bounds
-the sum of the $\epsilon_i$’s, and so it determines the number and severity of the violations to the margin (and to the hyperplane) that we will tolerate. We can
-think of C as a budget for the amount that the margin can be violated
-by the n observations. For C &gt; 0 no more than C observations can be on the wrong side of the hyperplane. C controls the bias-variance trade-off of the support
-vector classifier. When the tuning parameter C is large, then the margin is
-wide, many observations violate the margin, and so there are many support
-vectors. In this case, many observations are involved in determining the
-hyperplane.</p>
+<p>Intuitively, we’re trying to maximize the margin (by minimizing $||w||^2 = w^Tw$), while incurring a penalty when a sample is misclassified or within the margin boundary. Ideally, the value $y_i
+(w^T \phi (x_i) + b)$ would be $\ge 1$ for all samples, which indicates a perfect prediction. But problems are usually not always perfectly separable with a hyperplane, so we allow some samples to be at a distance $\zeta_i$ from their correct margin boundary. The penalty term <code>C</code> controls the strength of this penalty, and as a result, acts as an inverse regularization parameter.</p>
 
 </div>
 </div>
@@ -13349,15 +13228,10 @@ hyperplane.</p>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>The optimization problem has a very interesting property:
-it turns out that only observations that either lie on the margin or that
-violate the margin will affect the hyperplane, and hence the classifier obtained. In other words, an observation that lies strictly on the correct side
-of the margin does not affect the support vector classifier! Changing the
-position of that observation would not change the classifier at all, provided
-that its position remains on the correct side of the margin. Observations
-that lie directly on the margin, or on the wrong side of the margin for
-their class, are known as support vectors. These observations do affect the
-support vector classifier.</p>
+<p>The same problem can also be written as:
+$$\begin{align*}\begin{aligned}\min_{\alpha} \frac{1}{2} \alpha^T Q \alpha - e^T \alpha\\\begin{split}
+\textrm {subject to } &amp; y^T \alpha = 0\\
+&amp; 0 \leq \alpha_i \leq C, i=1, ..., n\end{split}\end{aligned}\end{align*}$$</p>
 
 </div>
 </div>
@@ -13365,7 +13239,7 @@ support vector classifier.</p>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p><img src="images/09_04.png" alt=""></p>
+<p>where $e$ is the vector of all ones, and $Q$ is an $n$ by $n$ positive semidefinite matrix,$Q_{ij} \equiv y_i y_j K(x_i, x_j)$ , where $K(x_i, x_j) = \phi (x_i)^T \phi (x_j)$ is the kernel. The terms $\alpha_i$ are called the dual coefficients, and they are upper-bounded by C. This dual representation highlights the fact that training vectors are implicitly mapped into a higher (maybe infinite) dimensional space by the function $\phi$.</p>
 
 </div>
 </div>
@@ -13373,7 +13247,10 @@ support vector classifier.</p>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>The figure above shows classifiers fit with different values of C. Largest C corresponds to the top-left image.</p>
+<p>Once the optimization problem is solved, the output of decision<em>function for a given sample $x$ becomes:
+$$\sum</em>{i\in SV} y_i \alpha_i K(x_i, x) + b,$$
+and the predicted class correspond to its sign. We only need to sum over the support vectors (i.e. the samples that lie within the margin) because the dual coefficients $\alpha_i$ are zero for the other samples.</p>
+<p>These parameters can be accessed through the attributes <code>dual_coef_</code> which holds the product $y_i \alpha_i$, <code>support_vectors_</code> which holds the support vectors, and <code>intercept_</code> which holds the independent term b.</p>
 
 </div>
 </div>
@@ -13381,22 +13258,35 @@ support vector classifier.</p>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Support-Vector-Machines">Support Vector Machines<a class="anchor-link" href="#Support-Vector-Machines">&#182;</a></h2>
+<h3 id="LinearSVC">LinearSVC<a class="anchor-link" href="#LinearSVC">&#182;</a></h3>
 </div>
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>The support vector classifier is a natural approach for classification in the
-two-class setting, if the boundary between the two classes is linear. However, in practice we are sometimes faced with non-linear class boundaries. A natural solution to this problem is to enlarge the feature space quadratic or cubic terms. For instance, rather than fitting a
-support vector classifier using p features:
+<p>The primal problem can be equivalently formulated as
+$$\min_ {w, b} \frac{1}{2} w^T w + C \sum_{i=1}^{n}\max(0, 1 - y_i (w^T \phi(x_i) + b)),$$
+where we make use of the hinge loss. This is the form that is directly optimized by <code>LinearSVC</code>, but unlike the dual form, this one does not involve inner products between samples, so the famous kernel trick cannot be applied. This is why only the linear kernel is supported by <code>LinearSVC</code>.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="SVR">SVR<a class="anchor-link" href="#SVR">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Given training vectors $x_i \in \mathbb{R}^p$, i=1,…, n, and a vector $y \in \mathbb{R}^n$ $\epsilon$-SVR solves the following primal problem:
 $$
-X_1, X_2, \cdots, X_p 
-$$
-we could instead fit a support vector classifier using 2p features:
-$$
-X_1, X_1^2, X_2, X_2^2, \cdots, X_n, X_p^2
+\begin{align*}\begin{aligned}\min_ {w, b, \zeta, \zeta^*} \frac{1}{2} w^T w + C \sum_{i=1}^{n} (\zeta_i + \zeta_i^*)\\\begin{split}\textrm {subject to } &amp; y_i - w^T \phi (x_i) - b \leq \varepsilon + \zeta_i,\\
+                      &amp; w^T \phi (x_i) + b - y_i \leq \varepsilon + \zeta_i^*,\\
+                      &amp; \zeta_i, \zeta_i^* \geq 0, i=1, ..., n\end{split}\end{aligned}\end{align*}
 $$</p>
 
 </div>
@@ -13405,9 +13295,8 @@ $$</p>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>The support vector machine (SVM) is an extension of the support vector
-classifier that results from enlarging the feature space in a specific way,
-using kernels.</p>
+<p>Here, we are penalizing samples whose prediction is at least $\epsilon$ away from their true target. These samples penalize the objective by $\zeta_i$ or $\zeta_i^*$
+, depending on whether their predictions lie above or below the $\epsilon$ tube.</p>
 
 </div>
 </div>
@@ -13415,21 +13304,11 @@ using kernels.</p>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="Kernel">Kernel<a class="anchor-link" href="#Kernel">&#182;</a></h3>
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>A kernel is a
-function that quantifies the similarity of two observations. Suppose we have two vectors $x_i, x_{i^{'}}$. The inner product of these two vectors can be computed as
+<p>The dual problem is:
 $$
-\langle x_i, x_{i^{'}} \rangle = \sum_{j=1}^p x_{ij} x_{{i}^{'}j}
-$$ 
-This also forms a kernel, called a linear kernel:
-$$
-K(x_i, x_{i^{'}}) = \sum_{j=1}^p x_{ij} x_{{i}^{'}j}
+\begin{align*}\begin{aligned}\min_{\alpha, \alpha^*} \frac{1}{2} (\alpha - \alpha^*)^T Q (\alpha - \alpha^*) + \varepsilon e^T (\alpha + \alpha^*) - y^T (\alpha - \alpha^*)\\\begin{split}
+\textrm {subject to } &amp; e^T (\alpha - \alpha^*) = 0\\
+&amp; 0 \leq \alpha_i, \alpha_i^* \leq C, i=1, ..., n\end{split}\end{aligned}\end{align*}
 $$</p>
 
 </div>
@@ -13438,14 +13317,20 @@ $$</p>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>We could generalize the linear kernel as:
+<p>where $e$ is the vector of all ones, $Q$ is an $n$ by $n$ positive semidefinite matrix, $Q_{ij} \equiv K(x_i, x_j) = \phi (x_i)^T \phi (x_j)$ is the kernel. Here training vectors are implicitly mapped into a higher (maybe infinite) dimensional space by the function $\phi$.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>The prediction is:
 $$
-K(x_i, x_{i^{'}}) =(1+\sum_{j=1}^p x_{ij} x_{{i}^{'}j})^d
+\sum_{i \in SV}(\alpha_i - \alpha_i^*) K(x_i, x) + b
 $$
-which is a polynoimal kernel of order d. Using such a kernel with d &gt; 1, instead of the standard linear kernel in the support vector classifier algorithm leads to a much more
-flexible decision boundary. It essentially amounts to fitting a support vector
-classifier in a higher-dimensional space involving polynomials of degree d,
-rather than in the original feature space.</p>
+These parameters can be accessed through the attributes <code>dual_coef_</code> which holds the difference $\alpha_i - \alpha_i^*$
+, <code>support_vectors_</code> which holds the support vectors, and <code>intercept_</code> which holds the independent term $b$.</p>
 
 </div>
 </div>
@@ -13453,11 +13338,16 @@ rather than in the original feature space.</p>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Radial Basis Function (RBF) Kernel, another popular kernel takes form:
-$$
-K(x_i, x_{i^{'}}) = e^{-\gamma \sum_{j=1}^{p}(x_i - x_{i^{'}j})^2}
-$$
-Where $\gamma$, a positive constant, is a parameter that controls the width of the kernel.</p>
+<h3 id="LinearSVR">LinearSVR<a class="anchor-link" href="#LinearSVR">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>The primal problem can equivalenty be written as:
+$$\min_ {w, b} \frac{1}{2} w^T w + C \sum_{i=1}\max(0, |y_i - (w^T \phi(x_i) + b)| - \varepsilon),$$
+where we make use of the epsilon-insensitive loss, i.e. errors of less than $\epsilon$ are ignored. This is the form that is directly optimized by <code>LinearSVR</code>.</p>
 
 </div>
 </div>
@@ -13465,8 +13355,14 @@ Where $\gamma$, a positive constant, is a parameter that controls the width of t
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p><img src="images/09_05.png" alt="">
-Polynomial Kernel and Radial Basis Function (RBF) Kernel</p>
+<h2 id="Classifier">Classifier<a class="anchor-link" href="#Classifier">&#182;</a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><code>SVC</code>, <code>NuSVC</code> and <code>LinearSVC</code> are classes capable of performing binary and multi-class classification on a dataset. <code>SVC</code> and <code>NuSVC</code> are similar methods, but accept slightly different sets of parameters and have different mathematical formulations (see section Mathematical formulation). On the other hand, <code>LinearSVC</code> is another (faster) implementation of Support Vector Classification for the case of a linear kernel.</p>
 
 </div>
 </div>
@@ -13474,18 +13370,15 @@ Polynomial Kernel and Radial Basis Function (RBF) Kernel</p>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="SVMs-with-More-than-Two-Classes">SVMs with More than Two Classes<a class="anchor-link" href="#SVMs-with-More-than-Two-Classes">&#182;</a></h2>
+<h3 id="Multi-class-classification">Multi-class classification<a class="anchor-link" href="#Multi-class-classification">&#182;</a></h3>
 </div>
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>It turns out that the concept of separating hyperplanes upon which SVMs
-are based does not lend itself naturally to more than two classes. Though
-a number of proposals for extending SVMs to the K-class case have been
-made, the two most popular are the <em>one-versus-one</em> and <em>one-versus-all</em>
-approaches.</p>
+<p><code>SVC</code> and <code>NuSVC</code> implement the “one-versus-one” approach for multi-class classification. In total, n_classes * (n_classes - 1) / 2 classifiers are constructed and each one trains data from two classes. To provide a consistent interface with other classifiers, the decision_function_shape option allows to monotonically transform the results of the “one-versus-one” classifiers to a “one-vs-rest” decision function of shape (n_samples, n_classes).</p>
+<p>On the other hand, <code>LinearSVC</code> implements “one-vs-the-rest” multi-class strategy, thus training n_classes models.</p>
 
 </div>
 </div>
@@ -13493,21 +13386,16 @@ approaches.</p>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="One-Versus-One-Classification">One-Versus-One Classification<a class="anchor-link" href="#One-Versus-One-Classification">&#182;</a></h3>
+<h2 id="Regression">Regression<a class="anchor-link" href="#Regression">&#182;</a></h2>
 </div>
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Suppose that we would like to perform classification using SVMs, and there
-are K &gt; 2 classes. A one-versus-one or all-pairs approach constructs $^kP_2$. SVMs, each of which compares a pair of classes. For example, one such
-SVM might compare the kth class, coded as +1, to the $k^{'}$ th class, coded
-as −1. We classify a test observation using each of the $^kP_2$ classifiers, and
-we tally the number of times that the test observation is assigned to each
-of the K classes. The final classification is performed by assigning the test
-observation to the class to which it was most frequently assigned in these
-$^kP_2$ pairwise classifications.</p>
+<p>The method of Support Vector Classification can be extended to solve regression problems. This method is called Support Vector Regression.</p>
+<p>The model produced by support vector classification (as described above) depends only on a subset of the training data, because the cost function for building the model does not care about training points that lie beyond the margin. Analogously, the model produced by Support Vector Regression depends only on a subset of the training data, because the cost function ignores samples whose prediction is close to their target.</p>
+<p>There are three different implementations of Support Vector Regression: <code>SVR</code>, <code>NuSVR</code> and <code>LinearSVR</code>. <code>LinearSVR</code> provides a faster implementation than <code>SVR</code> but only considers the linear kernel, while <code>NuSVR</code> implements a slightly different formulation than <code>SVR</code> and <code>LinearSVR</code>.</p>
 
 </div>
 </div>
@@ -13515,19 +13403,408 @@ $^kP_2$ pairwise classifications.</p>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="One-Versus-All-Classification">One-Versus-All Classification<a class="anchor-link" href="#One-Versus-All-Classification">&#182;</a></h3>
+<h3 id="Complexity">Complexity<a class="anchor-link" href="#Complexity">&#182;</a></h3>
 </div>
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>The one-versus-all approach is an alternative procedure for applying SVMs in the case of K &gt; 2 classes. We fit K SVMs, each time comparing one of all
-the K classes to the remaining K − 1 classes. Let $\beta_{0k}, \beta_{1k}, \cdots , \beta_{pk}$ denote
-the parameters that result from fitting an SVM comparing the kth class
-(coded as +1) to the others (coded as −1). Let $x^∗$ denote a test observation.
-We assign the observation to the class for which $\beta_{0k} +\beta_{1k}{x^∗_1} +\beta_{2k}{x^∗_2} +\cdots+\beta_{pk}{x^∗_p}$ is largest, as this amounts to a high level of confidence that the test
-observation belongs to the kth class rather than to any of the other classes</p>
+<p>Support Vector Machines are powerful tools, but their compute and storage requirements increase rapidly with the number of training vectors. The core of an SVM is a quadratic programming problem (QP), separating support vectors from the rest of the training data. The QP solver used by the libsvm-based implementation scales between $O(n_{features} \times n_{samples}^2)$
+ and $O(n_{features} \times n_{samples}^3)$
+ depending on how efficiently the libsvm cache is used in practice (dataset dependent). If the data is very sparse  should be replaced by the average number of non-zero features in a sample vector.</p>
+<p>For the linear case, the algorithm used in <code>LinearSVC</code> by the liblinear implementation is much more efficient than its libsvm-based <code>SVC</code> counterpart and can scale almost linearly to millions of samples and/or features.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Kernel">Kernel<a class="anchor-link" href="#Kernel">&#182;</a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Kernels are used to transform the training vectors into a higher dimensional space. The kernel function is used to compute the dot product between two vectors. Here are some of the kernels implemented in scikit-learn:</p>
+<ul>
+<li>Linear: $K(x, y) = x^T y$</li>
+<li>Polynomial: $K(x, y) = (\gamma x^T y + r)^{d}$</li>
+<li>rbf: $K(x, y) = exp(-\gamma \|x - y\|^2)$</li>
+<li>sigmoid: $K(x, y) = \frac{1}{1 + exp(-\gamma x^T y +r)}$</li>
+</ul>
+<p>Here, d is specified by the <code>degree</code> parameter, $\gamma$ is specified by the <code>gamma</code> parameter, and $r$ is specified by the <code>coef0</code> parameter.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Parameters-of-Kernel">Parameters of Kernel<a class="anchor-link" href="#Parameters-of-Kernel">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>The parameter <code>C</code>, common to all SVM kernels, trades off misclassification of training examples against simplicity of the decision surface. A low <code>C</code> makes the decision surface smooth, while a high <code>C</code> aims at classifying all training examples correctly. <code>gamma</code> defines how much influence a single training example has. The larger <code>gamma</code> is, the closer other examples must be to be affected.</p>
+<p>Proper choice of <code>C</code> and <code>gamma</code> is critical to the SVM’s performance.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Using-Python-functions-as-kernels">Using Python functions as kernels<a class="anchor-link" href="#Using-Python-functions-as-kernels">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>You can use your own defined kernels by passing a function to the kernel parameter.</p>
+<p>Your kernel must take as arguments two matrices of shape <code>(n_samples_1, n_features)</code>, <code>(n_samples_2, n_features)</code> and return a kernel matrix of shape <code>(n_samples_1, n_samples_2)</code>.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[1]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">sklearn</span> <span class="kn">import</span> <span class="n">svm</span>
+<span class="k">def</span> <span class="nf">my_kernel</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
+
+<span class="n">clf</span> <span class="o">=</span> <span class="n">svm</span><span class="o">.</span><span class="n">SVC</span><span class="p">(</span><span class="n">kernel</span><span class="o">=</span><span class="n">my_kernel</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="SVC">SVC<a class="anchor-link" href="#SVC">&#182;</a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Parameters-of-SVC">Parameters of SVC<a class="anchor-link" href="#Parameters-of-SVC">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Here are some of the parameters of the <code>SVC</code> class:</p>
+<ul>
+<li><p><strong>C</strong>: float, optional (default=1.0)</p>
+<p>Regularization parameter. The strength of the regularization is inversely proportional to C. Must be strictly positive. The penalty is a squared l2 penalty.</p>
+</li>
+<li><p><strong>kernel</strong>: {‘linear’, ‘poly’, ‘rbf’, ‘sigmoid’, ‘precomputed’} or callable, (default='rbf')</p>
+<p>Specifies the kernel type to be used in the algorithm. It must be one of ‘linear’, ‘poly’, ‘rbf’, ‘sigmoid’, ‘precomputed’ or a callable. If none is given, ‘rbf’ will be used. If a callable is given it is used to precompute the kernel matrix.</p>
+</li>
+<li><p><strong>degree</strong>: int, optional (default=3)</p>
+<p>Degree of the polynomial kernel function (‘poly’). Ignored by all other kernels.</p>
+</li>
+<li><p><strong>gamma</strong>: float, optional (default=’auto’)</p>
+<p>Kernel coefficient for ‘rbf’, ‘poly’ and ‘sigmoid’.</p>
+<ul>
+<li><p>if gamma='scale' (default) is passed then it uses 1 / (n_features * X.var()) as value of gamma,</p>
+</li>
+<li><p>if ‘auto’, uses 1 / n_features.</p>
+</li>
+</ul>
+</li>
+<li><p><strong>coef0</strong>: float, optional (default=0.0)</p>
+<p>Independent term in kernel function. It is only significant in ‘poly’ and ‘sigmoid’.</p>
+</li>
+<li><p><strong>probability</strong>: boolean, optional (default=False)</p>
+<p>Whether to enable probability estimates. This must be enabled prior to calling fit, will slow down that method as it internally uses 5-fold cross-validation, and predict_proba may be inconsistent with predict.</p>
+</li>
+<li><p><strong>tol</strong>: float, optional (default=1e-3)</p>
+<p>Tolerance for stopping criterion.</p>
+</li>
+<li><p><strong>cache_size</strong>: float, optional (default=200.0)</p>
+<p>Specify the size of the kernel cache (in MB).</p>
+</li>
+<li><p><strong>class_weight</strong>: {dict, ‘balanced’}, optional (default=None)</p>
+<p>Set the parameter C of class i to class_weight[i]<em>C for SVC. If not given, all classes are supposed to have weight one. The ‘balanced’ mode uses the values of y to automatically adjust weights inversely proportional to class frequencies in the input data as `n_samples / (n_classes </em> np.bincount(y))`</p>
+</li>
+<li><p><strong>verbose</strong>: int, optional (default=0)</p>
+<p>Enable verbose output. Note that this setting takes advantage of a per-process runtime setting in libsvm that, if enabled, may not work properly in a multithreaded context.</p>
+</li>
+<li><p><strong>max_iter</strong>: int, optional (default=-1)</p>
+<p>Hard limit on iterations within solver, or -1 for no limit.</p>
+</li>
+<li><p><strong>decision_function_shape</strong>: [‘ovo’, ‘ovr’], optional (default=’ovr’)</p>
+<p>Whether to return a one-vs-rest (‘ovr’) decision function of shape (n_samples, n_classes) or one-vs-one (‘ovo’) decision function of shape (n_samples, n_classes * (n_classes - 1) / 2).</p>
+<p>However, note that internally, one-vs-one (‘ovo’) is always used as a multi-class strategy to train models; an ovr matrix is only constructed from the ovo matrix. The parameter is ignored for binary classification.</p>
+</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Attributes-of-SVC">Attributes of SVC<a class="anchor-link" href="#Attributes-of-SVC">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Here are some of the attributes of the <code>SVC</code> class:</p>
+<ul>
+<li><p><strong>support_</strong>: array-like, shape = [n_SV, n_features]</p>
+<p>Support vectors.</p>
+</li>
+<li><p><strong>support<em>vectors</em></strong>: array-like, shape = [n_SV, n_features]</p>
+<p>Support vectors.</p>
+</li>
+<li><p><strong>class<em>weight</em></strong>: array-like, shape = [n_classes]</p>
+<p>Multipliers of parameter C for each class. Computed based on the <code>class_weight</code> parameter.</p>
+</li>
+<li><p><strong>classes_</strong>: array-like, shape = [n_classes]</p>
+<p>The classes labels.</p>
+</li>
+<li><p><strong>coef_</strong>: ndarray of shape (n_classes * (n_classes - 1) / 2, n_features)</p>
+<p>Weights assigned to the features when <code>kernel="linear"</code>.</p>
+</li>
+<li><p><strong>dual<em>coef</em></strong>: ndarray of shape (n_classes -1, n_SV)</p>
+<p>Coefficients of the support vectors in the decision function.</p>
+</li>
+<li><p><strong>intercept_</strong>: ndarray of shape (n_classes * (n_classes - 1) / 2,)</p>
+<p>Constants in decision function.</p>
+</li>
+<li><p><strong>probA_</strong>: ndarray of shape (n_classes * (n_classes - 1) / 2)</p>
+<p>Parameter learned in Platt scaling when probability=True.</p>
+</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="SVR">SVR<a class="anchor-link" href="#SVR">&#182;</a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Parameters-of-SVR">Parameters of SVR<a class="anchor-link" href="#Parameters-of-SVR">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>The <code>SVR</code> class has the same parameters as the <code>SVC</code> class.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Attributes-of-SVR">Attributes of SVR<a class="anchor-link" href="#Attributes-of-SVR">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>The <code>SVR</code> class has the same attributes as the <code>SVC</code> class.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="LinearSVC">LinearSVC<a class="anchor-link" href="#LinearSVC">&#182;</a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Here are some of the parameters of the <code>LinearSVC</code> class:</p>
+<ul>
+<li><p><strong>penalty</strong>: {‘l1’, ‘l2’}, optional (default=’l2’)</p>
+<p>Specifies the norm used in the penalization. The ‘l2’ penalty is the standard used in SVC. The ‘l1’ leads to coef_ vectors that are sparse.</p>
+</li>
+<li><p><strong>loss</strong>: {‘hinge’, ‘squared_hinge’}, optional (default=’squared_hinge’)</p>
+<p>Specifies the loss function. ‘hinge’ is the standard SVM loss (used e.g. by the SVC class) while ‘squared_hinge’ is the square of the hinge loss. The combination of <code>penalty='l1'</code> and <code>loss='hinge'</code> is not supported.</p>
+</li>
+<li><p><strong>dual</strong>: boolean, optional (default=True)</p>
+
+<pre><code>  Whether to fit the classifier dual or primal. Prefer dual=False when n_samples &gt; n_features.</code></pre>
+</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Other parameters are the same as for the <code>SVC</code> class.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Attributes-of-LinearSVC">Attributes of LinearSVC<a class="anchor-link" href="#Attributes-of-LinearSVC">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Same as for the <code>SVC</code> class.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="LinearSVR">LinearSVR<a class="anchor-link" href="#LinearSVR">&#182;</a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Parameters-of-LinearSVR">Parameters of LinearSVR<a class="anchor-link" href="#Parameters-of-LinearSVR">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>The <code>LinearSVR</code> and the <code>SVR</code> clases have a lot of parameters in common. There are, however, some differences:</p>
+<ul>
+<li><p><strong>epsilon</strong>: float, optional (default=0.0)</p>
+<p>Epsilon parameter in the epsilon-insensitive loss function.</p>
+</li>
+<li><p><strong>loss</strong>: {‘epsilon_insensitive’, ‘squared_epsilon_insensitive’}, optional (default=’epsilon_insensitive’)</p>
+<p>Specifies the loss function. The epsilon-insensitive loss (standard SVR) is the L1 loss, while the squared epsilon-insensitive loss (‘squared_epsilon_insensitive’) is the L2 loss.</p>
+</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Attributes-of-LinearSVR">Attributes of LinearSVR<a class="anchor-link" href="#Attributes-of-LinearSVR">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Same as for the <code>SVR</code> class.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="NuSVC">NuSVC<a class="anchor-link" href="#NuSVC">&#182;</a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Parameters-of-NuSVC">Parameters of NuSVC<a class="anchor-link" href="#Parameters-of-NuSVC">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Same as SVC with some differences as:</p>
+<ul>
+<li><p><strong>nu</strong>: float, optional (default=0.5)</p>
+<p>An upper bound on the fraction of margin errors and a lower bound of the fraction of support vectors. Should be in the interval (0, 1].</p>
+</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Attributes-of-NuSVC">Attributes of NuSVC<a class="anchor-link" href="#Attributes-of-NuSVC">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Same as for the <code>SVC</code> class.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="NuSVR">NuSVR<a class="anchor-link" href="#NuSVR">&#182;</a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Parameters-of-NuSVR">Parameters of NuSVR<a class="anchor-link" href="#Parameters-of-NuSVR">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Same as <code>NuSVC</code>.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Attributes-of-NuSVR">Attributes of NuSVR<a class="anchor-link" href="#Attributes-of-NuSVR">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Same as for the <code>NuSVC</code> class.</p>
 
 </div>
 </div>
