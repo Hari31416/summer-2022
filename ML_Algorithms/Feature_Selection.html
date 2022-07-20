@@ -3,7 +3,7 @@
 <head><meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Stochastic Gradient Descent</title><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
+<title>Feature Selection</title><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
 
 <style type="text/css">
   pre { line-height: 125%; }
@@ -13089,22 +13089,38 @@ div#notebook {
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p><h1 id="Contents">Contents<a href="#Contents"></a></h1>
+<p><h2 id="Contents">Contents<a href="#Contents"></a></h2>
         <ol>
-        <li><a class="" href="#Stochastic-Gradient-Descent">Stochastic Gradient Descent</a></li></p>
-<ol><li><a class="" href="#SGDClassifier">SGDClassifier</a></li>
-<ol><li><a class="" href="#Loss-functions">Loss functions</a></li>
-<li><a class="" href="#Penalties">Penalties</a></li>
-<li><a class="" href="#Multi-class-classification">Multi-class classification</a></li>
-<li><a class="" href="#Parameters-of-SGDClassifier">Parameters of SGDClassifier</a></li>
-<li><a class="" href="#Attributes-of-SGDClassifier">Attributes of SGDClassifier</a></li>
-</ol><li><a class="" href="#SGDRegressor">SGDRegressor</a></li>
-<ol><li><a class="" href="#Parameters-of-SGDRegressor">Parameters of SGDRegressor</a></li>
-<li><a class="" href="#Attributes-of-SGDRegressor">Attributes of SGDRegressor</a></li>
-</ol><li><a class="" href="#More-Informations-on-SGD">More Informations on SGD</a></li>
-<ol><li><a class="" href="#Time-Complexity">Time Complexity</a></li>
-<li><a class="" href="#Stopping-Criterion">Stopping Criterion</a></li>
-<li><a class="" href="#Mathematical-Details">Mathematical Details</a></li>
+        <li><a class="" href="#Feature-Selection">Feature Selection</a></li></p>
+<ol><li><a class="" href="#Removing-features-with-low-variance">Removing features with low variance</a></li>
+<li><a class="" href="#Univariate-feature-selection">Univariate feature selection</a></li>
+<li><a class="" href="#Recursive-feature-elimination">Recursive feature elimination</a></li>
+<li><a class="" href="#Feature-selection-using-SelectFromModel">Feature selection using SelectFromModel</a></li>
+<ol><li><a class="" href="#Example-1:-SVC-Based">Example 1: SVC Based</a></li>
+<li><a class="" href="#Example-2:-Tree-Based">Example 2: Tree Based</a></li>
+</ol><li><a class="" href="#Sequential-Feature-Selection">Sequential Feature Selection</a></li>
+<ol><li><a class="" href="#Forward-SFS">Forward SFS</a></li>
+<li><a class="" href="#Backward-SFS">Backward SFS</a></li>
+</ol><li><a class="" href="#Feature-selection-as-part-of-a-pipeline">Feature selection as part of a pipeline</a></li>
+</ol><li><a class="" href="#Classes">Classes</a></li>
+<ol><li><a class="" href="#VarianceThreshold">VarianceThreshold</a></li>
+<ol><li><a class="" href="#Parameters-of-VarianceThreshold">Parameters of VarianceThreshold</a></li>
+<li><a class="" href="#Attributes-of-VarianceThreshold">Attributes of VarianceThreshold</a></li>
+</ol><li><a class="" href="#SelectKBest">SelectKBest</a></li>
+<ol><li><a class="" href="#Parameters-of-SelectKBest">Parameters of SelectKBest</a></li>
+<li><a class="" href="#Attributes-of-SelectKBest">Attributes of SelectKBest</a></li>
+</ol><li><a class="" href="#SelectPercentile">SelectPercentile</a></li>
+<ol><li><a class="" href="#Parameters-of-SelectPercentile">Parameters of SelectPercentile</a></li>
+<li><a class="" href="#Attributes-of-SelectPercentile">Attributes of SelectPercentile</a></li>
+</ol><li><a class="" href="#RFE">RFE</a></li>
+<ol><li><a class="" href="#Parameters-of-RFE">Parameters of RFE</a></li>
+<li><a class="" href="#Attributes-of-RFE">Attributes of RFE</a></li>
+</ol><li><a class="" href="#SelectFromModel">SelectFromModel</a></li>
+<ol><li><a class="" href="#Parameters-of-SelectFromModel">Parameters of SelectFromModel</a></li>
+<li><a class="" href="#Attributes-of-SelectFromModel">Attributes of SelectFromModel</a></li>
+</ol><li><a class="" href="#SequentialFeatureSelector">SequentialFeatureSelector</a></li>
+<ol><li><a class="" href="#Parameters-of-SequentialFeatureSelector">Parameters of SequentialFeatureSelector</a></li>
+<li><a class="" href="#Attributes-of-SequentialFeatureSelector">Attributes of SequentialFeatureSelector</a></li>
 </ol>
 </div>
 </div>
@@ -13112,14 +13128,14 @@ div#notebook {
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="Stochastic-Gradient-Descent">Stochastic Gradient Descent<a class="anchor-link" href="#Stochastic-Gradient-Descent">&#182;</a></h1>
+<h1 id="Feature-Selection">Feature Selection<a class="anchor-link" href="#Feature-Selection">&#182;</a></h1>
 </div>
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Stochastic Gradient Descent (SGD) is a simple yet very efficient approach to fitting linear classifiers and regressors under convex loss functions such as (linear) Support Vector Machines and Logistic Regression.</p>
+<p>Sklearn has a number of tools for feature selection available in the module <code>feature_selection</code>.</p>
 
 </div>
 </div>
@@ -13127,8 +13143,14 @@ div#notebook {
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>SGD has been successfully applied to large-scale and sparse machine learning problems often encountered in text classification and natural language processing. Given that the data is sparse, the classifiers in this module easily scale to problems with more than $10^5$ training examples and more than $10^5$ features.</p>
-<p>Strictly speaking, SGD is merely an optimization technique and does not correspond to a specific family of machine learning models. It is only a way to train a model. Often, an instance of <code>SGDClassifier</code> or <code>SGDRegressor</code> will have an equivalent estimator in the scikit-learn API, potentially using a different optimization technique. For example, using <code>SGDClassifier(loss='log_loss')</code> results in logistic regression, i.e. a model equivalent to <code>LogisticRegression</code> which is fitted via SGD instead of being fitted by one of the other solvers in <code>LogisticRegression</code>. Similarly,<code>SGDRegressor(loss='squared_error', penalty='l2')</code> and <code>Ridge</code> solve the same optimization problem, via different means.</p>
+<h2 id="Removing-features-with-low-variance">Removing features with low variance<a class="anchor-link" href="#Removing-features-with-low-variance">&#182;</a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><code>VarianceThreshold</code> is a simple baseline approach to feature selection. It removes all features whose variance doesn’t meet some threshold. By default, it removes all zero-variance features, i.e. features that have the same value in all samples.</p>
 
 </div>
 </div>
@@ -13136,20 +13158,8 @@ div#notebook {
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>The advantages of Stochastic Gradient Descent are:</p>
-<ul>
-<li><p>Efficiency.</p>
-</li>
-<li><p>Ease of implementation (lots of opportunities for code tuning).</p>
-</li>
-</ul>
-<p>The disadvantages of Stochastic Gradient Descent include:</p>
-<ul>
-<li><p>SGD requires a number of hyperparameters such as the regularization parameter and the number of iterations.</p>
-</li>
-<li><p>SGD is sensitive to feature scaling.</p>
-</li>
-</ul>
+<p>As an example, suppose that we have a dataset with boolean features, and we want to remove all features that are either one or zero (on or off) in more than 80% of the samples. Boolean features are Bernoulli random variables, and the variance of such variables is given by
+$$\mathrm{Var}[X] = p(1 - p)$$</p>
 
 </div>
 </div>
@@ -13157,29 +13167,20 @@ div#notebook {
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="SGDClassifier">SGDClassifier<a class="anchor-link" href="#SGDClassifier">&#182;</a></h2>
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>The class SGDClassifier implements a plain stochastic gradient descent learning routine which supports different loss functions and penalties for classification.</p>
+<p>So, we can set a threshold of <code>0.8*(1-0.8)</code>:</p>
 
 </div>
 </div>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[2]:</div>
+<div class="prompt input_prompt">In&nbsp;[1]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.linear_model</span> <span class="kn">import</span> <span class="n">SGDClassifier</span>
-<span class="n">X</span> <span class="o">=</span> <span class="p">[[</span><span class="mf">0.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">],</span> <span class="p">[</span><span class="mf">1.</span><span class="p">,</span> <span class="mf">1.</span><span class="p">]]</span>
-<span class="n">y</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
-<span class="n">clf</span> <span class="o">=</span> <span class="n">SGDClassifier</span><span class="p">(</span><span class="n">loss</span><span class="o">=</span><span class="s2">&quot;hinge&quot;</span><span class="p">,</span> <span class="n">penalty</span><span class="o">=</span><span class="s2">&quot;l2&quot;</span><span class="p">,</span> <span class="n">max_iter</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
-<span class="n">clf</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">clf</span><span class="o">.</span><span class="n">predict</span><span class="p">([[</span><span class="mf">2.</span><span class="p">,</span> <span class="mf">2.</span><span class="p">]]))</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.feature_selection</span> <span class="kn">import</span> <span class="n">VarianceThreshold</span>
+<span class="n">X</span> <span class="o">=</span> <span class="p">[[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]]</span>
+<span class="n">sel</span> <span class="o">=</span> <span class="n">VarianceThreshold</span><span class="p">(</span><span class="n">threshold</span><span class="o">=</span><span class="p">(</span><span class="mf">.8</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="mf">.8</span><span class="p">)))</span>
+<span class="n">sel</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -13192,13 +13193,20 @@ div#notebook {
 
 <div class="output_area">
 
-    <div class="prompt"></div>
+    <div class="prompt output_prompt">Out[1]:</div>
 
 
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>[1]
-</pre>
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>array([[0, 1],
+       [1, 0],
+       [0, 0],
+       [1, 1],
+       [1, 0],
+       [1, 1]])</pre>
 </div>
+
 </div>
 
 </div>
@@ -13208,7 +13216,31 @@ div#notebook {
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>SGD fits a linear model to the training data.</p>
+<h2 id="Univariate-feature-selection">Univariate feature selection<a class="anchor-link" href="#Univariate-feature-selection">&#182;</a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Univariate feature selection works by selecting the best features based on univariate statistical tests. It can be seen as a preprocessing step to an estimator. Scikit-learn exposes feature selection routines as objects that implement the <code>transform</code> method:</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<ul>
+<li><p><strong><code>SelectKBest</code></strong> removes all but the  highest scoring features</p>
+</li>
+<li><p><strong><code>SelectPercentile</code></strong> removes all but a user-specified highest scoring percentage of features</p>
+</li>
+<li><p>using common univariate statistical tests for each feature: false positive rate SelectFpr, false discovery rate SelectFdr, or family wise error SelectFwe.</p>
+</li>
+<li><p><strong><code>GenericUnivariateSelect</code></strong> allows to perform univariate feature selection with a configurable strategy. This allows to select the best univariate selection strategy with hyper-parameter search estimator.</p>
+</li>
+</ul>
 
 </div>
 </div>
@@ -13218,359 +13250,14 @@ div#notebook {
 <div class="prompt input_prompt">In&nbsp;[3]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">clf</span><span class="o">.</span><span class="n">coef_</span><span class="p">,</span> <span class="n">clf</span><span class="o">.</span><span class="n">intercept_</span>
-</pre></div>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.datasets</span> <span class="kn">import</span> <span class="n">load_iris</span>
+<span class="kn">from</span> <span class="nn">sklearn.feature_selection</span> <span class="kn">import</span> <span class="n">SelectKBest</span>
+<span class="kn">from</span> <span class="nn">sklearn.feature_selection</span> <span class="kn">import</span> <span class="n">chi2</span>
+<span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">load_iris</span><span class="p">(</span><span class="n">return_X_y</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
 
-    </div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area">
-
-    <div class="prompt output_prompt">Out[3]:</div>
-
-
-
-
-<div class="output_text output_subarea output_execute_result">
-<pre>(array([[9.85221675, 9.85221675]]), array([-9.99002993]))</pre>
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>The signed distance to the hyperplane (computed as the dot product between the coefficients and the input sample, plus the intercept) is given by <code>SGDClassifier.decision_function</code>:</p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[6]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">clf</span><span class="o">.</span><span class="n">decision_function</span><span class="p">([[</span><span class="mf">2.</span><span class="p">,</span> <span class="mf">2.</span><span class="p">]])</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area">
-
-    <div class="prompt output_prompt">Out[6]:</div>
-
-
-
-
-<div class="output_text output_subarea output_execute_result">
-<pre>array([29.41883706])</pre>
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="Loss-functions">Loss functions<a class="anchor-link" href="#Loss-functions">&#182;</a></h3>
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>The concrete loss function can be set via the loss parameter. <code>SGDClassifier</code> supports the following loss functions:</p>
-<ul>
-<li><p><code>loss="hinge"</code>: (soft-margin) linear Support Vector Machine,</p>
-</li>
-<li><p><code>loss="modified_huber"</code>: smoothed hinge loss,</p>
-</li>
-<li><p><code>loss="log"</code>: logistic regression,</p>
-</li>
-</ul>
-<p>and all regression losses. In this case the target is encoded as -1 or 1, and the problem is treated as a regression problem. The predicted class then correspond to the sign of the predicted target.</p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>The first two loss functions are lazy, they only update the model parameters if an example violates the margin constraint, which makes training very efficient and may result in sparser models (i.e. with more zero coefficients), even when L2 penalty is used.</p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>Using <code>loss="log"</code> or <code>loss="modified_huber"</code> enables the <code>predict_proba</code> method, which gives a vector of probability estimates $P(y|x)$ per sample $x$:</p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[9]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">clf</span> <span class="o">=</span> <span class="n">SGDClassifier</span><span class="p">(</span><span class="n">loss</span><span class="o">=</span><span class="s2">&quot;log&quot;</span><span class="p">,</span> <span class="n">max_iter</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
-<span class="n">clf</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">([[</span><span class="mf">1.</span><span class="p">,</span> <span class="mf">1.</span><span class="p">]])</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area">
-
-    <div class="prompt output_prompt">Out[9]:</div>
-
-
-
-
-<div class="output_text output_subarea output_execute_result">
-<pre>array([[0.00416343, 0.99583657]])</pre>
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="Penalties">Penalties<a class="anchor-link" href="#Penalties">&#182;</a></h3>
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>The concrete penalty can be set via the penalty parameter. SGD supports the following penalties:</p>
-<ul>
-<li><p><strong>penalty="l2"</strong>: L2 norm penalty on <code>coef_</code>.</p>
-</li>
-<li><p><strong>penalty="l1"</strong>: L1 norm penalty on <code>coef_</code>.</p>
-</li>
-<li><p><strong>penalty="elasticnet"</strong>: Convex combination of L2 and L1; <code>(1 - l1_ratio) * L2 + l1_ratio * L1.</code></p>
-</li>
-</ul>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="Multi-class-classification">Multi-class classification<a class="anchor-link" href="#Multi-class-classification">&#182;</a></h3>
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>SGDClassifier supports multi-class classification by combining multiple binary classifiers in a “one versus all” (OVA) scheme. For each of the $K$ classes, a binary classifier is learned that discriminates between that and all other $K-1$ classes. At testing time, we compute the confidence score (i.e. the signed distances to the hyperplane) for each classifier and choose the class with the highest confidence.</p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>The Figure below illustrates the OVA approach on the iris dataset. The dashed lines represent the three OVA classifiers; the background colors show the decision surface induced by the three classifiers.</p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p><img src="https://scikit-learn.org/stable/_images/sphx_glr_plot_sgd_iris_001.png" alt=""></p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>In the case of multi-class classification <code>coef_</code> is a two-dimensional array of shape (n_classes, n<em>features) and `intercept</em><code>is a one-dimensional array of shape (n_classes,). The i-th row of</code>coef_` holds the weight vector of the OVA classifier for the i-th class; classes are indexed in ascending order. Note that, in principle, since they allow to create a probability model, loss="log_loss" and loss="modified_huber" are more suitable for one-vs-all classification.</p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="Parameters-of-SGDClassifier">Parameters of SGDClassifier<a class="anchor-link" href="#Parameters-of-SGDClassifier">&#182;</a></h3>
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>Here are some of the parameters of SGDClassifier:</p>
-<ul>
-<li><p><strong>loss</strong> : {‘hinge’, ‘log_loss’, ‘log’, ‘modified_huber’, ‘squared_hinge’, ‘perceptron’, ‘squared_error’, ‘huber’, ‘epsilon_insensitive’, ‘squared_epsilon_insensitive’}, default=’hinge’</p>
-<p>The loss function to be used.</p>
-<ul>
-<li><p>‘hinge’ gives a linear SVM.</p>
-</li>
-<li><p>‘log_loss’ gives logistic regression, a probabilistic classifier.</p>
-</li>
-<li><p>‘modified_huber’ is another smooth loss that brings tolerance to
-outliers as well as probability estimates.</p>
-</li>
-<li><p>‘squared_hinge’ is like hinge but is quadratically penalized.</p>
-</li>
-<li><p>‘perceptron’ is the linear loss used by the perceptron algorithm.</p>
-</li>
-<li><p>The other losses, ‘squared_error’, ‘huber’, ‘epsilon_insensitive’ and ‘squared_epsilon_insensitive’ are designed for regression but can be useful in classification as well.</p>
-</li>
-</ul>
-</li>
-<li><p><strong>penalty</strong> : {‘l2’, ‘l1’, ‘elasticnet’}, default=’l2’</p>
-<p>The penalty (aka regularization term) to be used.</p>
-<ul>
-<li><p>‘l2’ is the standard regularizer used in ridge regression.</p>
-</li>
-<li><p>‘l1’ is the standard regularizer used in lasso regression.</p>
-</li>
-<li><p>‘elasticnet’ is a combination of L1 and L2 regularization that is
-also known as the elastic net.</p>
-</li>
-</ul>
-</li>
-<li><p><strong>l_1_ratio</strong> : float, optional, default=0.15</p>
-<p>The Elastic Net mixing parameter, with 0 &lt;= l1_ratio &lt;= 1. l1_ratio=0 corresponds to L2 penalty, l1_ratio=1 to L1.</p>
-</li>
-<li><p><strong>fit_intercept</strong> : bool, optional, default=True</p>
-<p>Whether to calculate the intercept for this model. If set to false, no intercept will be used in calculations (i.e. data is expected to be centered).</p>
-</li>
-<li><p><strong>max_iter</strong> : int, optional, default=1000</p>
-<p>Maximum number of iterations for the solver. The solver iterates until convergence (determined by ‘tol’) or this number of iterations.</p>
-<p>Maximum number of iterations for conjugate gradient solver.</p>
-</li>
-<li><p><strong>tol</strong> : float, optional, default=1e-3</p>
-<p>Tolerance for stopping criteria.</p>
-</li>
-<li><p><strong>shuffle</strong> : bool, optional, default=True</p>
-<p>Whether or not the training data should be shuffled before each epoch.</p>
-</li>
-<li><p><strong>epsilon</strong> : float, optional, default=0.1</p>
-<p>Epsilon in the epsilon-insensitive loss functions; only if loss is ‘huber’, ‘epsilon_insensitive’, or ‘squared_epsilon_insensitive’. For ‘huber’, determines the threshold at which it becomes less important to get the prediction exactly right. For epsilon-insensitive, any differences between the current prediction and the correct label are ignored if they are less than this threshold. Values must be in the range [0.0, inf).</p>
-</li>
-<li><p><strong>alpha</strong> : float, optional, default=0.0001</p>
-<p>Constant that multiplies the regularization term. The higher the value, the stronger the regularization. Also used to compute the learning rate when set to learning_rate is set to ‘optimal’. Values must be in the range [0.0, inf).</p>
-</li>
-<li><p><strong>learning_rate</strong> : {‘constant’, ‘optimal’, ‘invscaling’, ‘adaptive’}, optional, default=’constant’</p>
-<p>The learning rate schedule.</p>
-<ul>
-<li><p>‘constant’: eta = eta0</p>
-</li>
-<li><p>‘optimal’: eta = 1.0 / (alpha * (t + t0)) where t0 is chosen by a heuristic proposed by Leon Bottou.</p>
-</li>
-<li><p>‘invscaling’: eta = eta0 / pow(t, power_t)</p>
-</li>
-<li><p>‘adaptive’: eta = eta0, as long as the training keeps decreasing. Each time n_iter_no_change consecutive epochs fail to decrease the training loss by tol or fail to increase validation score by tol if early_stopping is True, the current learning rate is divided by 5.</p>
-</li>
-</ul>
-</li>
-<li><p><strong>eta0</strong> : float, optional, default=0.0</p>
-<p>The initial learning rate for the ‘constant’ or ‘invscaling’ schedules. The default value is 0.0.</p>
-</li>
-<li><p><strong>power_t</strong> : float, optional, default=0.5</p>
-<p>The exponent for inverse scaling learning rate. It is used only when learning_rate is set to ‘invscaling’.</p>
-</li>
-<li><p><strong>early_stopping</strong> : bool, optional, default=False</p>
-<p>Whether to use early stopping to terminate training when validation score is not improving. If set to true, it will automatically set aside 10% of training data as validation and terminate training when validation score is not improving by at least tol for n_iter_no_change consecutive epochs.</p>
-</li>
-<li><p><strong>n_iter_no_change</strong> : int, optional, default=5</p>
-<p>Number of iterations with no improvement after which training will be terminated.</p>
-</li>
-<li><p><strong>class_weight</strong> : dict, {class_label: weight}, optional, default=None</p>
-<p>Weights associated with classes. If not given, all classes are supposed to have weight one. For multi-output problems, a list of dicts can be provided in the same order as the columns of y.
-  The ‘balanced’ mode uses the values of y to automatically adjust weights inversely proportional to class frequencies in the input data.
-  For multi-output, the weights are normalized separately for each column.</p>
-</li>
-<li><p><strong>warm_start</strong> : bool, optional, default=False</p>
-<p>When set to True, reuse the solution of the previous call to fit as initialization, otherwise, just erase the previous solution.</p>
-</li>
-</ul>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="Attributes-of-SGDClassifier">Attributes of SGDClassifier<a class="anchor-link" href="#Attributes-of-SGDClassifier">&#182;</a></h3>
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<ul>
-<li><p><strong>coef_</strong> : array, shape (1, n_features) or (n_classes, n_features)</p>
-<p>Weights assigned to the features.</p>
-</li>
-<li><p><strong>intercept_</strong> : array, shape (1,) or (n_classes,)</p>
-<p>Constant bias assigned to the samples.</p>
-</li>
-<li><p><strong>n<em>iter</em></strong> : int</p>
-
-<pre><code>  Number of iterations run.</code></pre>
-</li>
-<li><p><strong>classes_</strong> : array of shape (n_classes,)</p>
-<p>The classes labels.</p>
-</li>
-</ul>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[10]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">from</span> <span class="nn">sklearn.linear_model</span> <span class="kn">import</span> <span class="n">SGDClassifier</span>
-<span class="kn">from</span> <span class="nn">sklearn.preprocessing</span> <span class="kn">import</span> <span class="n">StandardScaler</span>
-<span class="kn">from</span> <span class="nn">sklearn.pipeline</span> <span class="kn">import</span> <span class="n">make_pipeline</span>
-<span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">]])</span>
-<span class="n">Y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">])</span>
-<span class="n">clf</span> <span class="o">=</span> <span class="n">make_pipeline</span><span class="p">(</span><span class="n">StandardScaler</span><span class="p">(),</span>
-                    <span class="n">SGDClassifier</span><span class="p">(</span><span class="n">max_iter</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="mf">1e-3</span><span class="p">))</span>
-<span class="n">clf</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">)</span>
-
-
-<span class="nb">print</span><span class="p">(</span><span class="n">clf</span><span class="o">.</span><span class="n">predict</span><span class="p">([[</span><span class="o">-</span><span class="mf">0.8</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">]]))</span>
+<span class="n">X_new</span> <span class="o">=</span> <span class="n">SelectKBest</span><span class="p">(</span><span class="n">chi2</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+<span class="n">X_new</span><span class="o">.</span><span class="n">shape</span>
 </pre></div>
 
     </div>
@@ -13587,11 +13274,24 @@ also known as the elastic net.</p>
 
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>[1]
+<pre>(150, 4)
 </pre>
 </div>
 </div>
 
+<div class="output_area">
+
+    <div class="prompt output_prompt">Out[3]:</div>
+
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>(150, 2)</pre>
+</div>
+
+</div>
+
 </div>
 </div>
 
@@ -13599,28 +13299,11 @@ also known as the elastic net.</p>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="SGDRegressor">SGDRegressor<a class="anchor-link" href="#SGDRegressor">&#182;</a></h2>
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>The class <code>SGDRegressor</code> implements a plain stochastic gradient descent learning routine which supports different loss functions and penalties to fit linear regression models. <code>SGDRegressor</code> is well suited for regression problems with a large number of training samples.</p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>The concrete loss function can be set via the loss parameter. <code>SGDRegressor</code> supports the following loss functions:</p>
+<p>These objects take as input a scoring function that returns univariate scores and p-values (or only scores for <code>SelectKBest</code> and <code>SelectPercentile</code>):</p>
 <ul>
-<li><p><strong>loss="squared_error"</strong>: Ordinary least squares,</p>
+<li><p>For regression: <em>f_regression</em>, <em>mutual_info_regression</em></p>
 </li>
-<li><p><strong>loss="huber"</strong>: Huber loss for robust regression,</p>
-</li>
-<li><p><strong>loss="epsilon_insensitive"</strong>: linear Support Vector Regression.</p>
+<li><p>For classification: <em>chi2</em>, <em>f_classif</em>, <em>mutual_info_classif</em></p>
 </li>
 </ul>
 
@@ -13630,50 +13313,34 @@ also known as the elastic net.</p>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="Parameters-of-SGDRegressor">Parameters of SGDRegressor<a class="anchor-link" href="#Parameters-of-SGDRegressor">&#182;</a></h3>
+<h2 id="Recursive-feature-elimination">Recursive feature elimination<a class="anchor-link" href="#Recursive-feature-elimination">&#182;</a></h2>
 </div>
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>The <code>SGDRegressor</code> class has the same parameters as the <code>SGDClassifier</code> class. Only the <code>loss</code> parameter is different.</p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="Attributes-of-SGDRegressor">Attributes of SGDRegressor<a class="anchor-link" href="#Attributes-of-SGDRegressor">&#182;</a></h3>
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>The <code>SGDRegressor</code> class has the same attributes as the <code>SGDClassifier</code> class except for the <code>classes_</code> attribute.</p>
+<p>Given an external estimator that assigns weights to features (e.g., the coefficients of a linear model), the goal of recursive feature elimination (<code>RFE</code>) is to select features by recursively considering smaller and smaller sets of features. First, the estimator is trained on the initial set of features and the importance of each feature is obtained either through any specific attribute (such as <code>coef_</code>, <code>feature_importances_</code>) or callable. Then, the least important features are pruned from current set of features. That procedure is recursively repeated on the pruned set until the desired number of features to select is eventually reached.</p>
+<p><code>RFECV</code> performs <code>RFE</code> in a cross-validation loop to find the optimal number of features.</p>
 
 </div>
 </div>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[11]:</div>
+<div class="prompt input_prompt">In&nbsp;[6]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">from</span> <span class="nn">sklearn.linear_model</span> <span class="kn">import</span> <span class="n">SGDRegressor</span>
-<span class="kn">from</span> <span class="nn">sklearn.pipeline</span> <span class="kn">import</span> <span class="n">make_pipeline</span>
-<span class="kn">from</span> <span class="nn">sklearn.preprocessing</span> <span class="kn">import</span> <span class="n">StandardScaler</span>
-<span class="n">n_samples</span><span class="p">,</span> <span class="n">n_features</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">5</span>
-<span class="n">rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-<span class="n">y</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">n_samples</span><span class="p">)</span>
-<span class="n">X</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">n_samples</span><span class="p">,</span> <span class="n">n_features</span><span class="p">)</span>
-<span class="c1"># Always scale the input. The most convenient way is to use a pipeline.</span>
-<span class="n">reg</span> <span class="o">=</span> <span class="n">make_pipeline</span><span class="p">(</span><span class="n">StandardScaler</span><span class="p">(),</span>
-                    <span class="n">SGDRegressor</span><span class="p">(</span><span class="n">max_iter</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="mf">1e-3</span><span class="p">))</span>
-<span class="n">reg</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.feature_selection</span> <span class="kn">import</span> <span class="n">RFE</span>
+<span class="kn">from</span> <span class="nn">sklearn.linear_model</span> <span class="kn">import</span> <span class="n">LogisticRegression</span>
+<span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">load_iris</span><span class="p">(</span><span class="n">return_X_y</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="n">rfe</span> <span class="o">=</span> <span class="n">RFE</span><span class="p">(</span><span class="n">estimator</span><span class="o">=</span><span class="n">LogisticRegression</span><span class="p">(</span><span class="n">max_iter</span><span class="o">=</span><span class="mi">1000</span><span class="p">),</span> <span class="n">n_features_to_select</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">rfe</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">rfe</span><span class="o">.</span><span class="n">support_</span><span class="p">)</span> 
+<span class="nb">print</span><span class="p">(</span><span class="n">rfe</span><span class="o">.</span><span class="n">ranking_</span><span class="p">)</span>
+<span class="n">X_new</span> <span class="o">=</span> <span class="n">rfe</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+<span class="n">X_new</span><span class="o">.</span><span class="n">shape</span>
 </pre></div>
 
     </div>
@@ -13686,14 +13353,26 @@ also known as the elastic net.</p>
 
 <div class="output_area">
 
-    <div class="prompt output_prompt">Out[11]:</div>
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>(150, 4)
+[False False  True  True]
+[3 2 1 1]
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+    <div class="prompt output_prompt">Out[6]:</div>
 
 
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>Pipeline(steps=[(&#39;standardscaler&#39;, StandardScaler()),
-                (&#39;sgdregressor&#39;, SGDRegressor())])</pre>
+<pre>(150, 2)</pre>
 </div>
 
 </div>
@@ -13705,23 +13384,14 @@ also known as the elastic net.</p>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="More-Informations-on-SGD">More Informations on SGD<a class="anchor-link" href="#More-Informations-on-SGD">&#182;</a></h2>
+<h2 id="Feature-selection-using-SelectFromModel">Feature selection using SelectFromModel<a class="anchor-link" href="#Feature-selection-using-SelectFromModel">&#182;</a></h2>
 </div>
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="Time-Complexity">Time Complexity<a class="anchor-link" href="#Time-Complexity">&#182;</a></h3>
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>The major advantage of SGD is its efficiency, which is basically linear in the number of training examples. If X is a matrix of size (n, p) training has a cost of $O(k n \bar p)$
-, where k is the number of iterations (epochs) and 
-$\bar{p}$ is the average number of non-zero attributes per sample</p>
+<p><code>SelectFromModel</code> is a meta-transformer that can be used alongside any estimator that assigns importance to each feature through a specific attribute (such as <code>coef_</code>, <code>feature_importances_</code>) or via an <code>importance_getter</code> callable after fitting. The features are considered unimportant and removed if the corresponding importance of the feature values are below the provided threshold parameter. Apart from specifying the threshold numerically, there are built-in heuristics for finding a threshold using a string argument. Available heuristics are “mean”, “median” and float multiples of these like “0.1*mean”. In combination with the threshold criteria, one can use the <code>max_features</code> parameter to set a limit on the number of features to select.</p>
 
 </div>
 </div>
@@ -13729,18 +13399,281 @@ $\bar{p}$ is the average number of non-zero attributes per sample</p>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="Stopping-Criterion">Stopping Criterion<a class="anchor-link" href="#Stopping-Criterion">&#182;</a></h3>
+<h3 id="Example-1:-SVC-Based">Example 1: SVC Based<a class="anchor-link" href="#Example-1:-SVC-Based">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[7]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.svm</span> <span class="kn">import</span> <span class="n">LinearSVC</span>
+<span class="kn">from</span> <span class="nn">sklearn.datasets</span> <span class="kn">import</span> <span class="n">load_iris</span>
+<span class="kn">from</span> <span class="nn">sklearn.feature_selection</span> <span class="kn">import</span> <span class="n">SelectFromModel</span>
+<span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">load_iris</span><span class="p">(</span><span class="n">return_X_y</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+
+<span class="n">lsvc</span> <span class="o">=</span> <span class="n">LinearSVC</span><span class="p">(</span><span class="n">C</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">penalty</span><span class="o">=</span><span class="s2">&quot;l1&quot;</span><span class="p">,</span> <span class="n">dual</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">SelectFromModel</span><span class="p">(</span><span class="n">lsvc</span><span class="p">,</span> <span class="n">prefit</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">X_new</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+<span class="n">X_new</span><span class="o">.</span><span class="n">shape</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>(150, 4)
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+    <div class="prompt output_prompt">Out[7]:</div>
+
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>(150, 3)</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<blockquote><p>With SVMs and logistic-regression, the parameter C controls the sparsity: the smaller C the fewer features selected. With Lasso, the higher the alpha parameter, the fewer features selected.</p>
+</blockquote>
+
 </div>
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>The classes <code>SGDClassifier</code> and <code>SGDRegressor</code> provide two criteria to stop the algorithm when a given level of convergence is reached:</p>
+<h3 id="Example-2:-Tree-Based">Example 2: Tree Based<a class="anchor-link" href="#Example-2:-Tree-Based">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[8]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.ensemble</span> <span class="kn">import</span> <span class="n">ExtraTreesClassifier</span>
+<span class="kn">from</span> <span class="nn">sklearn.datasets</span> <span class="kn">import</span> <span class="n">load_iris</span>
+<span class="kn">from</span> <span class="nn">sklearn.feature_selection</span> <span class="kn">import</span> <span class="n">SelectFromModel</span>
+<span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">load_iris</span><span class="p">(</span><span class="n">return_X_y</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+
+<span class="n">clf</span> <span class="o">=</span> <span class="n">ExtraTreesClassifier</span><span class="p">(</span><span class="n">n_estimators</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span>
+<span class="n">clf</span> <span class="o">=</span> <span class="n">clf</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">clf</span><span class="o">.</span><span class="n">feature_importances_</span><span class="p">)</span>  
+
+<span class="n">model</span> <span class="o">=</span> <span class="n">SelectFromModel</span><span class="p">(</span><span class="n">clf</span><span class="p">,</span> <span class="n">prefit</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">X_new</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+<span class="n">X_new</span><span class="o">.</span><span class="n">shape</span> 
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>(150, 4)
+[0.10769421 0.07282498 0.37546013 0.44402068]
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+    <div class="prompt output_prompt">Out[8]:</div>
+
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>(150, 2)</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Sequential-Feature-Selection">Sequential Feature Selection<a class="anchor-link" href="#Sequential-Feature-Selection">&#182;</a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Sequential Feature Selection (SFS) is available in the <code>SequentialFeatureSelector</code> transformer. SFS can be either forward or backward.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Forward-SFS">Forward SFS<a class="anchor-link" href="#Forward-SFS">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Forward-SFS is a greedy procedure that iteratively finds the best new feature to add to the set of selected features. Concretely, we initially start with zero feature and find the one feature that maximizes a cross-validated score when an estimator is trained on this single feature. Once that first feature is selected, we repeat the procedure by adding a new feature to the set of selected features. The procedure stops when the desired number of selected features is reached, as determined by the <code>n_features_to_select</code> parameter.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Backward-SFS">Backward SFS<a class="anchor-link" href="#Backward-SFS">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Backward-SFS follows the same idea but works in the opposite direction: instead of starting with no feature and greedily adding features, we start with all the features and greedily remove features from the set. The <code>direction</code> parameter controls whether forward or backward SFS is used.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<blockquote><p>In general, forward and backward selection do not yield equivalent results. Also, one may be much faster than the other depending on the requested number of selected features: if we have 10 features and ask for 7 selected features, forward selection would need to perform 7 iterations while backward selection would only need to perform 3.</p>
+</blockquote>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>SFS differs from <code>RFE</code> and <code>SelectFromModel</code> in that it does not require the underlying model to expose a <code>coef_</code> or <code>feature_importances_</code> attribute. It may however be slower considering that more models need to be evaluated, compared to the other approaches. For example in backward selection, the iteration going from <em>m</em> features to <em>m - 1</em> features using k-fold cross-validation requires fitting <em>m </em> k* models, while <code>RFE</code> would require only a single fit, and <code>SelectFromModel</code> always just does a single fit and requires no iterations.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Feature-selection-as-part-of-a-pipeline">Feature selection as part of a pipeline<a class="anchor-link" href="#Feature-selection-as-part-of-a-pipeline">&#182;</a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Feature selection is usually used as a pre-processing step before doing the actual learning. The recommended way to do this in scikit-learn is to use a <code>Pipeline</code>:</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[13]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.ensemble</span> <span class="kn">import</span> <span class="n">RandomForestClassifier</span>
+<span class="kn">from</span> <span class="nn">sklearn.pipeline</span> <span class="kn">import</span> <span class="n">Pipeline</span>
+<span class="n">clf</span> <span class="o">=</span> <span class="n">Pipeline</span><span class="p">([</span>
+  <span class="p">(</span><span class="s1">&#39;feature_selection&#39;</span><span class="p">,</span> <span class="n">SelectFromModel</span><span class="p">(</span><span class="n">LinearSVC</span><span class="p">(</span><span class="n">penalty</span><span class="o">=</span><span class="s2">&quot;l1&quot;</span><span class="p">))),</span>
+  <span class="p">(</span><span class="s1">&#39;classification&#39;</span><span class="p">,</span> <span class="n">RandomForestClassifier</span><span class="p">())</span>
+<span class="p">])</span>
+<span class="n">clf</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt output_prompt">Out[13]:</div>
+
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>Pipeline(steps=[(&#39;feature_selection&#39;,
+                 SelectFromModel(estimator=LinearSVC(penalty=&#39;l1&#39;))),
+                (&#39;classification&#39;, RandomForestClassifier())])</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="Classes">Classes<a class="anchor-link" href="#Classes">&#182;</a></h1>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="VarianceThreshold"><code>VarianceThreshold</code><a class="anchor-link" href="#VarianceThreshold">&#182;</a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Parameters-of-VarianceThreshold">Parameters of <code>VarianceThreshold</code><a class="anchor-link" href="#Parameters-of-VarianceThreshold">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
 <ul>
-<li><p>With <code>early_stopping=True</code>, the input data is split into a training set and a validation set. The model is then fitted on the training set, and the stopping criterion is based on the prediction score (using the score method) computed on the validation set. The size of the validation set can be changed with the parameter <code>validation_fraction</code>.</p>
-</li>
-<li><p>With <code>early_stopping=False</code>, the model is fitted on the entire input data and the stopping criterion is based on the objective function computed on the training data.</p>
+<li><p><strong>threshold</strong>: float, (default=0.0)</p>
+<p>Features with a training-set variance lower than this threshold will be removed. The default is to keep all features with non-zero variance, i.e. remove the features that have the same value in all samples.</p>
 </li>
 </ul>
 
@@ -13750,39 +13683,17 @@ $\bar{p}$ is the average number of non-zero attributes per sample</p>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>In both cases, the criterion is evaluated once by epoch, and the algorithm stops when the criterion does not improve <code>n_iter_no_change</code> times in a row. The improvement is evaluated with absolute tolerance <code>tol</code>, and the algorithm stops in any case after a maximum number of iteration <code>max_iter</code>.</p>
-
+<h3 id="Attributes-of-VarianceThreshold">Attributes of <code>VarianceThreshold</code><a class="anchor-link" href="#Attributes-of-VarianceThreshold">&#182;</a></h3>
 </div>
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="Mathematical-Details">Mathematical Details<a class="anchor-link" href="#Mathematical-Details">&#182;</a></h3>
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>Given a set of training examples $(x_1, y_1), \ldots, (x_n, y_n)$, our goal is to find a linear model $f(x) = w^T x + b$ which minimizes the following loss function:
-$$
-E(w,b) = \frac{1}{n}\sum_{i=1}^{n} L(y_i, f(x_i)) + \alpha R(w)
-$$
-where $L$ is a loss function that measures model (mis)fit and $R$ is a regularization term (aka penalty) that penalizes model complexity; $\alpha$ is a non-negative hyperparameter that controls the regularization strength.</p>
-<p>The choice of $L$ determines which loss function is used. The choice of $R$ determines the regularization term.</p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>Stochastic gradient descent is an optimization method for unconstrained optimization problems. In contrast to (batch) gradient descent, SGD approximates the true gradient of $E(w,b)$ by considering a single training example at a time.</p>
-<p>The class <code>SGDClassifier</code> implements a first-order SGD learning routine. The algorithm iterates over the training examples and for each example updates the model parameters according to the update rule given by:
-$$w \leftarrow w - \eta \left[\alpha \frac{\partial R(w)}{\partial w}</p>
 <ul>
-<li>\frac{\partial L(w^T x_i + b, y_i)}{\partial w}\right]$$</li>
+<li><p><strong>variances_</strong>: array-like, shape (n_features,)</p>
+<p>The variance of each feature in the training set.</p>
+</li>
 </ul>
 
 </div>
@@ -13791,7 +13702,347 @@ $$w \leftarrow w - \eta \left[\alpha \frac{\partial R(w)}{\partial w}</p>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>where $\eta$ is the learning rate which controls the step-size in the parameter space. The intercept $b$ is updated similarly but without regularization. The learning rate can be sheduled over the training epochs.</p>
+<h2 id="SelectKBest"><code>SelectKBest</code><a class="anchor-link" href="#SelectKBest">&#182;</a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Parameters-of-SelectKBest">Parameters of <code>SelectKBest</code><a class="anchor-link" href="#Parameters-of-SelectKBest">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<ul>
+<li><p><strong>score_func</strong>: callable, defualt=f_classif</p>
+<p>Function taking two arrays X and y, and returning a pair of arrays (scores, pvalues) or a single array with scores. Default is f_classif. The default function only works with classification tasks.</p>
+</li>
+<li><p><strong>k</strong>: int or "all", default=10</p>
+<p>Number of top features to select. The “all” option bypasses selection, for use in a parameter search.</p>
+</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Attributes-of-SelectKBest">Attributes of <code>SelectKBest</code><a class="anchor-link" href="#Attributes-of-SelectKBest">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<ul>
+<li><p><strong>scores_</strong>: array-like, shape (n_features,)</p>
+<p>The scores associated with each feature.</p>
+</li>
+<li><p><strong>pvalues_</strong>: array-like, shape (n_features,)</p>
+<p>The p-values associated with each feature.</p>
+</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="SelectPercentile"><code>SelectPercentile</code><a class="anchor-link" href="#SelectPercentile">&#182;</a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Parameters-of-SelectPercentile">Parameters of <code>SelectPercentile</code><a class="anchor-link" href="#Parameters-of-SelectPercentile">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<ul>
+<li><p><strong>score_func</strong>: callable, default=f_classif</p>
+<p>Function taking two arrays X and y, and returning a pair of arrays (scores, pvalues) or a single array with scores. Default is f_classif. The default function only works with classification tasks.</p>
+</li>
+<li><p><strong>percentile</strong>: int, default=10</p>
+<p>Percentile of features to keep.</p>
+</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Available callable score functions are:</p>
+<ul>
+<li><p>For regression: f_regression, mutual_info_regression</p>
+</li>
+<li><p>For classification: chi2, f_classif, mutual_info_classif</p>
+</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Attributes-of-SelectPercentile">Attributes of <code>SelectPercentile</code><a class="anchor-link" href="#Attributes-of-SelectPercentile">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<ul>
+<li><p><strong>scores_</strong>: array-like, shape (n_features,)</p>
+<p>The scores associated with each feature.</p>
+</li>
+<li><p><strong>pvalues_</strong>: array-like, shape (n_features,)</p>
+<p>The p-values associated with each feature.</p>
+</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="RFE"><code>RFE</code><a class="anchor-link" href="#RFE">&#182;</a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Parameters-of-RFE">Parameters of <code>RFE</code><a class="anchor-link" href="#Parameters-of-RFE">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<ul>
+<li><p><strong>estimator</strong>: estimator object.</p>
+<p>A supervised learning estimator with a <code>fit</code> method that provides information about feature importance (e.g. <code>coef_</code>, <code>feature_importances_</code>).</p>
+</li>
+<li><p><strong>n_features_to_select</strong>: int or float default=None</p>
+<p>The number of features to select. If None, half of the features are selected. If integer, the parameter is the absolute number of features to select. If float between 0 and 1, it is the fraction of features to select.</p>
+</li>
+<li><p><strong>step</strong>: int or float, default=1</p>
+<p>If greater than or equal to 1, then <code>step</code> corresponds to the (integer) number of features to remove at each iteration. If within (0.0, 1.0), then <code>step</code> corresponds to the percentage (rounded down) of features to remove at each iteration.</p>
+</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Attributes-of-RFE">Attributes of <code>RFE</code><a class="anchor-link" href="#Attributes-of-RFE">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<ul>
+<li><p><strong>classes_</strong>: array-like, shape (n_classes,)</p>
+<p>Classes labels available when <code>estimator</code> is a classifier.</p>
+</li>
+<li><p><strong>estimator_</strong>: estimator object.</p>
+<p>The underlying estimator.</p>
+</li>
+<li><p><strong>n<em>features</em></strong>: int</p>
+<p>The number of features.</p>
+</li>
+<li><p><strong>ranking_</strong>: array-like, shape (n_features,)</p>
+<p>The feature ranking, such that <code>ranking_[i]</code>corresponds to the ranking position of the i-th feature. Selected (i.e., estimated best) features are assigned rank 1.</p>
+</li>
+<li><p><strong>support_</strong>: array-like, shape (n_features,)</p>
+<p>The mask of selected features.</p>
+</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="SelectFromModel"><code>SelectFromModel</code><a class="anchor-link" href="#SelectFromModel">&#182;</a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Parameters-of-SelectFromModel">Parameters of <code>SelectFromModel</code><a class="anchor-link" href="#Parameters-of-SelectFromModel">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<ul>
+<li><p><strong>estimator</strong>: estimator object.</p>
+<p>The base estimator from which the transformer is built. This can be both a fitted (if <code>prefit</code> is set to <code>True</code>) or a non-fitted estimator. The estimator should have a <code>feature_importances_</code> or coef_ <code>attribute</code> after fitting. Otherwise, the <code>importance_getter</code> parameter should be used.</p>
+</li>
+<li><p><strong>threshold</strong> : str or float, default=None</p>
+<p>The threshold value to use for feature selection. Features whose importance is greater or equal are kept while the others are discarded. If “median” (resp. “mean”), then the threshold value is the median (resp. the mean) of the feature importances. A scaling factor (e.g., “1.25*mean”) may also be used. If None and if the estimator has a parameter penalty set to l1, either explicitly or implicitly (e.g, Lasso), the threshold used is 1e-5. Otherwise, “mean” is used by default.</p>
+</li>
+<li><p><strong>prefit</strong>: bool, default=False</p>
+<p>Whether a prefit model is expected to be passed into the constructor directly or not. If <code>True</code>, <code>estimator</code> must be a fitted estimator. If Fal<code>se,</code>estimator<code>is fitted and updated by calling</code>fit<code>and</code>partial_fit`, respectively.</p>
+</li>
+<li><p><strong>norm_order</strong>: non-zero int, inf, -inf, default=1</p>
+<p>Order of the norm used to filter the vectors of coefficients below threshold in the case where the <code>coef_</code> attribute of the estimator is of dimension 2.</p>
+</li>
+<li><p><strong>max_features</strong> :int, callable, default=None</p>
+<p>The maximum number of features to select.</p>
+<p>If an integer, then it specifies the maximum number of features to allow.</p>
+<p>If a callable, then it specifies how to calculate the maximum number of features allowed by using the output of <code>max_feaures(X)</code>.</p>
+<p>If <code>None</code>, then all features are kept.
+  To only select based on <code>max_features</code>, set <code>threshold=-np.inf</code></p>
+</li>
+<li><p><strong>importance_getter</strong>: str or callable, default=’auto’</p>
+<p>If ‘auto’, uses the feature importance either through a coef_ attribute or feature<em>importances</em> attribute of estimator.</p>
+<p>Also accepts a string that specifies an attribute name/path for extracting feature importance (implemented with attrgetter).</p>
+</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Attributes-of-SelectFromModel">Attributes of <code>SelectFromModel</code><a class="anchor-link" href="#Attributes-of-SelectFromModel">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<ul>
+<li><p><strong>estimator_</strong>: estimator object.</p>
+<p>The base estimator from which the transformer is built. This attribute exist only when <code>fit</code> has been called.</p>
+<ul>
+<li><p>If <code>prefit=True</code>, it is a deep copy of estimator.</p>
+</li>
+<li><p>If <code>prefit=False</code>, it is a clone of estimator and fit on the data passed to <code>fit</code> or <code>partial_fit</code>.</p>
+</li>
+</ul>
+</li>
+<li><p><strong>max<em>features</em></strong>: int</p>
+<p>Maximum number of features calculated during fit. Only defined if the max_features is not None.</p>
+<ul>
+<li><p>If <code>max_features</code> is an int, then <code>max_features_ = max_features</code>.</p>
+</li>
+<li><p>If <code>max_features</code> is a callable, then <code>max_features_ = max_features(X)</code>.</p>
+</li>
+</ul>
+</li>
+<li><p><strong>threshold_</strong> float</p>
+<p>Threshold value used for feature selection.</p>
+</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="SequentialFeatureSelector"><code>SequentialFeatureSelector</code><a class="anchor-link" href="#SequentialFeatureSelector">&#182;</a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Parameters-of-SequentialFeatureSelector">Parameters of <code>SequentialFeatureSelector</code><a class="anchor-link" href="#Parameters-of-SequentialFeatureSelector">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<ul>
+<li><p><strong>estimator</strong>: estimator instance</p>
+<p>An unfitted estimator.</p>
+</li>
+<li><p><strong>n_features_to_select</strong>: “auto”, int or float, default=’warn’</p>
+<p>If "auto", the behaviour depends on the <code>tol</code> parameter:</p>
+<ul>
+<li><p>if <code>tol</code> is not None, then features are selected until the score improvement does not exceed <code>tol</code>.</p>
+</li>
+<li><p>otherwise, half of the features are selected.</p>
+<p>If integer, the parameter is the absolute number of features to select. If float between 0 and 1, it is the fraction of features to select.</p>
+</li>
+</ul>
+</li>
+<li><p><strong>tol</strong>: float, default=None</p>
+<p>If the score is not incremented by at least tol between two consecutive feature additions or removals, stop adding or removing. tol is enabled only when <code>n_features_to_select</code> is "auto".</p>
+</li>
+<li><p><strong>direction</strong>: {‘forward’, ‘backward’}, default=’forward’</p>
+<p>If ‘forward’, features are added. If ‘backward’, features are removed.</p>
+</li>
+<li><p><strong>scoring</strong>:  str, callable, list/tuple or dict, default=None</p>
+<p>A single str or a callable to evaluate the predictions on the test set.</p>
+<p>If None, the estimator’s score method is used.</p>
+</li>
+<li><p><strong>cv</strong>: int, cross-validation generator or an iterable, default=None</p>
+<ul>
+<li><p>Determines the cross-validation splitting strategy. Possible inputs for <code>cv</code> are:</p>
+</li>
+<li><p><code>None</code>, to use the default 5-fold cross validation,</p>
+</li>
+<li><p>integer, to specify the number of folds in a <code>(Stratified)KFold</code>,</p>
+</li>
+<li><p>CV splitter,</p>
+</li>
+<li><p>An iterable yielding (train, test) splits as arrays of indices.</p>
+</li>
+</ul>
+</li>
+<li><strong>n_jobs</strong></li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Attributes-of-SequentialFeatureSelector">Attributes of <code>SequentialFeatureSelector</code><a class="anchor-link" href="#Attributes-of-SequentialFeatureSelector">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<ul>
+<li><p><strong>n<em>features</em></strong>: int</p>
+<p>Number of features seen during fit. Only defined if the underlying estimator exposes such an attribute when fit.</p>
+</li>
+<li><p><strong>n_features_to<em>select</em></strong>: int</p>
+<p>The number of features that were selected.</p>
+</li>
+<li><p><strong>support_</strong>: array-like, shape (n_features,)</p>
+<p>The mask of selected features.</p>
+</li>
+</ul>
 
 </div>
 </div>
