@@ -1,0 +1,17 @@
+name: data-science
+
+dependencies:
+  - python=3.8
+  - numpy
+  - matplotlib
+  - pandas
+  - scipy
+  - scikit-learn
+  - pip:
+      - tensorflow-cpu
+      - keras
+      - beautifulsoup4
+      - pydot
+      - graphviz
+      - tqdm
+      - nbformat
