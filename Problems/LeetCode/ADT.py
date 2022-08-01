@@ -69,11 +69,11 @@ class LinkedList:
         self.head = None
         self._length = 0
 
-    @property
+    # @property
     def data(self):
         return self.head.data if self.head is not None else None
 
-    @property
+    # @property
     def next(self):
         return self.head.next if self.head is not None else None
 
@@ -82,6 +82,38 @@ class LinkedList:
 
     def is_empty(self):
         return self._length == 0
+
+    def list_to_linkedlist(self, list_):
+        """
+        Converts a list to a linked list.
+
+        Parameters:
+        -----------
+        list_: List
+            The list to be converted.
+
+        Returns:
+        --------
+        None
+        """
+        # Check if the list is empty
+        if len(list_) == 0:
+            raise Empty("The list is empty.")
+        # Set the head to the first element of the list
+        self.head = Node(list_[0])
+        # Set the current node to the head
+        current = self.head
+        # Loop through the list
+        for i in range(1, len(list_)):
+            # Create a new node
+            new_node = Node(list_[i])
+            # Set the current node's next to the new node
+            current.next = new_node
+            # Set the current node to the new node
+            current = new_node
+        # Increment the length
+        self._length += len(list_)
+        # return self.head
 
     def print_list(self):
         """
