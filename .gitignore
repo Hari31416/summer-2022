@@ -1,3 +1,5 @@
 *checkpoints
 *.pdf
 .env
+tools
+*pycache*
